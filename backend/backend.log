@@ -1,0 +1,63 @@
+INFO:     Will watch for changes in these directories: ["/Users/emilianobarin/Desktop/Master in Energy Management - PoliMi/Management dell'efficienza energetica/Trianni/backend"]
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [1529] using StatReload
+INFO:     Started server process [1533]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:49655 - "GET /api/shadow/step0?metric=count&limit=25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49655 - "GET /api/shadow/step0?metric=count&limit=25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49663 - "GET /api/shadow/step1?pivot_type=naics&pivot_id=311 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49663 - "GET /api/shadow/step1?pivot_type=naics&pivot_id=311 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49670 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49670 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49673 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49675 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49682 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49682 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49686 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49686 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49699 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49699 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49702 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49704 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49720 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49720 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49730 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49730 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49736 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49736 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49739 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49739 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49745 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49745 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49749 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49749 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49756 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49756 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49759 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49759 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49766 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49766 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49771 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49771 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49778 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49778 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49780 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49780 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49801 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49801 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49808 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49808 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Large HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49815 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49815 - "GET /api/shadow/step2?naics_code=311&arc_code=2.7142 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49823 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49823 - "GET /api/shadow/step3?naics_code=311&arc_code=2.7142&firm_size=Small HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1533]
+INFO:     Stopping reloader process [1529]

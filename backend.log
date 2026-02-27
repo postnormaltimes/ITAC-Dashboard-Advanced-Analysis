@@ -1,0 +1,32 @@
+INFO:     Will watch for changes in these directories: ["/Users/emilianobarin/Desktop/Master in Energy Management - PoliMi/Management dell'efficienza energetica/Trianni/backend"]
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [4012] using StatReload
+INFO:     Started server process [4138]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:51092 - "POST /api/advanced/step1_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51099 - "POST /api/advanced/step2_distributions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51097 - "POST /api/advanced/step2_distributions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51103 - "POST /api/advanced/step3_filtered_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51105 - "POST /api/advanced/step3_filtered_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51114 - "OPTIONS /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51115 - "OPTIONS /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51117 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51114 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51131 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51133 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51156 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51158 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51326 - "OPTIONS /api/advanced/step1_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51326 - "POST /api/advanced/step1_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51326 - "OPTIONS /api/advanced/step2_distributions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51328 - "POST /api/advanced/step2_distributions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51326 - "POST /api/advanced/step2_distributions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51337 - "OPTIONS /api/advanced/step3_filtered_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51338 - "OPTIONS /api/advanced/step3_filtered_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51338 - "POST /api/advanced/step3_filtered_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51337 - "POST /api/advanced/step3_filtered_evaluate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51340 - "OPTIONS /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51342 - "OPTIONS /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51342 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51340 - "POST /api/advanced/step4_curves HTTP/1.1" 200 OK

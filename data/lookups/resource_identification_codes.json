@@ -1,0 +1,220 @@
+{
+  "metadata": {
+    "source": "IAC_DatabaseManualv10.2.pdf",
+    "page": 22,
+    "md5": "40c33258f56d9912f1d7fbd3ccefdfde",
+    "extractedAt": "2026-02-27T17:19:10.506761+00:00"
+  },
+  "codes": [
+    {
+      "streamType": null,
+      "streamName": "Electrical Consumption",
+      "code": "EC",
+      "consumptionUnits": "KWH(site)",
+      "notes": ""
+    },
+    {
+      "streamType": null,
+      "streamName": "Electrical Demand",
+      "code": "ED",
+      "consumptionUnits": "MMBtu(source) kW\u2013months/year",
+      "notes": ""
+    },
+    {
+      "streamType": null,
+      "streamName": "Other Electrical Fees",
+      "code": "EF",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": null,
+      "streamName": "Electricity",
+      "code": "E1",
+      "consumptionUnits": "KWH(site)",
+      "notes": "E1 was replaced with EC, ED, and EF as of FY 95 (9/30/95)."
+    },
+    {
+      "streamType": null,
+      "streamName": "Natural Gas",
+      "code": "E2",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": null,
+      "streamName": "L.P.G",
+      "code": "E3",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": null,
+      "streamName": "#1 Fuel Oil",
+      "code": "E4",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "#2 Fuel Oil",
+      "code": "E5",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "#4 Fuel Oil",
+      "code": "E6",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "#6 Fuel Oil",
+      "code": "E7",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Coal",
+      "code": "E8",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Wood",
+      "code": "E9",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Paper",
+      "code": "E10",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Other Gas",
+      "code": "E11",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Other Energy",
+      "code": "E12",
+      "consumptionUnits": "MMBtu",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Water Disposal",
+      "code": "W1",
+      "consumptionUnits": "Gallons",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Other Liquid (non-haz)",
+      "code": "W2",
+      "consumptionUnits": "Gallons",
+      "notes": ""
+    },
+    {
+      "streamType": "ENERGY",
+      "streamName": "Other Liquid (haz)",
+      "code": "W3",
+      "consumptionUnits": "Gallons",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Solid Waste (non-haz)",
+      "code": "W4",
+      "consumptionUnits": "Pounds",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Solid Waste (haz)",
+      "code": "W5",
+      "consumptionUnits": "Pounds",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Gaseous Waste",
+      "code": "W6",
+      "consumptionUnits": "Pounds",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Personnel Changes",
+      "code": "R1",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Administrative Costs",
+      "code": "R2",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Primary Raw Material",
+      "code": "R3",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Ancillary Material Cost",
+      "code": "R4",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Water Consumption",
+      "code": "R5",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "None",
+      "code": "R6",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "WASTE REDUCTION",
+      "streamName": "Primary Product",
+      "code": "P1",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "PRODUCTION",
+      "streamName": "By-product Product ion",
+      "code": "P2",
+      "consumptionUnits": "n/a",
+      "notes": ""
+    },
+    {
+      "streamType": "PRODUCTION",
+      "streamName": "Increase in Production",
+      "code": "P3",
+      "consumptionUnits": "%",
+      "notes": ""
+    }
+  ]
+}

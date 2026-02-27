@@ -1,0 +1,4839 @@
+{
+  "metadata": {
+    "source": "ARC List - V21.1.pdf",
+    "md5": "0a8bc709f01dfc168b93569075956943",
+    "extractedAt": "2026-02-27T17:22:10.926768+00:00"
+  },
+  "codes": [
+    {
+      "arcCode": "2.1",
+      "title": "Combustion Systems",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.11",
+      "title": "FURNACES, OVENS & DIRECTLY FIRED OPERATIONS",
+      "path": "Energy Management > Combustion Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.111",
+      "title": "Operations",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.112",
+      "title": "Hardware",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.113",
+      "title": "Maintenance",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.12",
+      "title": "BOILERS",
+      "path": "Energy Management > Combustion Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.121",
+      "title": "Operation",
+      "path": "Energy Management > Combustion Systems > BOILERS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.122",
+      "title": "Hardware",
+      "path": "Energy Management > Combustion Systems > BOILERS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.123",
+      "title": "Maintenance",
+      "path": "Energy Management > Combustion Systems > BOILERS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.124",
+      "title": "Blowdown",
+      "path": "Energy Management > Combustion Systems > BOILERS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.13",
+      "title": "FUEL SWITCHING",
+      "path": "Energy Management > Combustion Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.131",
+      "title": "Electric to Fossil Fuel",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.132",
+      "title": "Fossil Fuel to Electric",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.133",
+      "title": "Alternate Fuel",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.139",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2",
+      "title": "Thermal Systems",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.21",
+      "title": "STEAM",
+      "path": "Energy Management > Thermal Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.211",
+      "title": "Traps",
+      "path": "Energy Management > Thermal Systems > STEAM",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.212",
+      "title": "Condensate",
+      "path": "Energy Management > Thermal Systems > STEAM",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.213",
+      "title": "Leaks and Insulation",
+      "path": "Energy Management > Thermal Systems > STEAM",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.214",
+      "title": "Distillation",
+      "path": "Energy Management > Thermal Systems > STEAM",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.215",
+      "title": "Maintenance",
+      "path": "Energy Management > Thermal Systems > STEAM",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.216",
+      "title": "Operations",
+      "path": "Energy Management > Thermal Systems > STEAM",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.219",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Thermal Systems > STEAM",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.22",
+      "title": "HEATING",
+      "path": "Energy Management > Thermal Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.221",
+      "title": "Operation",
+      "path": "Energy Management > Thermal Systems > HEATING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.222",
+      "title": "Hardware",
+      "path": "Energy Management > Thermal Systems > HEATING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.23",
+      "title": "HEAT TREATING",
+      "path": "Energy Management > Thermal Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.231",
+      "title": "General",
+      "path": "Energy Management > Thermal Systems > HEAT TREATING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.24",
+      "title": "HEAT RECOVERY",
+      "path": "Energy Management > Thermal Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.241",
+      "title": "Flue Gas - Recuperation",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.242",
+      "title": "Flue Gas - Other Uses",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.243",
+      "title": "Heat Recovery from Specific Equipment",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.244",
+      "title": "Other Process Waste Heat",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.249",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.25",
+      "title": "HEAT CONTAINMENT",
+      "path": "Energy Management > Thermal Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.251",
+      "title": "Insulation",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.252",
+      "title": "Isolation",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.253",
+      "title": "Infiltration",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.26",
+      "title": "COOLING",
+      "path": "Energy Management > Thermal Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.261",
+      "title": "Cooling Towers",
+      "path": "Energy Management > Thermal Systems > COOLING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.262",
+      "title": "Chillers and Refrigeration",
+      "path": "Energy Management > Thermal Systems > COOLING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.269",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Thermal Systems > COOLING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.27",
+      "title": "DRYING",
+      "path": "Energy Management > Thermal Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.271",
+      "title": "Use of Air",
+      "path": "Energy Management > Thermal Systems > DRYING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3",
+      "title": "Electrical Power",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.31",
+      "title": "DEMAND MANAGEMENT",
+      "path": "Energy Management > Electrical Power",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.311",
+      "title": "Thermal Energy Storage",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.313",
+      "title": "Scheduling",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.314",
+      "title": "Battery Storage",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.319",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.32",
+      "title": "POWER FACTOR",
+      "path": "Energy Management > Electrical Power",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.321",
+      "title": "General",
+      "path": "Energy Management > Electrical Power > POWER FACTOR",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.33",
+      "title": "GENERATION OF POWER",
+      "path": "Energy Management > Electrical Power",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.331",
+      "title": "DC",
+      "path": "Energy Management > Electrical Power > GENERATION OF POWER",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.332",
+      "title": "AC",
+      "path": "Energy Management > Electrical Power > GENERATION OF POWER",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.34",
+      "title": "COGENERATION",
+      "path": "Energy Management > Electrical Power",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.341",
+      "title": "General",
+      "path": "Energy Management > Electrical Power > COGENERATION",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.35",
+      "title": "TRANSMISSION",
+      "path": "Energy Management > Electrical Power",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.351",
+      "title": "Transformers",
+      "path": "Energy Management > Electrical Power > TRANSMISSION",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.352",
+      "title": "Conductor Size",
+      "path": "Energy Management > Electrical Power > TRANSMISSION",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4",
+      "title": "Motor Systems",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.41",
+      "title": "MOTORS",
+      "path": "Energy Management > Motor Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.411",
+      "title": "Operation",
+      "path": "Energy Management > Motor Systems > MOTORS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.413",
+      "title": "Hardware",
+      "path": "Energy Management > Motor Systems > MOTORS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.414",
+      "title": "Motor System Drives",
+      "path": "Energy Management > Motor Systems > MOTORS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.415",
+      "title": "Motor Maintenance/Repair",
+      "path": "Energy Management > Motor Systems > MOTORS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.42",
+      "title": "AIR COMPRESSORS",
+      "path": "Energy Management > Motor Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.422",
+      "title": "Hardware",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.423",
+      "title": "Operations",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.43",
+      "title": "OTHER EQUIPMENT",
+      "path": "Energy Management > Motor Systems",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.431",
+      "title": "Operations",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.432",
+      "title": "Hardware",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5",
+      "title": "Industrial Design",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.51",
+      "title": "SYSTEMS",
+      "path": "Energy Management > Industrial Design",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.511",
+      "title": "Thermal",
+      "path": "Energy Management > Industrial Design > SYSTEMS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.512",
+      "title": "Mechanical",
+      "path": "Energy Management > Industrial Design > SYSTEMS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.519",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Industrial Design > SYSTEMS",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6",
+      "title": "Operations",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.61",
+      "title": "MAINTENANCE",
+      "path": "Energy Management > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.612",
+      "title": "General",
+      "path": "Energy Management > Operations > MAINTENANCE",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.62",
+      "title": "EQUIPMENT CONTROL",
+      "path": "Energy Management > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.621",
+      "title": "Equipment Use Reduction",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.622",
+      "title": "Equipment Scheduling",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.623",
+      "title": "Equipment Automation",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.624",
+      "title": "Load Reduction",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7",
+      "title": "Building and Grounds",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.71",
+      "title": "LIGHTING",
+      "path": "Energy Management > Building and Grounds",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.711",
+      "title": "Level",
+      "path": "Energy Management > Building and Grounds > LIGHTING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.712",
+      "title": "Operation",
+      "path": "Energy Management > Building and Grounds > LIGHTING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.713",
+      "title": "Controls",
+      "path": "Energy Management > Building and Grounds > LIGHTING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.714",
+      "title": "Hardware",
+      "path": "Energy Management > Building and Grounds > LIGHTING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.72",
+      "title": "SPACE CONDITIONING",
+      "path": "Energy Management > Building and Grounds",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.721",
+      "title": "Maintenance",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.722",
+      "title": "Operation",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.723",
+      "title": "Hardware - Heating / Cooling",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.724",
+      "title": "Hardware - Air Circulation",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.725",
+      "title": "Evaporation",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.726",
+      "title": "Controls",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.727",
+      "title": "Humidity Control",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.729",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.73",
+      "title": "VENTILATION",
+      "path": "Energy Management > Building and Grounds",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.731",
+      "title": "General",
+      "path": "Energy Management > Building and Grounds > VENTILATION",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.74",
+      "title": "BUILDING ENVELOPE",
+      "path": "Energy Management > Building and Grounds",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.742",
+      "title": "Solar Loading",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.744",
+      "title": "Infiltration",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.749",
+      "title": "Miscellaneous",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8",
+      "title": "Ancillary Costs",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.81",
+      "title": "ADMINISTRATIVE",
+      "path": "Energy Management > Ancillary Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.811",
+      "title": "Utility Costs",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.812",
+      "title": "Fiscal",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.82",
+      "title": "SHIPPING, DISTRIBUTION, AND TRANSPORTATION",
+      "path": "Energy Management > Ancillary Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.821",
+      "title": "Shipping",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.822",
+      "title": "Vehicles",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9",
+      "title": "Alternative Energy Usage",
+      "path": "Energy Management",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.91",
+      "title": "GENERAL",
+      "path": "Energy Management > Alternative Energy Usage",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.911",
+      "title": "Solar",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.912",
+      "title": "Wind Power",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.913",
+      "title": "Hydrogen",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.914",
+      "title": "Biofuels",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "3.1",
+      "title": "Operations",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.11",
+      "title": "PROCEDURES",
+      "path": "Waste Minimization / Pollution Prevention > Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.111",
+      "title": "Process Specific",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.112",
+      "title": "Material Application",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.113",
+      "title": "Stripping",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.115",
+      "title": "Desulfurization / Slag Management",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.116",
+      "title": "Reduction / Elimination",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.117",
+      "title": "Product Specifications",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.118",
+      "title": "By-product Use",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.119",
+      "title": "Miscellaneous",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.12",
+      "title": "WASTE STREAM CONTAMINATION",
+      "path": "Waste Minimization / Pollution Prevention > Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.122",
+      "title": "Rinsing Strategies",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.124",
+      "title": "Dragout Reduction",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.129",
+      "title": "Miscellaneous",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2",
+      "title": "Equipment",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.21",
+      "title": "GENERAL",
+      "path": "Waste Minimization / Pollution Prevention > Equipment",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.211",
+      "title": "Fault Tolerance",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.212",
+      "title": "Painting Operations",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.213",
+      "title": "Process Specific Upgrades",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.214",
+      "title": "Tank Design",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.216",
+      "title": "System Monitoring",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.217",
+      "title": "Automation",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3",
+      "title": "Post Generation Treatment / Minimization",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.31",
+      "title": "GENERAL",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.311",
+      "title": "Neutralization",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.312",
+      "title": "Removal of Contaminants",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.313",
+      "title": "Material Concentration",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4",
+      "title": "Water Use",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.41",
+      "title": "GENERAL",
+      "path": "Waste Minimization / Pollution Prevention > Water Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.411",
+      "title": "Close Cycle Water Use",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.413",
+      "title": "Water Quality",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.414",
+      "title": "Water Treatment",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.415",
+      "title": "Reduction",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5",
+      "title": "Recycling",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.51",
+      "title": "LIQUID WASTE",
+      "path": "Waste Minimization / Pollution Prevention > Recycling",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.511",
+      "title": "Oil",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.512",
+      "title": "Ink",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.513",
+      "title": "White Water",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.514",
+      "title": "Miscellaneous",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.52",
+      "title": "SOLID WASTE",
+      "path": "Waste Minimization / Pollution Prevention > Recycling",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.521",
+      "title": "General",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.522",
+      "title": "Sand",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.524",
+      "title": "Metals",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.53",
+      "title": "OTHER MATERIALS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.531",
+      "title": "General",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6",
+      "title": "Waste Disposal",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.61",
+      "title": "GENERAL",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.611",
+      "title": "Sludge Maintenance",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.612",
+      "title": "Combustion of Waste Products",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.619",
+      "title": "Miscellaneous",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7",
+      "title": "Maintenance",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.71",
+      "title": "CLEANING / DEGREASING",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.711",
+      "title": "Mechanical Cleaning",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.712",
+      "title": "Reduction of Cleaning",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.713",
+      "title": "Rag Use",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.714",
+      "title": "Preventive Maintenance",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.719",
+      "title": "Miscellaneous",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.72",
+      "title": "SPILLAGE",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.721",
+      "title": "Operations",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.722",
+      "title": "Hardware",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.73",
+      "title": "OTHER",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.731",
+      "title": "Leak Reduction",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.739",
+      "title": "Miscellaneous",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8",
+      "title": "Raw Materials",
+      "path": "Waste Minimization / Pollution Prevention",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.81",
+      "title": "SOLVENTS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.811",
+      "title": "Use Reduction",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.812",
+      "title": "Emission Reduction",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.813",
+      "title": "Material Replacement",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.814",
+      "title": "Solvent Recovery",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.82",
+      "title": "OTHER SOLUTIONS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.821",
+      "title": "Water-Based Substitutes",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.822",
+      "title": "Other Substitutes",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.83",
+      "title": "SOLIDS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.831",
+      "title": "General",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLIDS",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "4.1",
+      "title": "Manufacturing Enhancements",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.11",
+      "title": "BOTTLENECK REDUCTION",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.12",
+      "title": "DEFECT REDUCTION",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.13",
+      "title": "MATERIAL REDUCTION",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.2",
+      "title": "Purchasing",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.21",
+      "title": "RAW MATERIALS",
+      "path": "Direct Productivity Enhancements > Purchasing",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.22",
+      "title": "ANCILLARY MATERIALS",
+      "path": "Direct Productivity Enhancements > Purchasing",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.23",
+      "title": "CAPITAL",
+      "path": "Direct Productivity Enhancements > Purchasing",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.3",
+      "title": "Inventory",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.31",
+      "title": "JUST IN TIME",
+      "path": "Direct Productivity Enhancements > Inventory",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.32",
+      "title": "OTHER INVENTORY CONTROLS",
+      "path": "Direct Productivity Enhancements > Inventory",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.4",
+      "title": "Labor Optimization",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.42",
+      "title": "PRACTICES / PROCEDURES",
+      "path": "Direct Productivity Enhancements > Labor Optimization",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.43",
+      "title": "TRAINING",
+      "path": "Direct Productivity Enhancements > Labor Optimization",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.44",
+      "title": "AUTOMATION",
+      "path": "Direct Productivity Enhancements > Labor Optimization",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.45",
+      "title": "SCHEDULING",
+      "path": "Direct Productivity Enhancements > Labor Optimization",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.46",
+      "title": "MAINTENANCE",
+      "path": "Direct Productivity Enhancements > Labor Optimization",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.5",
+      "title": "Space Utilization",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.51",
+      "title": "FLOOR LAYOUT",
+      "path": "Direct Productivity Enhancements > Space Utilization",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.52",
+      "title": "RENTAL SPACE",
+      "path": "Direct Productivity Enhancements > Space Utilization",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.6",
+      "title": "Reduction of Downtime",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.61",
+      "title": "MAINTENANCE",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.62",
+      "title": "QUICK CHANGE",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.63",
+      "title": "POWER CONDITIONING",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.64",
+      "title": "ALARMS",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.65",
+      "title": "OTHER EQUIPMENT",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.66",
+      "title": "SMART MANUFACTURING & INDUSTRIAL INTERNET OF",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.7",
+      "title": "Management Practices",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.71",
+      "title": "TOTAL QUALITY MANAGEMENT",
+      "path": "Direct Productivity Enhancements > Management Practices",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.72",
+      "title": "CERTIFICATIONS",
+      "path": "Direct Productivity Enhancements > Management Practices",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.73",
+      "title": "MARKETING",
+      "path": "Direct Productivity Enhancements > Management Practices",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.8",
+      "title": "Other Administrative Savings",
+      "path": "Direct Productivity Enhancements",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.81",
+      "title": "TAXES",
+      "path": "Direct Productivity Enhancements > Other Administrative Savings",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.82",
+      "title": "FEES",
+      "path": "Direct Productivity Enhancements > Other Administrative Savings",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "2.1111",
+      "title": "CONTROL PRESSURE ON STEAMER OPERATIONS",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1112",
+      "title": "HEAT OIL TO PROPER TEMPERATURE FOR GOOD ATOMIZATION",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1113",
+      "title": "REDUCE COMBUSTION AIR FLOW TO OPTIMUM",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1114",
+      "title": "LIMIT AND CONTROL SECONDARY COMBUSTION AIR IN FURNACE",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1115",
+      "title": "ELIMINATE COMBUSTIBLE GAS IN FLUE GAS",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1116",
+      "title": "IMPROVE COMBUSTION CONTROL CAPABILITY",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1117",
+      "title": "RELOCATE OVEN / FURNACE TO MORE EFFICIENT LOCATION",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1121",
+      "title": "USE INSULATION IN FURNACES TO FACILITATE HEATING / COOLING",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1122",
+      "title": "RE-SIZE CHARGING OPENINGS OR ADD A MOVABLE DOOR ON EQUIPMENT",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1123",
+      "title": "INSTALL AUTOMATIC STACK DAMPER",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1124",
+      "title": "REPLACE DIRECT FIRED EQUIPMENT WITH STEAM HEAT",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1125",
+      "title": "CONVERT TO OXY-FUEL BURNERS",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1131",
+      "title": "REPAIR FAULTY INSULATION IN FURNACES, BOILERS, ETC",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1132",
+      "title": "REPAIR FAULTY LOUVERS AND DAMPERS",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1133",
+      "title": "ADJUST BURNERS FOR EFFICIENT OPERATION",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1134",
+      "title": "ELIMINATE LEAKS IN COMBUSTIBLE GAS LINES",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1135",
+      "title": "REPAIR FURNACES AND OVEN DOORS SO THAT THEY SEAL EFFICIENTLY",
+      "path": "Energy Management > Combustion Systems > FURNACES, OVENS & DIRECTLY FIRED OPERATIONS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1211",
+      "title": "MOVE BOILER TO MORE EFFICIENT LOCATION",
+      "path": "Energy Management > Combustion Systems > BOILERS > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1212",
+      "title": "OPERATE BOILERS ON HIGH FIRE SETTING",
+      "path": "Energy Management > Combustion Systems > BOILERS > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1213",
+      "title": "DIRECT WARMEST AIR TO COMBUSTION INTAKE",
+      "path": "Energy Management > Combustion Systems > BOILERS > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1221",
+      "title": "REPLACE OBSOLETE BURNERS WITH MORE EFFICIENT ONES",
+      "path": "Energy Management > Combustion Systems > BOILERS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1222",
+      "title": "INSTALL TURBULATORS",
+      "path": "Energy Management > Combustion Systems > BOILERS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1223",
+      "title": "INSTALL SMALLER BOILER (INCREASE HIGH FIRE DUTY CYCLE)",
+      "path": "Energy Management > Combustion Systems > BOILERS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1224",
+      "title": "REPLACE BOILER",
+      "path": "Energy Management > Combustion Systems > BOILERS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1231",
+      "title": "ESTABLISH BURNER MAINTENANCE SCHEDULE FOR BOILERS",
+      "path": "Energy Management > Combustion Systems > BOILERS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1232",
+      "title": "KEEP BOILER TUBES CLEAN",
+      "path": "Energy Management > Combustion Systems > BOILERS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1233",
+      "title": "ANALYZE FLUE GAS FOR PROPER AIR/FUEL RATIO",
+      "path": "Energy Management > Combustion Systems > BOILERS > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1241",
+      "title": "REDUCE EXCESSIVE BOILER BLOWDOWN",
+      "path": "Energy Management > Combustion Systems > BOILERS > Blowdown",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1242",
+      "title": "MINIMIZE BOILER BLOWDOWN WITH BETTER FEEDWATER TREATMENT",
+      "path": "Energy Management > Combustion Systems > BOILERS > Blowdown",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1243",
+      "title": "USE HEAT FROM BOILER BLOWDOWN TO PREHEAT BOILER FEED WATER",
+      "path": "Energy Management > Combustion Systems > BOILERS > Blowdown",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1311",
+      "title": "REPLACE ELECTRICALLY-OPERATED EQUIPMENT WITH FOSSIL FUEL",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Electric to Fossil Fuel",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1321",
+      "title": "REPLACE FOSSIL FUEL EQUIPMENT WITH ELECTRICAL EQUIPMENT",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Fossil Fuel to Electric",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1331",
+      "title": "BURN A LESS EXPENSIVE GRADE OF FUEL",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Alternate Fuel",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1332",
+      "title": "CONVERT COMBUSTION EQUIPMENT TO BURN NATURAL GAS",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Alternate Fuel",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1333",
+      "title": "CONVERT COMBUSTION EQUIPMENT TO BURN OIL",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Alternate Fuel",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1335",
+      "title": "REPLACE GASOLINE WITH DIESEL, LPG, OR NATURAL GAS",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Alternate Fuel",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1336",
+      "title": "INSTALL EQUIPMENT TO UTILIZE WASTE FUEL",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Alternate Fuel",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1391",
+      "title": "REPLACE PURCHASED STEAM WITH ELECTRIC HEATING",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1392",
+      "title": "REPLACE PURCHASED STEAM WITH OTHER ENERGY SOURCE",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1393",
+      "title": "USE STEAM SPARGING OR INJECTIONS IN PLACE OF INDIRECT HEATING",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.1394",
+      "title": "REPLACE STEAM JETS ON VACUUM SYSTEM WITH ELECTRIC MOTOR",
+      "path": "Energy Management > Combustion Systems > FUEL SWITCHING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2111",
+      "title": "INSTALL STEAM TRAP",
+      "path": "Energy Management > Thermal Systems > STEAM > Traps",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2112",
+      "title": "USE CORRECT SIZE STEAM TRAPS",
+      "path": "Energy Management > Thermal Systems > STEAM > Traps",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2113",
+      "title": "REPAIR OR REPLACE STEAM TRAPS",
+      "path": "Energy Management > Thermal Systems > STEAM > Traps",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2114",
+      "title": "SHUT OFF STEAM TRAPS ON SUPERHEATED STEAM LINES WHEN NOT IN",
+      "path": "Energy Management > Thermal Systems > STEAM > Traps",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2121",
+      "title": "INCREASE AMOUNT OF CONDENSATE RETURNED",
+      "path": "Energy Management > Thermal Systems > STEAM > Condensate",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2122",
+      "title": "INSTALL / REPAIR INSULATION ON CONDENSATE LINES",
+      "path": "Energy Management > Thermal Systems > STEAM > Condensate",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2123",
+      "title": "INSULATE FEEDWATER TANK",
+      "path": "Energy Management > Thermal Systems > STEAM > Condensate",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2124",
+      "title": "INSTALL DEAERATOR IN PLACE OF CONDENSATE TANK",
+      "path": "Energy Management > Thermal Systems > STEAM > Condensate",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2126",
+      "title": "LOWER OPERATING PRESSURE OF CONDENSER (STEAM)",
+      "path": "Energy Management > Thermal Systems > STEAM > Condensate",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2127",
+      "title": "FLASH CONDENSATE TO PRODUCE LOWER PRESSURE STEAM",
+      "path": "Energy Management > Thermal Systems > STEAM > Condensate",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2128",
+      "title": "USE STEAM CONDENSATE FOR HOT WATER SUPPLY (NON-POTABLE)",
+      "path": "Energy Management > Thermal Systems > STEAM > Condensate",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2134",
+      "title": "ELIMINATE LEAKS IN HIGH PRESSURE REDUCING STATIONS",
+      "path": "Energy Management > Thermal Systems > STEAM > Leaks and Insulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2135",
+      "title": "REPAIR AND ELIMINATE STEAM LEAKS",
+      "path": "Energy Management > Thermal Systems > STEAM > Leaks and Insulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2136",
+      "title": "INSTALL/REPAIR INSULATION ON STEAM LINES",
+      "path": "Energy Management > Thermal Systems > STEAM > Leaks and Insulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2141",
+      "title": "OPERATE DISTILLATION COLUMNS EFFICIENTLY",
+      "path": "Energy Management > Thermal Systems > STEAM > Distillation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2151",
+      "title": "CLEAN STEAM COILS IN PROCESSING TANKS",
+      "path": "Energy Management > Thermal Systems > STEAM > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2152",
+      "title": "MAINTAIN STEAM JETS USED FOR VACUUM SYSTEM",
+      "path": "Energy Management > Thermal Systems > STEAM > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2153",
+      "title": "CLOSE OFF UNNEEDED STEAM LINES",
+      "path": "Energy Management > Thermal Systems > STEAM > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2161",
+      "title": "OPTIMIZE OPERATION OF MULTI-STAGE VACUUM STEAM JETS",
+      "path": "Energy Management > Thermal Systems > STEAM > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2162",
+      "title": "REDUCE EXCESS STEAM BLEEDING",
+      "path": "Energy Management > Thermal Systems > STEAM > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2163",
+      "title": "USE MINIMUM STEAM OPERATING PRESSURE",
+      "path": "Energy Management > Thermal Systems > STEAM > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2164",
+      "title": "TURN OFF STEAM TRACING DURING MILD WEATHER",
+      "path": "Energy Management > Thermal Systems > STEAM > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2165",
+      "title": "SUBSTITUTE AIR FOR STEAM TO ATOMIZE OIL",
+      "path": "Energy Management > Thermal Systems > STEAM > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2191",
+      "title": "SUBSTITUTE HOT PROCESS FLUIDS FOR STEAM",
+      "path": "Energy Management > Thermal Systems > STEAM > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2192",
+      "title": "USE HEAT EXCHANGE FLUIDS INSTEAD OF STEAM IN PIPELINE TRACING",
+      "path": "Energy Management > Thermal Systems > STEAM > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2211",
+      "title": "USE OPTIMUM TEMPERATURE",
+      "path": "Energy Management > Thermal Systems > HEATING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2212",
+      "title": "USE MINIMUM SAFE OVEN VENTILATION",
+      "path": "Energy Management > Thermal Systems > HEATING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2221",
+      "title": "USE IMMERSION HEATING IN TANKS, MELTING POTS, ETC",
+      "path": "Energy Management > Thermal Systems > HEATING > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2222",
+      "title": "CONVERT LIQUID HEATERS FROM UNDERFIRING TO IMMERSION OR",
+      "path": "Energy Management > Thermal Systems > HEATING > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2223",
+      "title": "ENHANCE SENSITIVITY OF TEMPERATURE CONTROL AND CUTOFF",
+      "path": "Energy Management > Thermal Systems > HEATING > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2311",
+      "title": "HEAT TREAT PARTS ONLY TO REQUIRED SPECIFICATIONS OR STANDARDS",
+      "path": "Energy Management > Thermal Systems > HEAT TREATING > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2312",
+      "title": "MINIMIZE NON-ESSENTIAL MATERIAL IN HEAT TREATMENT PROCESS",
+      "path": "Energy Management > Thermal Systems > HEAT TREATING > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2313",
+      "title": "USE BATCH FIRING WITH KILN \"FURNITURE\" SPECIFICALLY DESIGNED",
+      "path": "Energy Management > Thermal Systems > HEAT TREATING > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2314",
+      "title": "REPLACE HEAT TREATING OVEN WITH MORE EFFICIENT UNIT",
+      "path": "Energy Management > Thermal Systems > HEAT TREATING > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2414",
+      "title": "USE WASTE HEAT FROM HOT FLUE GASES TO PREHEAT",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Recuperation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2421",
+      "title": "INSTALL WASTE HEAT BOILER TO PROVIDE DIRECT POWER",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2422",
+      "title": "USE WASTE HEAT FROM HOT FLUE GASES TO GENERATE STEAM",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2423",
+      "title": "INSTALL WASTE HEAT BOILER TO PRODUCE STEAM",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2424",
+      "title": "USE HEAT IN FLUE GASES TO PREHEAT PRODUCTS OR MATERIALS",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2425",
+      "title": "USE FLUE GASES TO HEAT PROCESS OR SERVICE WATER",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2426",
+      "title": "USE WASTE HEAT FROM FLUE GASES TO HEAT SPACE CONDITIONING AIR",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2427",
+      "title": "USE WASTE HEAT FROM HOT FLUE GASES TO PREHEAT INCOMING FLUIDS",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2428",
+      "title": "USE FLUE GASES IN RADIANT HEATER FOR SPACE HEATING, OVENS, ETC",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Flue Gas - Other Uses",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2437",
+      "title": "RECOVER WASTE HEAT FROM EQUIPMENT",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Heat Recovery from Specific Equipment",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2441",
+      "title": "PREHEAT BOILER MAKEUP WATER WITH WASTE PROCESS HEAT",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Other Process Waste Heat",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2442",
+      "title": "PREHEAT COMBUSTION AIR WITH WASTE HEAT",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Other Process Waste Heat",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2443",
+      "title": "RE-USE OR RECYCLE HOT OR COLD PROCESS EXHAUST AIR",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Other Process Waste Heat",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2444",
+      "title": "USE HOT PROCESS FLUIDS TO PREHEAT INCOMING PROCESS FLUIDS",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Other Process Waste Heat",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2447",
+      "title": "HEAT WATER WITH EXHAUST HEAT",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Other Process Waste Heat",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2449",
+      "title": "RECOVER HEAT FROM EXHAUSTED STEAM, HOT AIR OR HOT WATER",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Other Process Waste Heat",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2491",
+      "title": "USE COOLING AIR WHICH COOLS HOT WORK PIECES FOR SPACE HEATING",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2492",
+      "title": "USE \u201cHEAT WHEEL\u201d OR OTHER HEAT EXCHANGER TO CROSS-EXCHANGE",
+      "path": "Energy Management > Thermal Systems > HEAT RECOVERY > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2511",
+      "title": "INSULATE BARE EQUIPMENT",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Insulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2514",
+      "title": "COVER OPEN TANKS 2.2515 USE OPTIMUM THICKNESS INSULATION",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Insulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2515",
+      "title": "USE OPTIMUM THICKNESS INSULATION",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Insulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2521",
+      "title": "ISOLATE STEAM LINES TO AVOID HEATING AIR CONDITIONED AREAS",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Isolation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2522",
+      "title": "ISOLATE HOT OR COLD EQUIPMENT",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Isolation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2523",
+      "title": "REDUCE INFILTRATION; ISOLATE HOT EQUIPMENT FROM REFRIGERATED",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Isolation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2524",
+      "title": "AVOID COOLING OF PROCESS STREAMS OR MATERIALS THAT MUST",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Isolation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2525",
+      "title": "ELIMINATE COOLING OF PROCESS STREAMS WHICH SUBSEQUENTLY MUST",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Isolation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2531",
+      "title": "RE-SIZE CHARGING OPENINGS OR ADD MOVABLE COVER OR DOOR",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2532",
+      "title": "USE ONLY AMOUNT OF AIR NECESSARY TO PREVENT EXPLOSION HAZARD",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2533",
+      "title": "REPLACE AIR CURTAIN DOORS WITH SOLID DOORS",
+      "path": "Energy Management > Thermal Systems > HEAT CONTAINMENT > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2611",
+      "title": "MODERATE COOLING TOWER OUTLET TEMPERATURE",
+      "path": "Energy Management > Thermal Systems > COOLING > Cooling Towers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2612",
+      "title": "USE COOLING TOWER WATER INSTEAD OF REFRIGERATION",
+      "path": "Energy Management > Thermal Systems > COOLING > Cooling Towers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2613",
+      "title": "USE ANTIFREEZE IN COOLING TOWERS TO ALLOW WINTER USE",
+      "path": "Energy Management > Thermal Systems > COOLING > Cooling Towers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2614",
+      "title": "USE COOLING TOWER OR ECONOMIZER TO REPLACE CHILLER COOLING",
+      "path": "Energy Management > Thermal Systems > COOLING > Cooling Towers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2615",
+      "title": "CLEAN CONDENSER TUBES",
+      "path": "Energy Management > Thermal Systems > COOLING > Cooling Towers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2621",
+      "title": "MODIFY REFRIGERATION SYSTEM TO OPERATE AT A LOWER PRESSURE",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2622",
+      "title": "REPLACE EXISTING CHILLER WITH HIGH EFFICIENCY MODEL",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2623",
+      "title": "MINIMIZE CONDENSER COOLING WATER TEMPERATURE",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2624",
+      "title": "USE COLD WASTE WATER TO COOL CHILLER FEED WATER",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2625",
+      "title": "CHILL WATER TO THE HIGHEST TEMPERATURE POSSIBLE",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2626",
+      "title": "AVOID FROST FORMATION ON EVAPORATORS",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2627",
+      "title": "USE MULTIPLE-EFFECT EVAPORATORS",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2628",
+      "title": "UTILIZE A LESS EXPENSIVE COOLING METHOD",
+      "path": "Energy Management > Thermal Systems > COOLING > Chillers and Refrigeration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2691",
+      "title": "SHUT OFF COOLING IF COLD OUTSIDE AIR WILL COOL PROCESS",
+      "path": "Energy Management > Thermal Systems > COOLING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2692",
+      "title": "USE OUTSIDE COLD WATER SOURCE AS A SUPPLY OF COOLING WATER",
+      "path": "Energy Management > Thermal Systems > COOLING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2693",
+      "title": "USE WASTE HEAT STEAM FOR ABSORPTION REFRIGERATION",
+      "path": "Energy Management > Thermal Systems > COOLING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2694",
+      "title": "USE HIGHEST TEMPERATURE FOR CHILLING OR COLD STORAGE",
+      "path": "Energy Management > Thermal Systems > COOLING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2695",
+      "title": "USE CASCADE SYSTEM OF RECIRCULATING DURING COLD WEATHER TO",
+      "path": "Energy Management > Thermal Systems > COOLING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2696",
+      "title": "USE EXCESS COLD PROCESS FLUID FOR INDUSTRIAL COOLING NEEDS",
+      "path": "Energy Management > Thermal Systems > COOLING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.2711",
+      "title": "UTILIZE OUTSIDE AIR INSTEAD OF CONDITIONED AIR FOR DRYING",
+      "path": "Energy Management > Thermal Systems > DRYING > Use of Air",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3111",
+      "title": "HEAT WATER DURING OFF-PEAK PERIODS AND STORE FOR LATER USE",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Thermal Energy Storage",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3112",
+      "title": "STORE HEATED / COOLED WATER FOR USE DURING PEAK DEMAND",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Thermal Energy Storage",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3113",
+      "title": "MAKE ICE DURING OFF PEAK HOURS FOR COOLING",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Thermal Energy Storage",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3131",
+      "title": "RESCHEDULE PLANT OPERATIONS OR REDUCE LOAD TO AVOID PEAKS",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3132",
+      "title": "RECHARGE BATTERIES ON DURING OFF-PEAK DEMAND PERIODS",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3133",
+      "title": "CONSIDER THREE OR FOUR DAYS AROUND-THE-CLOCK OPERATION",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3134",
+      "title": "SHIFT FROM DAYTIME TO NIGHTTIME OPERATION",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3135",
+      "title": "SCHEDULE ROUTINE MAINTENANCE DURING NON-OPERATING PERIODS",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3136",
+      "title": "OVERLAP CUSTODIAL SERVICES WITH NORMAL DAY HOURS",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3137",
+      "title": "USE POWER DURING OFF-PEAK PERIODS",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3141",
+      "title": "USE BATTERIES FOR DEMAND CONTROL",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Battery Storage",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3142",
+      "title": "USE BATTERIES FOR POWER QUALITY ISSUES",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Battery Storage",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3191",
+      "title": "USE DEMAND CONTROLLER OR LOAD SHEDDER",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3192",
+      "title": "USE FOSSIL FUEL POWERED GENERATOR DURING PEAK DEMAND PERIODS",
+      "path": "Energy Management > Electrical Power > DEMAND MANAGEMENT > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3212",
+      "title": "OPTIMIZE PLANT POWER FACTOR",
+      "path": "Energy Management > Electrical Power > POWER FACTOR > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3311",
+      "title": "REPLACE DC EQUIPMENT WITH AC EQUIPMENT",
+      "path": "Energy Management > Electrical Power > GENERATION OF POWER > DC",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3312",
+      "title": "INSTALL EFFICIENT RECTIFIERS",
+      "path": "Energy Management > Electrical Power > GENERATION OF POWER > DC",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3321",
+      "title": "USE STEAM PRESSURE REDUCTION TO GENERATE POWER",
+      "path": "Energy Management > Electrical Power > GENERATION OF POWER > AC",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3322",
+      "title": "USE EXISTING DAM TO GENERATE ELECTRICITY",
+      "path": "Energy Management > Electrical Power > GENERATION OF POWER > AC",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3323",
+      "title": "INSTALL EMISSIONS CONTROLS TO INCREASE CAPACITY",
+      "path": "Energy Management > Electrical Power > GENERATION OF POWER > AC",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3411",
+      "title": "REPLACE ELECTRIC MOTORS WITH BACK PRESSURE STEAM TURBINES",
+      "path": "Energy Management > Electrical Power > COGENERATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3412",
+      "title": "USE WASTE HEAT TO PRODUCE STEAM TO DRIVE A STEAM TURBINE-",
+      "path": "Energy Management > Electrical Power > COGENERATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3413",
+      "title": "BURN FOSSIL FUEL TO PRODUCE STEAM TO DRIVE A STEAM TURBINE-",
+      "path": "Energy Management > Electrical Power > COGENERATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3414",
+      "title": "BURN WASTE TO PRODUCE STEAM TO DRIVE A STEAM TURBINE",
+      "path": "Energy Management > Electrical Power > COGENERATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3415",
+      "title": "USE A FOSSIL FUEL ENGINE TO COGENERATE ELECTRICITY OR MOTIVE",
+      "path": "Energy Management > Electrical Power > COGENERATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3416",
+      "title": "USE COMBINED CYCLE GAS TURBINE GENERATOR SETS WITH WASTE",
+      "path": "Energy Management > Electrical Power > COGENERATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3417",
+      "title": "USE WASTE HEAT WITH A CLOSED-CYCLE GAS TURBINE-GENERATOR SET",
+      "path": "Energy Management > Electrical Power > COGENERATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3511",
+      "title": "USE PLANT OWNED TRANSFORMERS OR LEASE TRANSFORMERS",
+      "path": "Energy Management > Electrical Power > TRANSMISSION > Transformers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3512",
+      "title": "DE-ENERGIZE EXCESS TRANSFORMER CAPACITY",
+      "path": "Energy Management > Electrical Power > TRANSMISSION > Transformers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3513",
+      "title": "CONSIDER POWER LOSS AS WELL AS INITIAL LOADS AND LOAD GROWTH",
+      "path": "Energy Management > Electrical Power > TRANSMISSION > Transformers",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3521",
+      "title": "REDUCE LOAD ON ELECTRICAL CONDUCTOR TO REDUCE HEATING LOSSES",
+      "path": "Energy Management > Electrical Power > TRANSMISSION > Conductor Size",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.3522",
+      "title": "INCREASE ELECTRICAL CONDUCTOR SIZE TO REDUCE DISTRIBUTION",
+      "path": "Energy Management > Electrical Power > TRANSMISSION > Conductor Size",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4111",
+      "title": "UTILIZE ENERGY-EFFICIENT BELTS AND OTHER IMPROVED MECHANISMS",
+      "path": "Energy Management > Motor Systems > MOTORS > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4112",
+      "title": "INSTALL SOFT-START TO ELIMINATE NUISANCE TRIPS",
+      "path": "Energy Management > Motor Systems > MOTORS > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4113",
+      "title": "INSTALL MOTOR VOLTAGE CONTROLLER ON LIGHTLY LOADED MOTORS",
+      "path": "Energy Management > Motor Systems > MOTORS > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4132",
+      "title": "SIZE ELECTRIC MOTORS FOR PEAK OPERATING EFFICIENCY",
+      "path": "Energy Management > Motor Systems > MOTORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4133",
+      "title": "USE MOST EFFICIENT TYPE OF ELECTRIC MOTORS",
+      "path": "Energy Management > Motor Systems > MOTORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4134",
+      "title": "REPLACE ELECTRIC MOTOR WITH FOSSIL FUEL ENGINE",
+      "path": "Energy Management > Motor Systems > MOTORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4145",
+      "title": "INSTALL ISOLATION TRANSFORMER ON ADJUSTABLE FREQUENCY DRIVE",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor System Drives",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4146",
+      "title": "USE ADJUSTABLE FREQUENCY DRIVE OR MULTIPLE SPEED MOTORS ON",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor System Drives",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4151",
+      "title": "DEVELOP A REPAIR/REPLACE POLICY",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor Maintenance/Repair",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4152",
+      "title": "USE ONLY CERTIFIED MOTOR REPAIR SHOPS",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor Maintenance/Repair",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4153",
+      "title": "AVOID EMERGENCY REWIND OF MOTORS",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor Maintenance/Repair",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4154",
+      "title": "AVOID REWINDING MOTORS MORE THAN TWICE",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor Maintenance/Repair",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4155",
+      "title": "STANDARDIZE MOTOR INVENTORY",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor Maintenance/Repair",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4156",
+      "title": "ESTABLISH A PREVENTATIVE MAINTENANCE PROGRAM",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor Maintenance/Repair",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4157",
+      "title": "ESTABLISH A PREDICTIVE MAINTENANCE PROGRAM",
+      "path": "Energy Management > Motor Systems > MOTORS > Motor Maintenance/Repair",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4221",
+      "title": "INSTALL COMPRESSOR AIR INTAKES IN COOLEST LOCATIONS",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4222",
+      "title": "INSTALL ADEQUATE DRYERS ON AIR LINES TO ELIMINATE BLOWDOWN",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4223",
+      "title": "INSTALL DIRECT ACTING UNITS IN PLACE OF COMPRESSED AIR PRESSURE",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4224",
+      "title": "UPGRADE CONTROLS ON COMPRESSORS",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4225",
+      "title": "INSTALL COMMON HEADER ON COMPRESSORS",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4226",
+      "title": "USE / PURCHASE OPTIMUM SIZED COMPRESSOR",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4227",
+      "title": "USE COMPRESSOR AIR FILTERS",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4231",
+      "title": "REDUCE THE PRESSURE OF COMPRESSED AIR TO THE MINIMUM REQUIRED",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4234",
+      "title": "COOL COMPRESSOR AIR INTAKE WITH HEAT EXCHANGER",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4235",
+      "title": "REMOVE OR CLOSE OFF UNNEEDED COMPRESSED AIR LINES",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4236",
+      "title": "ELIMINATE LEAKS IN INERT GAS AND COMPRESSED AIR LINES/ VALVES",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4237",
+      "title": "SUBSTITUTE COMPRESSED AIR COOLING WITH WATER OR AIR COOLING",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4238",
+      "title": "DO NOT USE COMPRESSED AIR FOR PERSONAL COOLING",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4239",
+      "title": "ELIMINATE OR REDUCE COMPRESSED AIR USAGE",
+      "path": "Energy Management > Motor Systems > AIR COMPRESSORS > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4311",
+      "title": "RECOVER MECHANICAL ENERGY",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4312",
+      "title": "IMPROVE LUBRICATION PRACTICES",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4313",
+      "title": "PROVIDE PROPER MAINTENANCE / OF MOTOR DRIVEN EQUIPMENT",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4314",
+      "title": "USE SYNTHETIC LUBRICANT",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Operations",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4321",
+      "title": "UPGRADE OBSOLETE EQUIPMENT",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4322",
+      "title": "USE OR REPLACE WITH ENERGY EFFICIENT SUBSTITUTES",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4323",
+      "title": "USE OPTIMUM SIZE AND CAPACITY EQUIPMENT",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4324",
+      "title": "REPLACE HYDRAULIC / PNEUMATIC EQUIPMENT WITH ELECTRIC",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.4325",
+      "title": "UPGRADE CONVEYORS",
+      "path": "Energy Management > Motor Systems > OTHER EQUIPMENT > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5111",
+      "title": "CONVERT FROM INDIRECT TO DIRECT FIRED SYSTEMS",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Thermal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5112",
+      "title": "USE CONTINUOUS EQUIPMENT WHICH RETAINS PROCESS HEATING",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Thermal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5113",
+      "title": "USE DIRECT FLAME IMPINGEMENT OR INFRARED PROCESSING FOR",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Thermal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5114",
+      "title": "USE SHAFT TYPE FURNACES FOR PREHEATING INCOMING MATERIAL",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Thermal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5115",
+      "title": "REPOSITION OVEN WALLS TO REDUCE HEATED SPACE",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Thermal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5117",
+      "title": "CONVERT TO INDIRECT TEMPERATURE CONTROL SYSTEM",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Thermal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5121",
+      "title": "REDESIGN FLOW TO MINIMIZE MASS TRANSFER LENGTH",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Mechanical",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5122",
+      "title": "REPLACE HIGH RESISTANCE DUCTS, PIPES, AND FITTINGS",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Mechanical",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5123",
+      "title": "REDUCE FLUID FLOW RATES",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Mechanical",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5124",
+      "title": "USE GRAVITY FEEDS WHEREVER POSSIBLE",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Mechanical",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5125",
+      "title": "SIZE AIR HANDLING GRILLS/ DUCTS COILS TO MINIMIZE AIR RESISTANCE",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Mechanical",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5191",
+      "title": "MODIFY DYE BECK",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5192",
+      "title": "MODIFY TEXTILE DRYERS",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5193",
+      "title": "CONVERT FROM BATCH TO CONTINUOUS OPERATION",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5194",
+      "title": "REDESIGN PROCESS",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5195",
+      "title": "CHANGE PRODUCT DESIGN TO REDUCE ENERGY REQUIREMENTS",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.5196",
+      "title": "USE SMALL NUMBER OF HIGH OUTPUT UNITS INSTEAD OF MANY SMALL",
+      "path": "Energy Management > Industrial Design > SYSTEMS > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6121",
+      "title": "REDUCE HOT WATER TEMPERATURE TO THE MINIMUM REQUIRED",
+      "path": "Energy Management > Operations > MAINTENANCE > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6122",
+      "title": "ADJUST VENTS TO MINIMIZE ENERGY USE",
+      "path": "Energy Management > Operations > MAINTENANCE > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6123",
+      "title": "REMOVE UNNEEDED SERVICE LINES TO ELIMINATE POTENTIAL LEAKS",
+      "path": "Energy Management > Operations > MAINTENANCE > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6124",
+      "title": "ESTABLISH EQUIPMENT MAINTENANCE SCHEDULE",
+      "path": "Energy Management > Operations > MAINTENANCE > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6125",
+      "title": "KEEP EQUIPMENT CLEAN",
+      "path": "Energy Management > Operations > MAINTENANCE > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6126",
+      "title": "KEEP SOLID FUELS / RAW MATERIALS DRY",
+      "path": "Energy Management > Operations > MAINTENANCE > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6127",
+      "title": "MAINTAIN AIR FILTERS BY CLEANING OR REPLACEMENT",
+      "path": "Energy Management > Operations > MAINTENANCE > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6211",
+      "title": "CONSERVE ENERGY BY EFFICIENT USE OF VENDING MACHINES",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Use Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6212",
+      "title": "TURN OFF EQUIPMENT DURING BREAKS, REDUCE OPERATING TIME",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Use Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6213",
+      "title": "TURN OFF STEAM / HOT WATER LINES LEADING TO SPACE HEATING UNITS",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Use Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6214",
+      "title": "SHUT OFF PILOTS IN STANDBY EQUIPMENT",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Use Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6215",
+      "title": "SHUT OFF AIR CONDITIONING IN WINTER HEATING SEASON",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Use Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6218",
+      "title": "TURN OFF EQUIPMENT WHEN NOT IN USE",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Use Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6221",
+      "title": "USE MOST EFFICIENT EQUIPMENT AT ITS MAXIMUM CAPACITY AND LESS",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6222",
+      "title": "USE DRYING OVEN (BATCH TYPE) ON ALTERNATE DAYS OR OTHER",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6223",
+      "title": "SCHEDULE USE OF ELEVATORS TO CONSERVE ENERGY",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6224",
+      "title": "SCHEDULE BAKING TIMES OF SMALL AND LARGE COMPONENTS",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6225",
+      "title": "ELIMINATE THIRD SHIFT",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6226",
+      "title": "OPTIMIZE FILTRATION CLEANING/ REPLACEMENT TO MINIMIZE AIR",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Scheduling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6231",
+      "title": "UTILIZE CONTROLS TO OPERATE EQUIPMENT ONLY WHEN NEEDED",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Automation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6232",
+      "title": "INSTALL SET-BACK TIMERS",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Equipment Automation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6241",
+      "title": "REDUCE TEMPERATURE OF PROCESS EQUIPMENT WHEN ON STANDBY",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Load Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.6242",
+      "title": "MINIMIZE OPERATION OF EQUIPMENT MAINTAINED IN STANDBY",
+      "path": "Energy Management > Operations > EQUIPMENT CONTROL > Load Reduction",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7111",
+      "title": "REDUCE ILLUMINATION TO MINIMUM NECESSARY LEVELS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Level",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7121",
+      "title": "UTILIZE DAYLIGHT WHENEVER POSSIBLE IN LIEU OF ARTIFICIAL LIGHT",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7122",
+      "title": "DISCONNECT BALLASTS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7123",
+      "title": "KEEP LAMPS AND REFLECTORS CLEAN",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7124",
+      "title": "MAKE A PRACTICE OF TURNING OFF LIGHTS WHEN NOT NEEDED",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7131",
+      "title": "ADD AREA LIGHTING SWITCHES",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7132",
+      "title": "INSTALL TIMERS ON LIGHT SWITCHES IN LITTLE USED AREAS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7133",
+      "title": "USE SEPARATE SWITCHES ON PERIMETER LIGHTING WHICH MAY BE",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7134",
+      "title": "USE PHOTOCELL CONTROLS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7135",
+      "title": "INSTALL OCCUPANCY SENSORS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7141",
+      "title": "LOWER LIGHT FIXTURES IN HIGH CEILING AREAS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7142",
+      "title": "UTILIZE HIGHER EFFICIENCY LAMPS AND/OR BALLASTS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7144",
+      "title": "INSTALL SPECTRAL REFLECTORS / DELAMP",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7145",
+      "title": "INSTALL SKYLIGHTS",
+      "path": "Energy Management > Building and Grounds > LIGHTING > Hardware",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7211",
+      "title": "CLEAN AND MAINTAIN REFRIGERANT CONDENSERS AND TOWERS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7212",
+      "title": "INSTALL OR UPGRADE INSULATION ON HVAC DISTRIBUTION SYSTEMS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Maintenance",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7221",
+      "title": "LOWER TEMPERATURE DURING THE WINTER SEASON AND VICE-VERSA",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7224",
+      "title": "REDUCE SPACE CONDITIONING DURING NON-WORKING HOURS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7225",
+      "title": "CLOSE OUTDOOR AIR DAMPERS DURING WARM-UP / COOL-DOWN PERIODS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7226",
+      "title": "USE COMPUTER PROGRAMS TO OPTIMIZE HVAC PERFORMANCE",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7227",
+      "title": "USE WATER ON AIR CONDITIONING EXCHANGER",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7228",
+      "title": "AVOID INTRODUCING HOT, HUMID, OR DIRTY AIR INTO HVAC SYSTEM",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7229",
+      "title": "AIR CONDITION ONLY SPACE NECESSARY",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Operation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7231",
+      "title": "USE RADIANT HEATER FOR SPOT HEATING",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Heating / Cooling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7232",
+      "title": "REPLACE EXISTING HVAC UNIT WITH HIGH EFFICIENCY MODEL",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Heating / Cooling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7233",
+      "title": "USE PROPERLY DESIGNED AND SIZED HVAC EQUIPMENT",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Heating / Cooling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7234",
+      "title": "USE HEAT PUMP FOR SPACE CONDITIONING",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Heating / Cooling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7235",
+      "title": "INSTALL FOSSIL FUEL MAKE-UP AIR UNIT",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Heating / Cooling",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7241",
+      "title": "INSTALL OUTSIDE AIR DAMPER / ECONOMIZER ON HVAC UNIT",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Air Circulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7242",
+      "title": "CHANGE ZONE REHEAT COILS TO VARIABLE AIR VOLUME BOXES",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Air Circulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7243",
+      "title": "IMPROVE AIR CIRCULATION WITH DESTRATIFICATION FANS / OTHER",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Air Circulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7244",
+      "title": "REVISE SMOKE CLEANUP FROM OPERATIONS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Air Circulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7245",
+      "title": "USE DIRECT AIR SUPPLY TO EXHAUST HOODS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Hardware - Air Circulation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7251",
+      "title": "REDUCE AIR CONDITIONING LOAD BY EVAPORATING WATER FROM ROOF",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Evaporation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7252",
+      "title": "UTILIZE AN EVAPORATIVE AIR PRE-COOLER OR OTHER HEAT EXCHANGER",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Evaporation",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7261",
+      "title": "INSTALL TIMERS AND/OR THERMOSTATS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7262",
+      "title": "SEPARATE CONTROLS OF AIR HANDLERS FROM AC/ HEATING SYSTEMS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7263",
+      "title": "LOWER COMPRESSOR PRESSURE THROUGH A/C SYSTEM MODIFICATION",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7264",
+      "title": "INTERLOCK HEATING AND AIR CONDITIONING SYSTEMS TO PREVENT",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Controls",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7271",
+      "title": "REPLACE ELECTRIC REHEAT WITH HEAT PIPES",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Humidity Control",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7272",
+      "title": "INSTALL HEAT PIPES / RAISE COOLING SETPOINT",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Humidity Control",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7273",
+      "title": "INSTALL DESICCANT HUMIDITY CONTROL SYSTEM",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Humidity Control",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7291",
+      "title": "RESCHEDULE AND REARRANGE MULTIPLE-SOURCE HEATING SYSTEMS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7292",
+      "title": "LOWER CEILING TO REDUCE CONDITIONED SPACE",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7293",
+      "title": "MODIFY SPRINKLER SYSTEM TO REDUCE HEATING REQUIREMENTS",
+      "path": "Energy Management > Building and Grounds > SPACE CONDITIONING > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7311",
+      "title": "VENTILATION SYSTEM TO SHUT OFF WHEN ROOM IS NOT IN USE",
+      "path": "Energy Management > Building and Grounds > VENTILATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7312",
+      "title": "MINIMIZE USE OF OUTSIDE MAKE-UP AIR FOR VENTILATION EXCEPT",
+      "path": "Energy Management > Building and Grounds > VENTILATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7313",
+      "title": "RECYCLE AIR FOR HEATING, VENTILATION AND AIR CONDITIONING",
+      "path": "Energy Management > Building and Grounds > VENTILATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7314",
+      "title": "REDUCE VENTILATION AIR",
+      "path": "Energy Management > Building and Grounds > VENTILATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7316",
+      "title": "CENTRALIZE CONTROL OF EXHAUST FANS TO ENSURE THEIR SHUTDOWN,",
+      "path": "Energy Management > Building and Grounds > VENTILATION > General",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7421",
+      "title": "REDUCE GLAZED AREAS IN BUILDINGS",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Solar Loading",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7422",
+      "title": "PLANT TREES OR SHRUBS NEAR WINDOWS TO SHIELD FROM SUNLIGHT",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Solar Loading",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7423",
+      "title": "REDUCE HEAT GAIN BY WINDOW TINTING",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Solar Loading",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7424",
+      "title": "SHADE WINDOWS FROM SUMMER SUN",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Solar Loading",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7425",
+      "title": "CLEAN OR COLOR ROOF TO REDUCE SOLAR LOAD",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Solar Loading",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7441",
+      "title": "REPLACE BROKEN WINDOWS AND/OR WINDOW SASH",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7442",
+      "title": "KEEP DOORS AND WINDOWS SHUT WHEN NOT ON USE",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7444",
+      "title": "CLOSE HOLES AND OPENINGS IN BUILDING SUCH AS BROKEN WINDOWS",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7446",
+      "title": "UTILIZE SENSORS CONTROLLING ROOF AND WALL OPENINGS",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7447",
+      "title": "INSTALL VINYL STRIP / HIGH SPEED / AIR CURTAIN DOORS",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Infiltration",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7491",
+      "title": "INSULATE GLAZING, WALLS, CEILINGS, AND ROOFS",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7492",
+      "title": "USE PROPER THICKNESS OF INSULATION ON BUILDING ENVELOPE",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7493",
+      "title": "USE DOUBLE OR TRIPLE GLAZED WINDOWS TO MAINTAIN HIGHER",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7494",
+      "title": "INSTALL STORM WINDOWS AND DOORS",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7495",
+      "title": "INSTALL REPLACEMENT DOORS",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.7496",
+      "title": "INSTALL PARTITIONS TO REDUCE SIZE OF CONDITIONED SPACE",
+      "path": "Energy Management > Building and Grounds > BUILDING ENVELOPE > Miscellaneous",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8112",
+      "title": "COMBINE UTILITY METERS",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Utility Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8113",
+      "title": "PURCHASE GAS DIRECTLY FROM A CONTRACT GAS SUPPLIER",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Utility Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8114",
+      "title": "CHANGE RATE SCHEDULES OR OTHER CHANGES IN UTILITY SERVICE",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Utility Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8115",
+      "title": "BASE UTILITY CHARGES ON USAGE RATHER THAN AREA OCCUPIED",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Utility Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8117",
+      "title": "INSTALL SUB-METERING EQUIPMENT",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Utility Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8118",
+      "title": "CHECK FOR ACCURACY OF UTILITY/POWER METERS",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Utility Costs",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8121",
+      "title": "APPLY FOR TAX-FREE STATUS FOR ENERGY PURCHASES",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Fiscal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8122",
+      "title": "USE UTILITY CONTROLLED POWER MANAGEMENT",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Fiscal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8123",
+      "title": "PAY UTILITY BILLS ON TIME",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Fiscal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8124",
+      "title": "HIRE ENERGY MANAGER",
+      "path": "Energy Management > Ancillary Costs > ADMINISTRATIVE > Fiscal",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8211",
+      "title": "CONSOLIDATE FREIGHT SHIPMENTS AND/OR DELIVERIES",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION > Shipping",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8212",
+      "title": "REDUCE DELIVERY SCHEDULES",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION > Shipping",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8221",
+      "title": "CONSIDER INTERMEDIATE OR ECONOMY SIZE AUTOS / TRUCKS",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION > Vehicles",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8222",
+      "title": "SIZE TRUCKS TO JOB",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION > Vehicles",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8223",
+      "title": "ADD AIR SHIELDS TO TRUCKS TO INCREASE FUEL MILEAGE",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION > Vehicles",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8226",
+      "title": "INCREASE EFFICIENCY OF TRUCKS",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION > Vehicles",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.8227",
+      "title": "ADJUST / MAINTAIN FORK LIFT TRUCKS FOR MOST EFFICIENT OPERATION",
+      "path": "Energy Management > Ancillary Costs > SHIPPING, DISTRIBUTION, AND TRANSPORTATION > Vehicles",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9111",
+      "title": "USE SOLAR HEAT TO HEAT MAKE-UP AIR",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL > Solar",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9112",
+      "title": "USE SOLAR HEAT TO HEAT WATER",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL > Solar",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9113",
+      "title": "USE SOLAR HEAT FOR HEAT",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL > Solar",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9114",
+      "title": "USE SOLAR HEAT TO MAKE ELECTRICITY",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL > Solar",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9121",
+      "title": "INSTALL WIND POWERED ELECTRIC GENERATOR",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL > Wind Power",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9131",
+      "title": "INSTALL FUEL CELL TO UTILIZE WASTE HYDROGEN",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL > Hydrogen",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "2.9141",
+      "title": "INSTALL ANAEROBIC DIGESTER",
+      "path": "Energy Management > Alternative Energy Usage > GENERAL > Biofuels",
+      "recommendationType": 2
+    },
+    {
+      "arcCode": "3.1111",
+      "title": "COVER INK CONTAINERS WHEN NOT IN USE",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Process Specific",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1114",
+      "title": "REUSE HIGH FERROUS METAL DUST AS RAW MATERIAL",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Process Specific",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1121",
+      "title": "USE MORE EFFICIENT ADHESIVE APPLICATORS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Material Application",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1131",
+      "title": "USE MECHANICAL STRIPPING METHODS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Stripping",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1152",
+      "title": "USE HIGH QUALITY SCRAP (LOW SULFUR) TO REDUCE HAZARDOUS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Desulfurization / Slag Management",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1154",
+      "title": "USE AN ALTERNATIVE DESULFURIZING AGENT TO ELIMINATE",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Desulfurization / Slag Management",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1161",
+      "title": "ELIMINATE/REDUCE AN OPERATION",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Reduction / Elimination",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1162",
+      "title": "USE LESS WASTEFUL PACKAGING",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Reduction / Elimination",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1163",
+      "title": "USE PLASTIC PALLETS INSTEAD OF WOOD",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Reduction / Elimination",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1171",
+      "title": "CHANGE PRODUCT SPECS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Product Specifications",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1172",
+      "title": "REVISE RAW MATERIAL SPECS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Product Specifications",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1175",
+      "title": "USE A DIFFERENT OR RECYCLE RAW MATERIAL",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Product Specifications",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1181",
+      "title": "ELIMINATE A BY-PRODUCT",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > By-product Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1182",
+      "title": "MAKE A NEW BY-PRODUCT",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > By-product Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1191",
+      "title": "CHANGE PROCEDURES / EQUIPMENT / OPERATING CONDITIONS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1192",
+      "title": "REDUCE SCRAP PRODUCTION",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1193",
+      "title": "CONVERT FROM BATCH OPERATION TO CONTINUOUS PROCESSING",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1194",
+      "title": "USE AUTOMATIC FLOW CONTROL",
+      "path": "Waste Minimization / Pollution Prevention > Operations > PROCEDURES > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1221",
+      "title": "USE REACTIVE RINSING",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Rinsing Strategies",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1222",
+      "title": "REDUCE WATER USE WITH COUNTERCURRENT RINSING",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Rinsing Strategies",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1223",
+      "title": "USE FOG NOZZLES / SPRAY RINSING INSTEAD OF IMMERSION RINSING",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Rinsing Strategies",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1227",
+      "title": "USE COUNTERCURRENT RINSING TO REDUCE RINSE WATER VOLUME",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Rinsing Strategies",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1241",
+      "title": "SLOW INSERTION / WITHDRAWAL OF PARTS FROM DEGREASING TANK",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Dragout Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1242",
+      "title": "ALLOW DRAINAGE BEFORE WITHDRAWING OBJECT",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Dragout Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1244",
+      "title": "REDUCE SOLUTION DRAG-OUT TO PREVENT SOLUTION LOSS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Dragout Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1291",
+      "title": "ELIMINATE PRACTICE OF MIXING WASTE STREAMS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1293",
+      "title": "SEPARATE TREATMENTS FOR EACH TYPE OF SOLUTION AND RECYCLE",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.1294",
+      "title": "SEGREGATE SPENT SOLVENTS AND REUSE IN SUBSEQUENT WASHINGS",
+      "path": "Waste Minimization / Pollution Prevention > Operations > WASTE STREAM CONTAMINATION > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2111",
+      "title": "INSTALL REDUNDANT EQUIPMENT TO AVOID LOSSES CAUSED BY",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Fault Tolerance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2121",
+      "title": "CONVERT TO ELECTROSTATIC POWDER COATING",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Painting Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2123",
+      "title": "CONVERT TO HIGH VOLUME LOW PRESSURE (HVLP) PAINT GUNS",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Painting Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2124",
+      "title": "CONVERT TO AIR ASSISTED / AIRLESS PAINT GUNS",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Painting Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2135",
+      "title": "EXTEND SOLUTION LIFE WITH FILTERING OR CARBONATE FREEZING",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Process Specific Upgrades",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2136",
+      "title": "USE \"WASH-LESS\" PROCESSING EQUIPMENT",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Process Specific Upgrades",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2141",
+      "title": "USE CYLINDRICAL TANKS WITH HEIGHT TO DIAMETER RATIOS CLOSE TO",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Tank Design",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2142",
+      "title": "USE TANKS WITH A CONICAL BOTTOM OUTLET SECTION TO REDUCE",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Tank Design",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2161",
+      "title": "CLOSELY MONITOR CHEMICAL ADDITIONS TO INCREASE BATH LIFE",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > System Monitoring",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2171",
+      "title": "USE AN AUTOMATIC PLATE PROCESSOR",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Automation",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2172",
+      "title": "USE AUTOMATIC CLEANING EQUIPMENT",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Automation",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2173",
+      "title": "CONVERT TO ROBOTIC PAINTING",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Automation",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.2176",
+      "title": "INCREASE USE OF AUTOMATION",
+      "path": "Waste Minimization / Pollution Prevention > Equipment > GENERAL > Automation",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3111",
+      "title": "ADJUST PH FOR NEUTRALIZATION",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Neutralization",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3112",
+      "title": "UTILIZE OXIDATION/REDUCTION FOR NEUTRALIZATION",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Neutralization",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3113",
+      "title": "USE OTHER METHODS FOR NEUTRALIZATION",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Neutralization",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3121",
+      "title": "USE SCREENING, MAGNETIC SEPARATION TO REMOVE CONTAMINANTS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Removal of Contaminants",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3122",
+      "title": "USE FILTRATION, CENTRIFUGING TO REMOVE CONTAMINANTS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Removal of Contaminants",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3123",
+      "title": "USE DECANTING, FLOTATION TO REMOVE CONTAMINANTS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Removal of Contaminants",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3125",
+      "title": "USE DISTILLATION, EVAPORATION TO REMOVE CONTAMINANTS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Removal of Contaminants",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3126",
+      "title": "USE ABSORPTION, EXTRACTION TO REMOVE CONTAMINANTS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Removal of Contaminants",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3127",
+      "title": "USE ADSORPTION, ION EXCHANGE TO REMOVE CONTAMINANTS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Removal of Contaminants",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3128",
+      "title": "UTILIZE OTHER METHODS TO REMOVE CONTAMINANTS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Removal of Contaminants",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3131",
+      "title": "USE EVAPORATION TO CONCENTRATE MATERIAL",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Material Concentration",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3132",
+      "title": "USE REVERSE OSMOSIS TO CONCENTRATE MATERIAL",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Material Concentration",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.3133",
+      "title": "USE OTHER WASTE CONCENTRATION METHODS",
+      "path": "Waste Minimization / Pollution Prevention > Post Generation Treatment / Minimization > GENERAL > Material Concentration",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4111",
+      "title": "USE CLOSED CYCLE PROCESS TO MINIMIZE WASTE WATER PRODUCTION",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Close Cycle Water Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4112",
+      "title": "RECOVERY METALS FROM RINSE WATER (EVAP., ION EXCHANGE, RO,",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Close Cycle Water Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4113",
+      "title": "TREAT AND REUSE RINSE WATERS",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Close Cycle Water Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4114",
+      "title": "REPLACE CITY WATER WITH RECYCLED WATER VIA COOLING TOWER",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Close Cycle Water Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4115",
+      "title": "RECOVER AND REUSE COOLING WATER",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Close Cycle Water Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4116",
+      "title": "METER RECYCLED WATER (TO REDUCE SEWER CHARGES)",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Close Cycle Water Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4131",
+      "title": "MINIMIZE CONTAMINATION OF WATER BEFORE TREATMENT",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Water Quality",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4132",
+      "title": "USE DEIONIZED WATER IN UPSTREAM RINSE TANKS",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Water Quality",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4133",
+      "title": "CLEAN FOULING FROM WATER LINES REGULARLY",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Water Quality",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4141",
+      "title": "REPLACE THE CHLORINATION STAGE WITH AN OXYGEN OR OZONE STAGE",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Water Treatment",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4144",
+      "title": "PERFORM HIGH CONSISTENCY GAS PHASE CHLORINATION",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Water Treatment",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4145",
+      "title": "USE MAGNETIC TECHNOLOGY TO TREAT WATER",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Water Treatment",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4146",
+      "title": "CHANGE METHOD OF DEIONIZED WATER PRODUCTION",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Water Treatment",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4151",
+      "title": "MINIMIZE WATER USAGE",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4152",
+      "title": "CAREFULLY CONTROL WATER LEVEL IN MASS FINISHING EQUIPMENT",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4153",
+      "title": "USE COUNTERCURRENT RINSING TO REDUCE WASTE WATER",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4154",
+      "title": "ELIMINATE LEAKS IN WATER LINES AND VALVES",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4155",
+      "title": "SUB-METER / QUANTIFY WATER USE",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4156",
+      "title": "USE FLOW CONTROL VALVES ON EQUIPMENT TO OPTIMIZE WATER USE",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4157",
+      "title": "REPLACE WATER COOLING ON PROCESSES WITH AIR COOLING",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4158",
+      "title": "USE MINIMUM COOLING WATER TO BEARINGS",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.4159",
+      "title": "REPLACE TREATED WATER WITH WELL / SURFACE WATER",
+      "path": "Waste Minimization / Pollution Prevention > Water Use > GENERAL > Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5111",
+      "title": "FILTER AND REUSE HYDRAULIC OIL",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Oil",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5112",
+      "title": "REPROCESS SPENT OILS ON SITE FOR RE-USE",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Oil",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5113",
+      "title": "SELL OIL TO RECYCLER",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Oil",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5121",
+      "title": "RECYCLE WASTE INK AND CLEANUP SOLVENT",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Ink",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5131",
+      "title": "RECYCLE WHITE WATER",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > White Water",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5132",
+      "title": "REUSE RICH WHITE WATER IN OTHER APPLICATIONS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > White Water",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5142",
+      "title": "TREAT AND REUSE EQUIPMENT CLEANING SOLUTIONS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5143",
+      "title": "RETURN SPENT SOLUTIONS TO THE MANUFACTURER",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5144",
+      "title": "RECYCLE SPENT TANNING SOLUTION",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5145",
+      "title": "RECOVER AND REUSE SPENT ACID BATHS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5146",
+      "title": "UTILIZE A CENTRAL COOLANT SYSTEM FOR CLEANING AND REUSE OF",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > LIQUID WASTE > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5211",
+      "title": "REUSE SCRAP GLASS AS FEED STOCK",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5212",
+      "title": "REGRIND, REUSE, OR SELL SCRAP PLASTIC PARTS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5213",
+      "title": "REUSE SCRAP PRINTED PAPER FOR MAKE-READY",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5215",
+      "title": "AVOID CONTAMINATION OF END PIECES AND REUSE AS FEED STOCK",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5216",
+      "title": "RECYCLE NON-FERROUS DUST",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5217",
+      "title": "REUSE / RECYCLE/ SELL PAPER PRODUCTS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5218",
+      "title": "REUSE / RECYCLE/ SELL RUBBER PRODUCTS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5221",
+      "title": "RECYCLE CASTING SAND",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > Sand",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5222",
+      "title": "USE SAND FOR OTHER PURPOSES (EG CONSTRUCTION FILL, COVER FOR",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > Sand",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5241",
+      "title": "SELL USED PLATES TO AN ALUMINUM RECYCLER",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > Metals",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5242",
+      "title": "RECOVER METALS FROM SPENT SOLUTIONS AND RECYCLE",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > Metals",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5244",
+      "title": "RECOVER METALS FROM CASTING SAND",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > Metals",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5248",
+      "title": "SEPARATE AND RECYCLE SCRAP METAL TO FOUNDRY OR FOR SALE",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > SOLID WASTE > Metals",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5311",
+      "title": "RECOVER AND REUSE WASTE MATERIAL",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5313",
+      "title": "INCREASE AMOUNT OF WASTE RECOVERED FOR RESALE",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5314",
+      "title": "USE IN-PROCESS RECYCLING WHENEVER POSSIBLE",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5315",
+      "title": "LEASE / PURCHASE BALER; SELL CARDBOARD TO RECYCLER",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5316",
+      "title": "CONTRACT A WOOD PALLET RECYCLING COMPANY",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5317",
+      "title": "SELL / OFFER BY-PRODUCT AS ANIMAL FEED",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.5318",
+      "title": "RECYCLE FLUORESCENT LAMPS",
+      "path": "Waste Minimization / Pollution Prevention > Recycling > OTHER MATERIALS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6111",
+      "title": "USE ALTERNATIVE FLOCCULENT TO MINIMIZE SLUDGE VOLUME",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Sludge Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6112",
+      "title": "USE FILTER AND DRYING OVEN TO REDUCE SLUDGE VOLUME",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Sludge Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6113",
+      "title": "REMOVE SLUDGE FROM TANKS ON A REGULAR BASIS",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Sludge Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6114",
+      "title": "USE PRECIPITATING AGENTS IN WASTEWATER TREATMENT THAT",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Sludge Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6121",
+      "title": "BURN WASTE PAPER FOR HEAT",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Combustion of Waste Products",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6122",
+      "title": "INSTALL SOLID WASTE INCINERATOR FOR HEAT",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Combustion of Waste Products",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6123",
+      "title": "BURN WOOD BY-PRODUCTS FOR HEAT",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Combustion of Waste Products",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6124",
+      "title": "BURN WASTE OIL FOR HEAT",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Combustion of Waste Products",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6125",
+      "title": "SELL COMBUSTIBLE WASTE",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Combustion of Waste Products",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6126",
+      "title": "DIRECT WASTE GASSES TO BOILER COMBUSTION AIR",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Combustion of Waste Products",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6192",
+      "title": "USE A LESS EXPENSIVE METHOD OF WASTE REMOVAL",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6193",
+      "title": "INSTALL EQUIPMENT (E.G. COMPACTOR) TO REDUCE DISPOSAL COSTS",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.6194",
+      "title": "SHIP HYDRAULIC OIL TO SECONDARY FUEL PROGRAM",
+      "path": "Waste Minimization / Pollution Prevention > Waste Disposal > GENERAL > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7112",
+      "title": "USE SQUEEGEES, MOPS, AND VACUUMS FOR FLOOR CLEANING",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Mechanical Cleaning",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7115",
+      "title": "CLEAN LINES WITH \u201cPIGS\" INSTEAD OF SOLVENTS / SOLUTIONS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Mechanical Cleaning",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7121",
+      "title": "IMPROVE HANDLING PRACTICES",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Reduction of Cleaning",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7122",
+      "title": "MAXIMIZE PRODUCTION RUNS TO REDUCE CLEANING",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Reduction of Cleaning",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7123",
+      "title": "USE CONTINUOUS PROCESSING",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Reduction of Cleaning",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7124",
+      "title": "INSTALL DEDICATED MIXING EQUIPMENT TO OPTIMIZE REUSE OF USED",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Reduction of Cleaning",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7131",
+      "title": "USE A RAG RECYCLE SERVICE",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Rag Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7132",
+      "title": "REUSE RAGS UNTIL COMPLETELY SOILED",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Rag Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7134",
+      "title": "WASH AND REUSE RAGS ON-SITE",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Rag Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7135",
+      "title": "MINIMIZE USE OF RAGS THROUGH WORKER TRAINING",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Rag Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7137",
+      "title": "REPLACE CLOTH RAGS WITH PAPER TOWELS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Rag Use",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7141",
+      "title": "IMPROVE CLEANING EFFICIENCY BY MAINTAINING CLEANING SYSTEM",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Preventive Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7142",
+      "title": "USE CLEAN IN PLACE (CIP) SYSTEMS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Preventive Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7143",
+      "title": "CLEAN EQUIPMENT IMMEDIATELY AFTER USE",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Preventive Maintenance",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7191",
+      "title": "USE WATER BASED SPRAY ABRASIVES INSTEAD OF BAR ABRASIVES",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7193",
+      "title": "USE HIGH PRESSURE WASH SYSTEMS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7195",
+      "title": "USE TEFLON LINED TANKS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7196",
+      "title": "USE REUSABLE FILTERS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7197",
+      "title": "USE ULTRASONIC CLEANING",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7198",
+      "title": "REDUCE / ELIMINATE USE OF DISPOSABLE PRODUCT",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > CLEANING / DEGREASING > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7211",
+      "title": "MODIFY MATERIAL APPLICATION METHODS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE > Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7212",
+      "title": "IMPROVED MATERIAL HANDLING (MIXING AND TRANSFER)",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE > Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7214",
+      "title": "REDUCE OR ELIMINATE WASTE",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE > Operations",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7221",
+      "title": "IMPROVE PROCESS CONTROL TO PREVENT SPILLS OF MATERIAL",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE > Hardware",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7222",
+      "title": "MINIMIZE OVERFLOWS BY INSTALLING LEVEL CONTROLS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE > Hardware",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7223",
+      "title": "INSTALL SHROUDING ON MACHINES TO PREVENT SPLASHING",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE > Hardware",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7224",
+      "title": "USE PUMPS AND PIPING TO DECREASE THE FREQUENCY OF SPILLAGE",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > SPILLAGE > Hardware",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7311",
+      "title": "MAINTAIN MACHINES WITH TO REDUCE LEAKS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER > Leak Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7312",
+      "title": "IMPLEMENT A REGULAR MAINTENANCE PROGRAM TO REDUCE EMISSIONS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER > Leak Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7313",
+      "title": "ELIMINATE OXYGEN LOSS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER > Leak Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7391",
+      "title": "IMPLEMENT A MAINTENANCE PROGRAM TO KEEP RACKS AND TANKS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7392",
+      "title": "APPLY A PROTECTIVE COATING TO RACKS AND TANKS",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.7393",
+      "title": "IMPLEMENT A MACHINE AND COOLANT SUMP CLEANING PROGRAM TO",
+      "path": "Waste Minimization / Pollution Prevention > Maintenance > OTHER > Miscellaneous",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8113",
+      "title": "PREVENT EXCESSIVE SOLVENT USAGE (OPERATOR TRAINING)",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Use Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8121",
+      "title": "COVER CONTAINERS TO MINIMIZE EVAPORATIVE LOSSES",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Emission Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8122",
+      "title": "USE TIGHT-FITTING LIDS ON MATERIAL CONTAINERS TO REDUCE VOC",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Emission Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8124",
+      "title": "INSTALL FLOATING COVERS ON TANKS OF VOLATILE MATERIALS TO",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Emission Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8125",
+      "title": "REMOVE ROLLERS FROM THE MACHINES AND CLEAN IN A CLOSED",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Emission Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8126",
+      "title": "USE FLUE GAS RECUPERATION TO REDUCE VOC",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Emission Reduction",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8131",
+      "title": "USE WATER-BASED ADHESIVES",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Material Replacement",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8132",
+      "title": "USE LESS TOXIC AND VOLATILE SOLVENT SUBSTITUTES",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Material Replacement",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8133",
+      "title": "CONVERT TO AQUEOUS CLEANING",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Material Replacement",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8134",
+      "title": "USE WATER-BASED CUTTING FLUIDS TO ELIMINATE NEED FOR SOLVENT",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Material Replacement",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8135",
+      "title": "USE LOW VOC OR WATER BASED PAINT",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Material Replacement",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8136",
+      "title": "SWITCH TO A SOLVENT THAT CAN BE CLEANED AND REUSED",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Material Replacement",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8137",
+      "title": "USE SOY OR WATER-BASED INKS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Material Replacement",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8141",
+      "title": "REGENERATE CLEANING SOLVENT ON-SITE AND REUSE",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Solvent Recovery",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8142",
+      "title": "DISTILL CONTAMINATED SOLVENTS FOR REUSE",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Solvent Recovery",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8143",
+      "title": "RECYCLE CLEANING SOLVENT AND REUSE",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLVENTS > Solvent Recovery",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8211",
+      "title": "CONVERT TO AQUEOUS CLEANING SYSTEM",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS > Water-Based Substitutes",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8214",
+      "title": "USE WATER-BASED DEVELOPERS AND FINISHERS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS > Water-Based Substitutes",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8221",
+      "title": "USE ALTERNATIVES FOR ACIDS / ALKALINE (WATER, STEAM, ABRASIVE)",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS > Other Substitutes",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8224",
+      "title": "CONVERT TO LESS TOXIC HYDROCARBON CLEANERS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS > Other Substitutes",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8225",
+      "title": "REPLACE HEXAVALENT CHROMIUM SOLUTIONS WITH TRIVALENT",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS > Other Substitutes",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8228",
+      "title": "REPLACE HEAVY METAL REAGENTS WITH NON-HAZARDOUS REAGENTS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > OTHER SOLUTIONS > Other Substitutes",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8312",
+      "title": "USE BUILDING MATERIALS WHICH REQUIRE LESS ENERGY TO PRODUCE",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLIDS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "3.8314",
+      "title": "PURCHASE HIGH MATERIALS IN RETURNABLE BULK CONTAINERS",
+      "path": "Waste Minimization / Pollution Prevention > Raw Materials > SOLIDS > General",
+      "recommendationType": 3
+    },
+    {
+      "arcCode": "4.111",
+      "title": "ADD EQUIPMENT/ OPERATORS TO REDUCE PRODUCTION BOTTLENECK",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > BOTTLENECK REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.112",
+      "title": "REPLACE OLD MACHINE WITH NEW AUTOMATIC MULTI-STATION TOOL",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > BOTTLENECK REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.113",
+      "title": "INSTALL REFRIGERATION SYSTEM TO COOL PRODUCT",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > BOTTLENECK REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.114",
+      "title": "ADD/MODIFY EQUIPMENT TO IMPROVE DRYING PROCESS",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > BOTTLENECK REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.121",
+      "title": "MAINTAIN CLEAN CONDITIONS BEFORE PAINTING",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > DEFECT REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.122",
+      "title": "DEVELOP STANDARD PROCEDURES TO IMPROVE INTERNAL YIELDS",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > DEFECT REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.123",
+      "title": "REDUCE DEFECTS BY REDUCING PRODUCT TIPPING",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > DEFECT REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.124",
+      "title": "INSTALL CONTINUOUS LUBRICATION EQUIPMENT",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > DEFECT REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.126",
+      "title": "INSTALL SENSORS TO DETECT DEFECTS",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > DEFECT REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.131",
+      "title": "MODIFY PROCESS TO REDUCE MATERIAL USE/COST",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > MATERIAL REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.132",
+      "title": "PURCHASE NEW EQUIPMENT TO REDUCE MATERIAL USE / COST",
+      "path": "Direct Productivity Enhancements > Manufacturing Enhancements > MATERIAL REDUCTION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.211",
+      "title": "CONSIDER USE / PURCHASE OF BULK MATERIALS WHERE POSSIBLE",
+      "path": "Direct Productivity Enhancements > Purchasing > RAW MATERIALS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.212",
+      "title": "ADOPT IN-HOUSE MATERIAL GENERATION",
+      "path": "Direct Productivity Enhancements > Purchasing > RAW MATERIALS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.213",
+      "title": "PURCHASE MATERIAL FROM SUPPLIER IN CUSTOMIZED PACKAGING",
+      "path": "Direct Productivity Enhancements > Purchasing > RAW MATERIALS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.214",
+      "title": "PURCHASE APPROPRIATELY SIZED MATERIAL",
+      "path": "Direct Productivity Enhancements > Purchasing > RAW MATERIALS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.221",
+      "title": "USE ONLY AMOUNT OF PACKAGING MATERIAL NECESSARY",
+      "path": "Direct Productivity Enhancements > Purchasing > ANCILLARY MATERIALS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.222",
+      "title": "PURCHASE RECONDITIONED MATERIAL INSTEAD OF NEW",
+      "path": "Direct Productivity Enhancements > Purchasing > ANCILLARY MATERIALS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.231",
+      "title": "PURCHASE EQUIPMENT INSTEAD OF LEASING",
+      "path": "Direct Productivity Enhancements > Purchasing > CAPITAL",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.232",
+      "title": "LEASE EQUIPMENT INSTEAD OF PURCHASING",
+      "path": "Direct Productivity Enhancements > Purchasing > CAPITAL",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.311",
+      "title": "SCHEDULE DELIVERIES ACCORDING TO DEMAND",
+      "path": "Direct Productivity Enhancements > Inventory > JUST IN TIME",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.321",
+      "title": "OPTIMIZE PRODUCTION LOT SIZES AND INVENTORIES",
+      "path": "Direct Productivity Enhancements > Inventory > OTHER INVENTORY CONTROLS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.322",
+      "title": "ELIMINATE OLD STOCK AND / OR MODIFY INVENTORY CONTROL",
+      "path": "Direct Productivity Enhancements > Inventory > OTHER INVENTORY CONTROLS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.323",
+      "title": "OPTIMIZE LOT SIZES TO REDUCE INVENTORY CARRYING COSTS",
+      "path": "Direct Productivity Enhancements > Inventory > OTHER INVENTORY CONTROLS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.421",
+      "title": "MODIFY CURRENT INCENTIVE PROGRAM",
+      "path": "Direct Productivity Enhancements > Labor Optimization > PRACTICES / PROCEDURES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.422",
+      "title": "UTILIZE OUTSIDE CONTRACTING",
+      "path": "Direct Productivity Enhancements > Labor Optimization > PRACTICES / PROCEDURES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.423",
+      "title": "MOVE PRODUCT USING MECHANICAL MEANS",
+      "path": "Direct Productivity Enhancements > Labor Optimization > PRACTICES / PROCEDURES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.424",
+      "title": "IMPROVE SPACE COMFORT CONDITIONING",
+      "path": "Direct Productivity Enhancements > Labor Optimization > PRACTICES / PROCEDURES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.425",
+      "title": "ELIMINATE/REDUCE REDUNDANT INSPECTIONS",
+      "path": "Direct Productivity Enhancements > Labor Optimization > PRACTICES / PROCEDURES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.426",
+      "title": "MODIFY WORKLOAD",
+      "path": "Direct Productivity Enhancements > Labor Optimization > PRACTICES / PROCEDURES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.431",
+      "title": "TRAIN OPERATORS FOR MAXIMUM OPERATING EFFICIENCY",
+      "path": "Direct Productivity Enhancements > Labor Optimization > TRAINING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.432",
+      "title": "CROSS-TRAIN PERSONNEL TO AVOID LOST TIME",
+      "path": "Direct Productivity Enhancements > Labor Optimization > TRAINING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.441",
+      "title": "INSTALL AUTOMATIC PACKING EQUIPMENT",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.442",
+      "title": "INSTALL MAGAZINES FOR TEMPORARY STORAGE",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.443",
+      "title": "INSTALL AUTOMATIC BOILER FUEL FEED SYSTEM",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.444",
+      "title": "INSTALL SYSTEM TO COLLECT SCRAP",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.445",
+      "title": "INSTALL EQUIPMENT TO MOVE PRODUCT",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.446",
+      "title": "AUTOMATE FINISHING PROCESS",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.447",
+      "title": "AUTOMATE PAYROLL SYSTEM",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.448",
+      "title": "INSTALL AUTOMATIC PART STORAGE / RETRIEVAL SYSTEM",
+      "path": "Direct Productivity Enhancements > Labor Optimization > AUTOMATION",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.451",
+      "title": "ADD ADDITIONAL PRODUCTION SHIFT",
+      "path": "Direct Productivity Enhancements > Labor Optimization > SCHEDULING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.452",
+      "title": "ELIMINATE SHIFT",
+      "path": "Direct Productivity Enhancements > Labor Optimization > SCHEDULING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.453",
+      "title": "RESCHEDULE BREAKS TO ALLOW FOR CONTINUOUS PRODUCTION",
+      "path": "Direct Productivity Enhancements > Labor Optimization > SCHEDULING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.454",
+      "title": "MODIFY STARTUP/SHUTDOWN TIMES",
+      "path": "Direct Productivity Enhancements > Labor Optimization > SCHEDULING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.463",
+      "title": "MODIFY FACILITY TO AVOID EXCESS MAINTENANCE COSTS",
+      "path": "Direct Productivity Enhancements > Labor Optimization > MAINTENANCE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.511",
+      "title": "EXPAND OPERATIONS INTO UNUSED SPACE",
+      "path": "Direct Productivity Enhancements > Space Utilization > FLOOR LAYOUT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.512",
+      "title": "CONDENSE OPERATION INTO ONE BUILDING",
+      "path": "Direct Productivity Enhancements > Space Utilization > FLOOR LAYOUT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.513",
+      "title": "REARRANGE EQUIPMENT LAYOUT TO REDUCE LABOR COSTS",
+      "path": "Direct Productivity Enhancements > Space Utilization > FLOOR LAYOUT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.514",
+      "title": "REARRANGE EQUIPMENT LAYOUT TO REDUCE HANDLING COSTS",
+      "path": "Direct Productivity Enhancements > Space Utilization > FLOOR LAYOUT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.515",
+      "title": "INSTALL SHELVES / RACKS TO UTILIZE UNUSED SPACE",
+      "path": "Direct Productivity Enhancements > Space Utilization > FLOOR LAYOUT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.521",
+      "title": "CLEAR AND RENT EXISTING SPACE",
+      "path": "Direct Productivity Enhancements > Space Utilization > RENTAL SPACE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.522",
+      "title": "MODIFY STORAGE SPACE TO AVOID RENTAL OF A WAREHOUSE",
+      "path": "Direct Productivity Enhancements > Space Utilization > RENTAL SPACE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.611",
+      "title": "BEGIN A PRACTICE OF PREDICTIVE / PREVENTATIVE MAINTENANCE",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > MAINTENANCE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.612",
+      "title": "CONTRACT OUT MAINTENANCE",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > MAINTENANCE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.621",
+      "title": "USE FIXTURES TO REDUCE MACHINE CHANGEOUT TIMES",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > QUICK CHANGE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.622",
+      "title": "INSTALL ROTATING CAROUSELS TO REDUCE SET-UP TIMES",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > QUICK CHANGE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.623",
+      "title": "EMPLOY MODULAR JIGS TO REDUCE PROCESS SET-UP TIME",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > QUICK CHANGE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.624",
+      "title": "HIRE ADDITIONAL PERSONNEL TO REDUCE CHANGE-OUT TIME",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > QUICK CHANGE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.625",
+      "title": "DEVELOP STANDARD OPERATING PROCEDURES",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > QUICK CHANGE",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.631",
+      "title": "INSTALL AN UNINTERRUPTIBLE POWER SUPPLY",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > POWER CONDITIONING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.632",
+      "title": "CHANGE OPERATING CONDITIONS",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > POWER CONDITIONING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.641",
+      "title": "ELIMINATE SHUTDOWNS OF CONTROLS DUE TO OVERHEATING",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > ALARMS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.642",
+      "title": "INSTALL SENSORS TO DETECT AND AVOID JAMS",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > ALARMS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.651",
+      "title": "INSTALL BACKUP EQUIPMENT",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > OTHER EQUIPMENT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.652",
+      "title": "REPLACE EXISTING EQUIPMENT WITH MORE SUITABLE SUBSTITUTES",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > OTHER EQUIPMENT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.653",
+      "title": "MAINTAIN/ENLARGE A STOCK OF SPARE PARTS",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > OTHER EQUIPMENT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.661",
+      "title": "LEVEL ZERO \u2013 INSTALL CONTROL SYSTEMS FOR EXISTING EQUIPMENT",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > SMART MANUFACTURING & INDUSTRIAL INTERNET OF",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.662",
+      "title": "LEVEL ONE \u2013 ADD COMMUNICATION USING IIOT DEVICES TO EXISTING",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > SMART MANUFACTURING & INDUSTRIAL INTERNET OF",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.663",
+      "title": "LEVEL TWO \u2013 INSTALL CONTROL SYSTEM USING IIOT DEVICES WITH",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > SMART MANUFACTURING & INDUSTRIAL INTERNET OF",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.664",
+      "title": "LEVEL THREE - INSTALL OR MODIFY CONTROL SYSTEM WITH COMMUNICATION",
+      "path": "Direct Productivity Enhancements > Reduction of Downtime > SMART MANUFACTURING & INDUSTRIAL INTERNET OF",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.711",
+      "title": "INITIATE A TOTAL QUALITY MANAGEMENT PROGRAM",
+      "path": "Direct Productivity Enhancements > Management Practices > TOTAL QUALITY MANAGEMENT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.712",
+      "title": "UTILIZE JOB COSTING SOFTWARE",
+      "path": "Direct Productivity Enhancements > Management Practices > TOTAL QUALITY MANAGEMENT",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.721",
+      "title": "INITIATE A PROGRAM TO ACQUIRE ISO CERTIFICATION",
+      "path": "Direct Productivity Enhancements > Management Practices > CERTIFICATIONS",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.731",
+      "title": "ADVERTISE PRODUCT OR SERVICE",
+      "path": "Direct Productivity Enhancements > Management Practices > MARKETING",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.811",
+      "title": "DEMOLISH OLD BUILDING TO REDUCE TAX AND INSURANCE BILLS",
+      "path": "Direct Productivity Enhancements > Other Administrative Savings > TAXES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.812",
+      "title": "APPLY FOR INVESTMENT INCENTIVES",
+      "path": "Direct Productivity Enhancements > Other Administrative Savings > TAXES",
+      "recommendationType": 4
+    },
+    {
+      "arcCode": "4.821",
+      "title": "PAY BILLS ON TIME TO AVOID LATE FEES",
+      "path": "Direct Productivity Enhancements > Other Administrative Savings > FEES",
+      "recommendationType": 4
+    }
+  ]
+}
