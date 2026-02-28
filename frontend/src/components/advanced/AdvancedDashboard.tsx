@@ -10,7 +10,7 @@ import Step7_BaselineCurve from './Step7_BaselineCurve';
 import Step8_NEBInput from './Step8_NEBInput';
 import Step9_GapAnalysis from './Step9_GapAnalysis';
 import { api } from '../../api/client';
-import type { AdvancedMeasure } from '../../types';
+import type { AdvancedMeasure, FirmSizeCategory } from '../../types';
 
 const STEPS = [
     'Industry Selection',
@@ -30,7 +30,7 @@ const AdvancedDashboard: React.FC = () => {
     // State Store
     const [naicsCode, setNaicsCode] = useState<string>('');
     const [step1Data, setStep1Data] = useState<{ measures: AdvancedMeasure[], industryMedianCost: number } | null>(null);
-    const [clusterRanges, setClusterRanges] = useState<{ emp: number[], sales: number[] } | null>(null);
+    const [selectedCategories, setSelectedCategories] = useState<FirmSizeCategory[]>([]);
     const [clusterMeasures, setClusterMeasures] = useState<AdvancedMeasure[]>([]);
     const [selection, setSelection] = useState<string[]>([]);
     const [nebInputs, setNebInputs] = useState<Record<string, { opCost: number, nebValue: number }>>({});
@@ -38,7 +38,6 @@ const AdvancedDashboard: React.FC = () => {
     const handleStep1Next = async (naics: string) => {
         try {
             setNaicsCode(naics);
-            // reset downstream
             setStep1Data(null);
 
             const data = await api.getAdvancedStep1(naics);
@@ -66,6 +65,7 @@ const AdvancedDashboard: React.FC = () => {
                     <Step2_MeasureTable
                         measures={step1Data.measures}
                         industryMedianCost={step1Data.industryMedianCost}
+                        naicsCode={naicsCode}
                         onBack={() => setActiveStep(0)}
                         onNext={() => setActiveStep(2)}
                     />
@@ -83,18 +83,18 @@ const AdvancedDashboard: React.FC = () => {
                 {activeStep === 3 && (
                     <Step4_ClusterDef
                         onBack={() => setActiveStep(2)}
-                        onNext={(ranges) => {
-                            setClusterRanges(ranges);
+                        onNext={(categories) => {
+                            setSelectedCategories(categories);
                             setActiveStep(4);
                         }}
                     />
                 )}
 
-                {activeStep === 4 && step1Data && clusterRanges && (
+                {activeStep === 4 && step1Data && (
                     <Step5_Comparison
                         naicsCode={naicsCode}
                         genericMeasures={step1Data.measures}
-                        clusterRanges={clusterRanges}
+                        selectedCategories={selectedCategories}
                         onBack={() => setActiveStep(3)}
                         onNext={(measures) => {
                             setClusterMeasures(measures);
@@ -118,6 +118,7 @@ const AdvancedDashboard: React.FC = () => {
                     <Step7_BaselineCurve
                         naicsCode={naicsCode}
                         selectedMeasureIds={selection}
+                        selectedCategories={selectedCategories}
                         onBack={() => setActiveStep(5)}
                         onNext={() => setActiveStep(7)}
                     />
@@ -125,8 +126,10 @@ const AdvancedDashboard: React.FC = () => {
 
                 {activeStep === 7 && step1Data && (
                     <Step8_NEBInput
+                        naicsCode={naicsCode}
                         measures={clusterMeasures.length ? clusterMeasures : step1Data.measures}
                         selectedMeasureIds={selection}
+                        selectedCategories={selectedCategories}
                         nebInputs={nebInputs}
                         setNebInputs={setNebInputs}
                         onBack={() => setActiveStep(6)}
@@ -138,6 +141,7 @@ const AdvancedDashboard: React.FC = () => {
                     <Step9_GapAnalysis
                         naicsCode={naicsCode}
                         selectedMeasureIds={selection}
+                        selectedCategories={selectedCategories}
                         nebInputs={nebInputs}
                         onBack={() => setActiveStep(7)}
                         onReset={() => setActiveStep(0)}

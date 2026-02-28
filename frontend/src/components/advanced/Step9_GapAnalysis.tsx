@@ -1,100 +1,55 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Button, CircularProgress, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import {
-    ComposedChart,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-    Scatter
-} from 'recharts';
+import { Box, Typography, Paper, Button, CircularProgress } from '@mui/material';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine, ReferenceArea, Label } from 'recharts';
 import { api } from '../../api/client';
-import type { AdvancedStep4Response, CurvePoint } from '../../types';
+import type { FirmSizeCategory, PrimaryCurvePoint, EconomicSummary } from '../../types';
 import { buildSupplyCurveSteps } from '../../utils/stats';
 
 interface Step9Props {
     naicsCode: string;
-    selectedMeasureIds: string[]; // These define the scope
+    selectedMeasureIds: string[];
+    selectedCategories: FirmSizeCategory[];
     nebInputs: Record<string, { opCost: number, nebValue: number }>;
     onBack: () => void;
     onReset: () => void;
 }
 
-const Step9_GapAnalysis: React.FC<Step9Props> = ({ naicsCode, selectedMeasureIds, nebInputs, onBack, onReset }) => {
+const Step9_GapAnalysis: React.FC<Step9Props> = ({ naicsCode, selectedMeasureIds, selectedCategories, nebInputs, onBack, onReset }) => {
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState<AdvancedStep4Response | null>(null);
-    const [adjustedData, setAdjustedData] = useState<CurvePoint[]>([]);
-    const [resourceType, setResourceType] = useState<'electricity' | 'natural_gas'>('electricity');
+    const [curve, setCurve] = useState<PrimaryCurvePoint[]>([]);
+    const [cutoff, setCutoff] = useState(0);
+    const [summary, setSummary] = useState<EconomicSummary | null>(null);
 
     useEffect(() => {
         let mounted = true;
-        const load = async () => {
-            try {
-                const res = await api.getAdvancedStep4(naicsCode, selectedMeasureIds, resourceType);
-                if (!mounted) return;
-
-                setData(res);
-                const baseline = res.baseline_curve;
-
-                // Calculate Adjusted
-                // Adjusted Y (CCE) = Y + (OpCost - NEB) / Savings
-                const adjusted = baseline.map(pt => {
-                    const inputs = nebInputs[pt.id] || { opCost: 0, nebValue: 0 };
-                    const deltaCost = inputs.opCost - inputs.nebValue;
-                    // Avoid division by zero, though width (savings) should be > 0
-                    const width = pt.width || 1;
-                    const adjustedY = pt.y + (deltaCost / width);
-                    return {
-                        ...pt,
-                        y: adjustedY,
-                        // Note: X coordinates (cumulative) stay the same because savings quantity doesn't change, 
-                        // only the cost effectiveness (order might change if we re-sorted, but for comparison usually nice to keep order or re-sort?)
-                        // If we re-sort, the shape changes completely. 
-                        // Truth: Supply curves should strictly be sorted by Y. 
-                        // If we adjust Y, we MUST RE-SORT to be a valid supply curve.
-                    };
-                });
-
-                // Re-sort adjusted curve by new Y
-                adjusted.sort((a, b) => a.y - b.y);
-
-                // Re-calculate X (cumulative)
-                let cumX = 0;
-                const finalAdjusted = adjusted.map(pt => {
-                    cumX += pt.width;
-                    return { ...pt, x: cumX };
-                });
-
-                setAdjustedData(finalAdjusted);
-
-            } catch (err) {
-                console.error(err);
-            } finally {
-                if (mounted) setLoading(false);
-            }
-        };
-        load();
+        api.getPrimaryCurves(naicsCode, selectedMeasureIds, 70, 5, selectedCategories)
+            .then(data => {
+                if (mounted) {
+                    setCurve(data.primary_curve);
+                    setCutoff(data.cutoff_price_gj_primary);
+                    setSummary(data.economic_summary);
+                }
+            })
+            .catch(console.error)
+            .finally(() => { if (mounted) setLoading(false); });
         return () => { mounted = false; };
-    }, [naicsCode, selectedMeasureIds, nebInputs, resourceType]);
+    }, [naicsCode, selectedMeasureIds, selectedCategories]);
 
-    const handleResourceChange = (
-        _event: React.MouseEvent<HTMLElement>,
-        newResource: 'electricity' | 'natural_gas'
-    ) => {
-        if (newResource !== null) {
-            setResourceType(newResource);
-        }
-    };
+    const steps = buildSupplyCurveSteps(
+        curve.map(pt => ({ savings: pt.width, cce: pt.y, label: pt.label, units: 'GJ_primary' }))
+    );
+    const maxX = steps.length ? Math.max(...steps.map(s => s.x)) : 1;
+    const maxY = steps.length ? Math.max(...steps.map(s => s.y), cutoff * 1.2) : 1;
 
-    const isElectricity = resourceType === 'electricity';
-    const xAxisLabel = isElectricity ? 'Cumulative Energy Savings (MWh)' : 'Cumulative Energy Savings (MMBtu)';
-    const yAxisLabel = isElectricity ? 'Cost of Conserved Energy ($/MWh)' : 'Cost of Conserved Energy ($/MMBtu)';
+    let econBoundaryX = maxX;
+    for (const pt of curve) {
+        if (pt.y > cutoff) { econBoundaryX = pt.x; break; }
+    }
+
+    // Apply NEB adjustments summary
+    const totalNebAdjustment = Object.values(nebInputs).reduce((sum, inp) => sum + (inp.nebValue || 0) - (inp.opCost || 0), 0);
 
     if (loading) return <Box sx={{ p: 4, textAlign: 'center' }}><CircularProgress /></Box>;
-
-    const color = '#2ecc71'; // Green for adjusted curve
 
     return (
         <Box>
@@ -102,122 +57,91 @@ const Step9_GapAnalysis: React.FC<Step9Props> = ({ naicsCode, selectedMeasureIds
                 <Box>
                     <Typography variant="h5">Step 9: Gap Analysis</Typography>
                     <Typography color="text.secondary">
-                        Visualize how Non-Energy Benefits shift the supply curve and unlock new potential.
+                        Final assessment with NEB adjustments. Economic vs technical potential.
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <ToggleButtonGroup
-                        value={resourceType}
-                        exclusive
-                        onChange={handleResourceChange}
-                        size="small"
-                        color="primary"
-                    >
-                        <ToggleButton value="electricity">Electricity</ToggleButton>
-                        <ToggleButton value="natural_gas">Natural Gas</ToggleButton>
-                    </ToggleButtonGroup>
+                <Box>
                     <Button onClick={onBack} sx={{ mr: 1 }}>Back</Button>
-                    <Button variant="outlined" color="error" onClick={onReset}>Start Over</Button>
+                    <Button variant="outlined" onClick={onReset}>Reset Analysis</Button>
                 </Box>
             </Box>
 
-            {!data || data.baseline_curve.length === 0 ? (
-                <Box sx={{ p: 4, textAlign: 'center' }}>No data available for {isElectricity ? 'Electricity' : 'Natural Gas'}.</Box>
-            ) : (
-                (() => {
-                    const baselineStaircase = buildSupplyCurveSteps(
-                        data.baseline_curve.map((pt: any) => ({
-                            savings: pt.width,
-                            cce: pt.y,
-                            label: pt.label,
-                            units: pt.units
-                        }))
-                    );
-
-                    const adjustedStaircase = buildSupplyCurveSteps(
-                        adjustedData.map((pt: any) => ({
-                            savings: pt.width,
-                            cce: pt.y,
-                            label: pt.label,
-                            units: pt.units
-                        }))
-                    );
-
-                    return (
-                        <>
-                            <Paper sx={{ p: 2, height: 500 }}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <ComposedChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis
-                                            dataKey="x"
-                                            type="number"
-                                            label={{ value: xAxisLabel, position: 'insideBottom', offset: -10 }}
-                                            domain={[0, 'auto']}
-                                        />
-                                        <YAxis
-                                            label={{ value: yAxisLabel, angle: -90, position: 'insideLeft' }}
-                                        />
-                                        <Tooltip
-                                            content={({ active, payload }) => {
-                                                if (active && payload && payload.length) {
-                                                    const pt = payload[0].payload;
-                                                    if (pt.isEdge) return null;
-                                                    return (
-                                                        <Paper sx={{ p: 1 }}>
-                                                            <Typography variant="subtitle2">{pt.label}</Typography>
-                                                            <Typography variant="body2">CCE: ${pt.y.toFixed(2)}</Typography>
-                                                            <Typography variant="body2">Savings: {pt.width?.toFixed(1) || 0} {pt.units}</Typography>
-                                                            <Typography variant="body2">Cum Savings: {(pt.x + (pt.width || 0)).toFixed(1)} {pt.units}</Typography>
-                                                        </Paper>
-                                                    );
-                                                }
-                                                return null;
-                                            }}
-                                        />
-                                        <Legend />
-                                        {/* Baseline Curve */}
-                                        <Scatter
-                                            name={`Baseline (${isElectricity ? 'Elec' : 'Gas'})`}
-                                            data={baselineStaircase}
-                                            dataKey="y"
-                                            fill="#95a5a6"
-                                            line={{ stroke: '#95a5a6', strokeWidth: 2, strokeDasharray: '5 5' }}
-                                            shape="circle"
-                                        />
-                                        {/* Adjusted Curve */}
-                                        <Scatter
-                                            name={`NEB Adjusted (${isElectricity ? 'Elec' : 'Gas'})`}
-                                            data={adjustedStaircase}
-                                            dataKey="y"
-                                            fill={color}
-                                            line={{ stroke: color, strokeWidth: 3 }}
-                                            shape="circle"
-                                        />
-                                    </ComposedChart>
-                                </ResponsiveContainer>
-                            </Paper>
-                            <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
-                                * Solid line: Adjusted. Dashed line: Baseline.
+            {/* Economic Potential Summary */}
+            {summary && (
+                <Paper sx={{ p: 2, mb: 3 }}>
+                    <Typography variant="h6" gutterBottom>Economic Potential Summary</Typography>
+                    <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                        <Box>
+                            <Typography variant="caption" color="text.secondary">Technical Potential</Typography>
+                            <Typography variant="h6">{summary.total_technical_gj.toFixed(0)} GJ</Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="caption" color="text.secondary">Economic Potential</Typography>
+                            <Typography variant="h6" color="success.main">{summary.economic_gj.toFixed(0)} GJ</Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="caption" color="text.secondary">Share Economic</Typography>
+                            <Typography variant="h6">{(summary.share_economic * 100).toFixed(1)}%</Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="caption" color="text.secondary">Measures Below Cutoff</Typography>
+                            <Typography variant="h6">{summary.count_economic} / {summary.count_total}</Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="caption" color="text.secondary">NEB Net Adjustment</Typography>
+                            <Typography variant="h6" color={totalNebAdjustment >= 0 ? 'success.main' : 'error.main'}>
+                                ${totalNebAdjustment.toLocaleString()}/yr
                             </Typography>
-
-                            <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-                                <Paper sx={{ p: 2, flex: 1, bgcolor: '#f5f5f5' }}>
-                                    <Typography variant="h6">Baseline Potential ({isElectricity ? 'Electricity' : 'Gas'})</Typography>
-                                    <Typography variant="body2">Measures: {data.baseline_curve.length}</Typography>
-                                </Paper>
-                                <Paper sx={{ p: 2, flex: 1, bgcolor: '#e8f5e9' }}>
-                                    <Typography variant="h6">Adjusted Potential</Typography>
-                                    <Typography variant="body2">Measures: {adjustedData.length}</Typography>
-                                    <Typography variant="body2" color="success.main">
-                                        Curve shifts down/right indicate better economics.
-                                    </Typography>
-                                </Paper>
-                            </Box>
-                        </>
-                    );
-                })()
+                        </Box>
+                    </Box>
+                </Paper>
             )}
+
+            {/* Supply Curve */}
+            <Paper sx={{ p: 2, mb: 3 }}>
+                <Typography variant="subtitle1" gutterBottom>CCE Supply Curve ($/GJ primary)</Typography>
+                <ResponsiveContainer width="100%" height={400}>
+                    <BarChart data={steps} barCategoryGap={0} barGap={0}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                            dataKey="x" type="number" domain={[0, maxX * 1.05]}
+                            label={{ value: 'Cumulative Primary Energy Saved (GJ)', position: 'insideBottom', offset: -5 }}
+                            tick={{ fontSize: 10 }}
+                        />
+                        <YAxis
+                            domain={[0, maxY * 1.1]}
+                            label={{ value: '$/GJ primary', angle: -90, position: 'insideLeft' }}
+                            tick={{ fontSize: 10 }}
+                        />
+                        <Tooltip />
+                        <ReferenceLine y={cutoff} stroke="#f44336" strokeDasharray="5 5">
+                            <Label value={`Cutoff: $${cutoff.toFixed(2)}/GJ`} position="right" fill="#f44336" />
+                        </ReferenceLine>
+                        <ReferenceArea x1={0} x2={econBoundaryX} y1={0} y2={cutoff} fill="#4caf50" fillOpacity={0.08} />
+                        <ReferenceArea x1={econBoundaryX} x2={maxX} y1={cutoff} y2={maxY * 1.1} fill="#f44336" fillOpacity={0.05} />
+                        <Bar dataKey="y" fill="#1976d2" isAnimationActive={false} />
+                    </BarChart>
+                </ResponsiveContainer>
+            </Paper>
+
+            {/* Measure details table (simple summary) */}
+            <Paper sx={{ p: 2 }}>
+                <Typography variant="subtitle1" gutterBottom>Selected Measures ({selectedMeasureIds.length})</Typography>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    {curve.map(pt => (
+                        <Paper key={pt.id} variant="outlined" sx={{
+                            p: 1, minWidth: 120,
+                            borderColor: pt.y <= cutoff ? 'success.main' : 'error.main',
+                            borderWidth: 2,
+                        }}>
+                            <Typography variant="caption" fontWeight="bold">{pt.id}</Typography>
+                            <Typography variant="caption" display="block" color="text.secondary">{pt.label}</Typography>
+                            <Typography variant="body2">${pt.y.toFixed(2)}/GJ</Typography>
+                            <Typography variant="caption" color="text.secondary">{pt.width.toFixed(1)} GJ</Typography>
+                        </Paper>
+                    ))}
+                </Box>
+            </Paper>
         </Box>
     );
 };

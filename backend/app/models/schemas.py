@@ -183,7 +183,8 @@ class AdvancedMeasure(BaseModel):
     imp_rate: float
     gross_savings: float  # Median
     payback: float        # Median
-    cce: float            # Median
+    cce: float            # Median (legacy, MMBtu-based)
+    cce_primary: float = 0.0  # Median CCE in $/GJ_primary (normalized)
     score: float          # 0-100
     cce_gas: Optional[float] = None
     cce_elec: Optional[float] = None
@@ -193,3 +194,88 @@ class AdvancedStep1Response(BaseModel):
     measures: List[AdvancedMeasure]
     naics_code: str
     industry_median_energy_cost: float # Derived from data
+
+# --- Measure Distribution (per-ARC) ---
+
+class MeasureDistributionRequest(BaseModel):
+    naics_code: str
+    arc_code: str
+    categories: Optional[List[str]] = None  # firm size categories for filtering
+
+class MeasureDistributionResponse(BaseModel):
+    gross_savings: List[float]
+    payback: List[float]
+    cce_primary: List[float]
+    count: int
+
+# --- Category-based Filtering ---
+
+class CategoryFilterRequest(BaseModel):
+    naics_code: str
+    categories: List[str]  # ["micro", "small", "medium", "large"]
+
+class AdvancedStep3Response(BaseModel):
+    cluster_metrics: List[AdvancedMeasure]
+    cluster_median_energy_cost: float = 0.0
+    cluster_size: int
+
+# --- Primary Curve ---
+
+class PrimaryCurveRequest(BaseModel):
+    naics_code: str
+    selected_measure_ids: List[str]
+    categories: Optional[List[str]] = None
+    electricity_price_mwh: float = 70.0
+    gas_price_mmbtu: float = 5.0
+    pef_elec: float = 2.348
+    pef_gas: float = 1.047
+
+class PrimaryCurvePoint(BaseModel):
+    x: float          # cumulative GJ_primary
+    y: float          # CCE $/GJ_primary
+    width: float      # GJ_primary
+    label: str
+    id: str
+    units: str = "GJ_primary"
+
+class EconomicSummary(BaseModel):
+    total_technical_gj: float
+    economic_gj: float
+    share_economic: float
+    count_economic: int
+    count_total: int
+    cutoff_price: float
+
+class PrimaryCurveResponse(BaseModel):
+    primary_curve: List[PrimaryCurvePoint]
+    cutoff_price_gj_primary: float
+    economic_summary: EconomicSummary
+    # Keep legacy fields for backward compat
+    baseline_curve: List[PrimaryCurvePoint] = []
+    electricity_curve: List[PrimaryCurvePoint] = []
+    gas_curve: List[PrimaryCurvePoint] = []
+
+# --- NEB Details ---
+
+class NEBMeasureDetail(BaseModel):
+    arc: str
+    description: str
+    imp_cost_median: Optional[float] = None
+    energy_savings_median: Optional[float] = None
+    other_energy_median: Optional[float] = None
+    waste_costs_median: Optional[float] = None
+    production_costs_median: Optional[float] = None
+    resource_costs_median: Optional[float] = None
+    # Distribution arrays
+    waste_values: List[float] = []
+    production_values: List[float] = []
+    resource_values: List[float] = []
+
+class NEBDetailsRequest(BaseModel):
+    naics_code: str
+    selected_measure_ids: List[str]
+    categories: Optional[List[str]] = None
+
+class NEBDetailsResponse(BaseModel):
+    measures: List[NEBMeasureDetail]
+

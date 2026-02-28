@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -19,23 +19,36 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import type { AdvancedMeasure } from '../../types';
+import type { AdvancedMeasure, MeasureDistributionResponse } from '../../types';
 import { computeStats, computeHistogram, normalizeWeights } from '../../utils/stats';
 import { sanitizeMeasureDescription } from '../../utils/text';
+import { api } from '../../api/client';
 
 interface Step2Props {
     measures: AdvancedMeasure[];
     industryMedianCost: number;
+    naicsCode: string;
     onBack: () => void;
     onNext: () => void;
 }
 
-const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost, onBack, onNext }) => {
+const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost: _industryMedianCost, naicsCode, onBack, onNext }) => {
     // Current weights: Count, Imp Rate, CCE, Payback, Savings
     const defaultWeights = [30, 25, 20, 15, 10];
     const [weights, setWeights] = useState<number[]>(defaultWeights);
     const [editIdx, setEditIdx] = useState<number | null>(null);
     const [editVal, setEditVal] = useState<string>('');
+    const [activeMeasure, setActiveMeasure] = useState<string>(measures[0]?.arc || '');
+    const [distData, setDistData] = useState<MeasureDistributionResponse | null>(null);
+
+    useEffect(() => {
+        if (!activeMeasure || !naicsCode) return;
+        let mounted = true;
+        api.getMeasureDistributions(naicsCode, activeMeasure)
+            .then(d => { if (mounted) setDistData(d); })
+            .catch(console.error);
+        return () => { mounted = false; };
+    }, [activeMeasure, naicsCode]);
 
     const handleEditWeight = (index: number) => {
         setEditIdx(index);
@@ -80,14 +93,14 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
 
     const countStats = _getMinMax('count');
     const impStats = _getMinMax('imp_rate');
-    const cceStats = _getMinMax('cce');
+    const cceStats = _getMinMax('cce_primary');
     const paybackStats = _getMinMax('payback');
     const savingsStats = _getMinMax('gross_savings');
 
     const recalculatedMeasures = measures.map(m => {
         const normCount = normMaxBetter(m.count, countStats.min, countStats.max);
         const normImp = normMaxBetter(m.imp_rate, impStats.min, impStats.max);
-        const normCce = normMinBetter(m.cce, cceStats.min, cceStats.max);
+        const normCce = normMinBetter(m.cce_primary, cceStats.min, cceStats.max);
         const normPayback = normMinBetter(m.payback, paybackStats.min, paybackStats.max);
         const normSavings = normMaxBetter(m.gross_savings, savingsStats.min, savingsStats.max);
 
@@ -109,13 +122,21 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
     // Let's use the full incoming dataset for the histogram context since it's ranking them.
     const histSavings = computeHistogram(measures.map(m => m.gross_savings));
     const histPayback = computeHistogram(measures.map(m => m.payback));
-    const histCceGas = computeHistogram(measures.map(m => m.cce_gas!).filter(v => v !== null && v !== undefined));
-    const histCceElec = computeHistogram(measures.map(m => m.cce_elec!).filter(v => v !== null && v !== undefined));
+    const histCcePrimary = computeHistogram(measures.map(m => m.cce_primary).filter(v => v > 0));
 
     const statSavings = computeStats(measures.map(m => m.gross_savings));
     const statPayback = computeStats(measures.map(m => m.payback));
-    const statCceGas = computeStats(measures.map(m => m.cce_gas!).filter(v => v !== null && v !== undefined));
-    const statCceElec = computeStats(measures.map(m => m.cce_elec!).filter(v => v !== null && v !== undefined));
+    const statCcePrimary = computeStats(measures.map(m => m.cce_primary).filter(v => v > 0));
+
+    // Per-measure distributions from API
+    const perMeasureHists = distData ? {
+        gs: computeHistogram(distData.gross_savings),
+        pb: computeHistogram(distData.payback),
+        cce: computeHistogram(distData.cce_primary),
+        gsStats: computeStats(distData.gross_savings),
+        pbStats: computeStats(distData.payback),
+        cceStats: computeStats(distData.cce_primary),
+    } : null;
 
     const renderWeightControl = (title: string, wIndex: number) => (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
@@ -179,7 +200,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                 <Box>
                     <Typography variant="h5">Step 2: Ranked Evaluation</Typography>
                     <Typography color="text.secondary">
-                        Industry Median Energy Cost: ${industryMedianCost.toFixed(3)} / unit
+                        {measures.length} measures ranked by weighted criteria. Click a row for per-measure distributions.
                     </Typography>
                 </Box>
                 <Box>
@@ -204,19 +225,30 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                             </CardContent>
                         </Card>
                     </Box>
-                    <Box sx={{ width: { xs: '100%', md: 'calc(18% - 16px)' } }}>
+                    <Box sx={{ width: { xs: '100%', md: 'calc(25% - 16px)' } }}>
                         {renderHistogram('Gross Savings', histSavings, statSavings, '$')}
                     </Box>
-                    <Box sx={{ width: { xs: '100%', md: 'calc(18% - 16px)' } }}>
+                    <Box sx={{ width: { xs: '100%', md: 'calc(25% - 16px)' } }}>
                         {renderHistogram('Payback Period', histPayback, statPayback, 'yrs')}
                     </Box>
-                    <Box sx={{ width: { xs: '100%', md: 'calc(18% - 16px)' } }}>
-                        {renderHistogram('CCE (Electricity)', histCceElec, statCceElec, '$/MWh')}
-                    </Box>
-                    <Box sx={{ width: { xs: '100%', md: 'calc(18% - 16px)' } }}>
-                        {renderHistogram('CCE (Natural Gas)', histCceGas, statCceGas, '$/MMBtu')}
+                    <Box sx={{ width: { xs: '100%', md: 'calc(25% - 16px)' } }}>
+                        {renderHistogram('CCE ($/GJ primary)', histCcePrimary, statCcePrimary, '$/GJ')}
                     </Box>
                 </Box>
+                {/* Per-measure distributions */}
+                {activeMeasure && perMeasureHists && (
+                    <Box sx={{ display: 'flex', gap: 2, mt: 2, flexWrap: 'wrap' }}>
+                        <Box sx={{ flex: '1 1 250px' }}>
+                            {renderHistogram(`Gross Savings — ${activeMeasure}`, perMeasureHists.gs, perMeasureHists.gsStats, '$')}
+                        </Box>
+                        <Box sx={{ flex: '1 1 250px' }}>
+                            {renderHistogram(`Payback — ${activeMeasure}`, perMeasureHists.pb, perMeasureHists.pbStats, 'yrs')}
+                        </Box>
+                        <Box sx={{ flex: '1 1 250px' }}>
+                            {renderHistogram(`CCE ($/GJ) — ${activeMeasure}`, perMeasureHists.cce, perMeasureHists.cceStats, '$/GJ')}
+                        </Box>
+                    </Box>
+                )}
             </Box>
 
             <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
@@ -229,13 +261,14 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                             <TableCell align="right">Imp Rate</TableCell>
                             <TableCell align="right">Gross Savings (Median)</TableCell>
                             <TableCell align="right">Payback (Median)</TableCell>
-                            <TableCell align="right">CCE (Median)</TableCell>
+                            <TableCell align="right">CCE ($/GJ primary)</TableCell>
                             <TableCell align="right">Score (0-100)</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {displayMeasures.map((row, index) => (
-                            <TableRow key={row.arc} hover>
+                            <TableRow key={row.arc} hover selected={row.arc === activeMeasure}
+                                onClick={() => setActiveMeasure(row.arc)} sx={{ cursor: 'pointer' }}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>
                                     <Box>
@@ -249,7 +282,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                                 <TableCell align="right">{(row.imp_rate * 100).toFixed(1)}%</TableCell>
                                 <TableCell align="right">{row.gross_savings.toLocaleString()}</TableCell>
                                 <TableCell align="right">{row.payback.toFixed(2)} yrs</TableCell>
-                                <TableCell align="right">${row.cce.toFixed(2)}</TableCell>
+                                <TableCell align="right">${row.cce_primary.toFixed(2)}/GJ</TableCell>
                                 <TableCell align="right">
                                     <Chip
                                         label={row.score.toFixed(1)}

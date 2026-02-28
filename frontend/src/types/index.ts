@@ -252,6 +252,8 @@ export interface Step3Response {
 }
 
 // --- Advanced Dashboard ---
+export type FirmSizeCategory = 'micro' | 'small' | 'medium' | 'large';
+
 export interface AdvancedMeasure {
     arc: string;
     description: string;
@@ -260,6 +262,7 @@ export interface AdvancedMeasure {
     gross_savings: number;
     payback: number;
     cce: number;
+    cce_primary: number;  // $/GJ_primary (normalized)
     score: number;
     cce_gas?: number | null;
     cce_elec?: number | null;
@@ -288,6 +291,62 @@ export interface AdvancedStep3Response {
     cluster_size: number;
 }
 
+// --- Per-Measure Distribution ---
+export interface MeasureDistributionResponse {
+    gross_savings: number[];
+    payback: number[];
+    cce_primary: number[];
+    count: number;
+}
+
+// --- Primary Curve ---
+export interface PrimaryCurvePoint {
+    x: number;
+    y: number;
+    width: number;
+    label: string;
+    id: string;
+    units: string;
+}
+
+export interface EconomicSummary {
+    total_technical_gj: number;
+    economic_gj: number;
+    share_economic: number;
+    count_economic: number;
+    count_total: number;
+    cutoff_price: number;
+}
+
+export interface PrimaryCurveResponse {
+    primary_curve: PrimaryCurvePoint[];
+    cutoff_price_gj_primary: number;
+    economic_summary: EconomicSummary;
+    baseline_curve: PrimaryCurvePoint[];
+    electricity_curve: PrimaryCurvePoint[];
+    gas_curve: PrimaryCurvePoint[];
+}
+
+// --- NEB Details ---
+export interface NEBMeasureDetail {
+    arc: string;
+    description: string;
+    imp_cost_median: number | null;
+    energy_savings_median: number | null;
+    other_energy_median: number | null;
+    waste_costs_median: number | null;
+    production_costs_median: number | null;
+    resource_costs_median: number | null;
+    waste_values: number[];
+    production_values: number[];
+    resource_values: number[];
+}
+
+export interface NEBDetailsResponse {
+    measures: NEBMeasureDetail[];
+}
+
+// Legacy types kept for backward compat
 export interface CurvePoint {
     x: number;
     y: number;

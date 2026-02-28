@@ -1,145 +1,157 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Button, CircularProgress, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import {
-    ComposedChart,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-    Scatter
-} from 'recharts';
+import { Box, Typography, Paper, Button, TextField, CircularProgress } from '@mui/material';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine, ReferenceArea, Label } from 'recharts';
 import { api } from '../../api/client';
-import type { AdvancedStep4Response } from '../../types';
+import type { FirmSizeCategory, PrimaryCurvePoint, EconomicSummary } from '../../types';
 import { buildSupplyCurveSteps } from '../../utils/stats';
 
 interface Step7Props {
     naicsCode: string;
     selectedMeasureIds: string[];
+    selectedCategories: FirmSizeCategory[];
     onBack: () => void;
     onNext: () => void;
 }
 
-const Step7_BaselineCurve: React.FC<Step7Props> = ({ naicsCode, selectedMeasureIds, onBack, onNext }) => {
-    const [loading, setLoading] = useState(true);
-    const [data, setData] = useState<AdvancedStep4Response | null>(null);
-    const [resourceType, setResourceType] = useState<'electricity' | 'natural_gas'>('electricity');
+const Step7_BaselineCurve: React.FC<Step7Props> = ({ naicsCode, selectedMeasureIds, selectedCategories, onBack, onNext }) => {
+    const [elecPrice, setElecPrice] = useState(70.0);
+    const [gasPrice, setGasPrice] = useState(5.0);
+    const [loading, setLoading] = useState(false);
+    const [curve, setCurve] = useState<PrimaryCurvePoint[]>([]);
+    const [cutoff, setCutoff] = useState(0);
+    const [summary, setSummary] = useState<EconomicSummary | null>(null);
 
-    useEffect(() => {
-        let mounted = true;
-        const load = async () => {
-            setLoading(true);
-            try {
-                const res = await api.getAdvancedStep4(naicsCode, selectedMeasureIds, resourceType);
-                if (mounted) setData(res);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                if (mounted) setLoading(false);
-            }
-        };
-        load();
-        return () => { mounted = false; };
-    }, [naicsCode, selectedMeasureIds, resourceType]);
-
-    const handleResourceChange = (
-        _event: React.MouseEvent<HTMLElement>,
-        newResource: 'electricity' | 'natural_gas'
-    ) => {
-        if (newResource !== null) {
-            setResourceType(newResource);
+    const loadCurve = async () => {
+        setLoading(true);
+        try {
+            const data = await api.getPrimaryCurves(naicsCode, selectedMeasureIds, elecPrice, gasPrice, selectedCategories);
+            setCurve(data.primary_curve);
+            setCutoff(data.cutoff_price_gj_primary);
+            setSummary(data.economic_summary);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const isElectricity = resourceType === 'electricity';
-    const xAxisLabel = isElectricity ? 'Cumulative Energy Savings (MWh)' : 'Cumulative Energy Savings (MMBtu)';
-    const yAxisLabel = isElectricity ? 'Cost of Conserved Energy ($/MWh)' : 'Cost of Conserved Energy ($/MMBtu)';
-    const color = isElectricity ? '#3498db' : '#e67e22'; // Blue for elec, orange for gas
+    useEffect(() => { loadCurve(); }, [naicsCode, selectedMeasureIds, selectedCategories]);
+
+    // Build staircase data for Recharts
+    const steps = buildSupplyCurveSteps(
+        curve.map(pt => ({ savings: pt.width, cce: pt.y, label: pt.label, units: 'GJ_primary' }))
+    );
+
+    const maxX = steps.length ? Math.max(...steps.map(s => s.x)) : 1;
+    const maxY = steps.length ? Math.max(...steps.map(s => s.y), cutoff * 1.2) : 1;
+
+    // Find the x where cce exceeds cutoff (for area shading)
+    let econBoundaryX = maxX;
+    for (const pt of curve) {
+        if (pt.y > cutoff) {
+            econBoundaryX = pt.x;
+            break;
+        }
+    }
 
     return (
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'center' }}>
                 <Box>
-                    <Typography variant="h5">Step 7: Baseline Technical Potential</Typography>
+                    <Typography variant="h5">Step 7: Baseline Potential (Primary Energy)</Typography>
                     <Typography color="text.secondary">
-                        Supply Curve of Conserved Energy (CCE). Ordered by cost effectiveness.
+                        Combined cost of conserved energy supply curve in $/GJ_primary.
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <ToggleButtonGroup
-                        value={resourceType}
-                        exclusive
-                        onChange={handleResourceChange}
-                        size="small"
-                        color="primary"
-                    >
-                        <ToggleButton value="electricity">Electricity</ToggleButton>
-                        <ToggleButton value="natural_gas">Natural Gas</ToggleButton>
-                    </ToggleButtonGroup>
+                <Box>
                     <Button onClick={onBack} sx={{ mr: 1 }}>Back</Button>
-                    <Button variant="contained" onClick={onNext}>Next: NEB Inputs</Button>
+                    <Button variant="contained" onClick={onNext}>Next: NEB</Button>
                 </Box>
             </Box>
 
-            {loading ? (
-                <Box sx={{ p: 4, textAlign: 'center' }}><CircularProgress /></Box>
-            ) : (!data || data.baseline_curve.length === 0) ? (
-                <Box sx={{ p: 4, textAlign: 'center' }}>No data for {isElectricity ? 'Electricity' : 'Natural Gas'} curve.</Box>
-            ) : (
-                (() => {
-                    const staircaseData = buildSupplyCurveSteps(
-                        data.baseline_curve.map(pt => ({
-                            savings: pt.width,
-                            cce: pt.y,
-                            label: pt.label,
-                            units: pt.units
-                        }))
-                    );
+            {/* Price Inputs */}
+            <Paper sx={{ p: 2, mb: 3, display: 'flex', gap: 3, alignItems: 'center', flexWrap: 'wrap' }}>
+                <TextField
+                    label="Electricity Price ($/MWh)" type="number" size="small"
+                    value={elecPrice} onChange={e => setElecPrice(+e.target.value)}
+                    sx={{ width: 200 }}
+                />
+                <TextField
+                    label="Gas Price ($/MMBtu)" type="number" size="small"
+                    value={gasPrice} onChange={e => setGasPrice(+e.target.value)}
+                    sx={{ width: 200 }}
+                />
+                <Button variant="outlined" onClick={loadCurve}>Update Curve</Button>
+                {cutoff > 0 && (
+                    <Typography variant="body2" color="text.secondary">
+                        Cutoff: <strong>${cutoff.toFixed(2)}/GJ_primary</strong>
+                    </Typography>
+                )}
+            </Paper>
 
-                    return (
-                        <>
-                            <Paper sx={{ p: 2, height: 500 }}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <ComposedChart data={staircaseData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis
-                                            dataKey="x"
-                                            type="number"
-                                            label={{ value: xAxisLabel, position: 'insideBottom', offset: -10 }}
-                                            domain={[0, 'auto']}
-                                        />
-                                        <YAxis
-                                            label={{ value: yAxisLabel, angle: -90, position: 'insideLeft' }}
-                                        />
-                                        <Tooltip
-                                            content={({ active, payload }) => {
-                                                if (active && payload && payload.length) {
-                                                    const pt = payload[0].payload;
-                                                    if (pt.isEdge) return null; // Avoid double tooltips on vertical drops
-                                                    return (
-                                                        <Paper sx={{ p: 1 }}>
-                                                            <Typography variant="subtitle2">{pt.label}</Typography>
-                                                            <Typography variant="body2">CCE: ${pt.y.toFixed(2)}</Typography>
-                                                            <Typography variant="body2">Savings: {pt.width?.toFixed(1) || 0} {pt.units}</Typography>
-                                                            <Typography variant="body2">Cum Savings: {(pt.x + (pt.width || 0)).toFixed(1)} {pt.units}</Typography>
-                                                        </Paper>
-                                                    );
-                                                }
-                                                return null;
-                                            }}
-                                        />
-                                        <Legend />
-                                        <Scatter name={`${isElectricity ? 'Electricity' : 'Gas'} Measures`} dataKey="y" fill={color} line={{ stroke: color, strokeWidth: 2 }} shape="circle" />
-                                    </ComposedChart>
-                                </ResponsiveContainer>
-                            </Paper>
-                            <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
-                                * Measures below the horizontal axis (if any) have negative cost (instant payback).
-                            </Typography>
-                        </>
-                    );
-                })()
+            {loading ? (
+                <Box sx={{ textAlign: 'center', p: 4 }}><CircularProgress /></Box>
+            ) : (
+                <>
+                    <Paper sx={{ p: 2, mb: 3 }}>
+                        <ResponsiveContainer width="100%" height={400}>
+                            <BarChart data={steps} barCategoryGap={0} barGap={0}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis
+                                    dataKey="x" type="number" domain={[0, maxX * 1.05]}
+                                    label={{ value: 'Cumulative Primary Energy Saved (GJ)', position: 'insideBottom', offset: -5 }}
+                                    tick={{ fontSize: 10 }}
+                                />
+                                <YAxis
+                                    domain={[0, maxY * 1.1]}
+                                    label={{ value: '$/GJ primary', angle: -90, position: 'insideLeft' }}
+                                    tick={{ fontSize: 10 }}
+                                />
+                                <Tooltip
+                                    formatter={(value: number | string) => [`$${Number(value).toFixed(2)}/GJ`, 'CCE']}
+                                    labelFormatter={(val) => `@ ${Number(val).toFixed(0)} GJ`}
+                                />
+                                <ReferenceLine y={cutoff} stroke="#f44336" strokeDasharray="5 5">
+                                    <Label value={`Cutoff: $${cutoff.toFixed(2)}/GJ`} position="right" fill="#f44336" />
+                                </ReferenceLine>
+                                {/* Economic region (green) */}
+                                <ReferenceArea x1={0} x2={econBoundaryX} y1={0} y2={cutoff} fill="#4caf50" fillOpacity={0.08} />
+                                {/* Non-economic region (red) */}
+                                <ReferenceArea x1={econBoundaryX} x2={maxX} y1={cutoff} y2={maxY * 1.1} fill="#f44336" fillOpacity={0.05} />
+                                <Bar dataKey="y" fill="#1976d2" isAnimationActive={false} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </Paper>
+
+                    {/* Economic Potential Summary */}
+                    {summary && (
+                        <Paper sx={{ p: 2 }}>
+                            <Typography variant="h6" gutterBottom>Economic Potential Summary</Typography>
+                            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">Technical Potential</Typography>
+                                    <Typography variant="h6">{summary.total_technical_gj.toFixed(0)} GJ</Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">Economic Potential</Typography>
+                                    <Typography variant="h6" color="success.main">{summary.economic_gj.toFixed(0)} GJ</Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">Share Economic</Typography>
+                                    <Typography variant="h6">{(summary.share_economic * 100).toFixed(1)}%</Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">Measures Below Cutoff</Typography>
+                                    <Typography variant="h6">{summary.count_economic} / {summary.count_total}</Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="caption" color="text.secondary">Weighted Cutoff</Typography>
+                                    <Typography variant="h6">${summary.cutoff_price.toFixed(2)} /GJ</Typography>
+                                </Box>
+                            </Box>
+                        </Paper>
+                    )}
+                </>
             )}
         </Box>
     );

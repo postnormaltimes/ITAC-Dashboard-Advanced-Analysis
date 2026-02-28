@@ -1,106 +1,96 @@
 import React, { useState } from 'react';
-import { Box, Typography, Paper, Button, Slider, Stack, TextField, Divider } from '@mui/material';
+import { Box, Typography, Paper, Button, Checkbox, FormControlLabel, FormGroup, Alert } from '@mui/material';
+import type { FirmSizeCategory } from '../../types';
+
+const CATEGORIES: { key: FirmSizeCategory; label: string; empDesc: string; salesDesc: string }[] = [
+    { key: 'micro', label: 'Micro', empDesc: '< 10 employees', salesDesc: '≤ $2M turnover' },
+    { key: 'small', label: 'Small', empDesc: '< 50 employees', salesDesc: '≤ $10M turnover' },
+    { key: 'medium', label: 'Medium', empDesc: '< 250 employees', salesDesc: '≤ $50M turnover' },
+    { key: 'large', label: 'Large', empDesc: '≥ 250 employees', salesDesc: '> $50M turnover' },
+];
 
 interface Step4Props {
     onBack: () => void;
-    onNext: (ranges: { emp: number[], sales: number[] }) => void;
+    onNext: (categories: FirmSizeCategory[]) => void;
 }
 
 const Step4_ClusterDef: React.FC<Step4Props> = ({ onBack, onNext }) => {
-    // Defaults matching common SME analysis
-    const [empRange, setEmpRange] = useState<number[]>([10, 500]);
-    const [salesRange, setSalesRange] = useState<number[]>([1000000, 50000000]);
+    const [selected, setSelected] = useState<Set<FirmSizeCategory>>(new Set(['small', 'medium']));
 
-    const handleNext = () => {
-        onNext({ emp: empRange, sales: salesRange });
+    const handleToggle = (cat: FirmSizeCategory) => {
+        setSelected(prev => {
+            const next = new Set(prev);
+            if (next.has(cat)) {
+                next.delete(cat);
+            } else {
+                if (next.size >= 2) return prev; // Prevent > 2
+                next.add(cat);
+            }
+            return next;
+        });
     };
 
     return (
-        <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+        <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'center' }}>
                 <Box>
                     <Typography variant="h5">Step 4: Define Cluster</Typography>
                     <Typography color="text.secondary">
-                        Refine the analysis scope by filtering for specific firm sizes.
+                        Select up to 2 firm-size categories to define your cluster for comparison.
                     </Typography>
                 </Box>
                 <Box>
                     <Button onClick={onBack} sx={{ mr: 1 }}>Back</Button>
-                    <Button variant="contained" onClick={handleNext}>Next: Compare</Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => onNext(Array.from(selected))}
+                        disabled={selected.size === 0}
+                    >
+                        Next: Comparison
+                    </Button>
                 </Box>
             </Box>
 
-            <Paper sx={{ p: 4 }}>
-                <Stack spacing={4}>
-                    <Box>
-                        <Typography variant="subtitle1" gutterBottom fontWeight="bold">
-                            Number of Employees
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                            Target Range: {empRange[0]} - {empRange[1]} employees
-                        </Typography>
-                        <Slider
-                            value={empRange}
-                            onChange={(_, newValue) => setEmpRange(newValue as number[])}
-                            valueLabelDisplay="auto"
-                            min={0}
-                            max={1000}
-                            step={10}
-                        />
-                        <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-                            <TextField
-                                label="Min"
-                                type="number"
-                                size="small"
-                                value={empRange[0]}
-                                onChange={(e) => setEmpRange([Number(e.target.value), empRange[1]])}
-                            />
-                            <TextField
-                                label="Max"
-                                type="number"
-                                size="small"
-                                value={empRange[1]}
-                                onChange={(e) => setEmpRange([empRange[0], Number(e.target.value)])}
-                            />
-                        </Stack>
-                    </Box>
+            {selected.size >= 2 && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                    Maximum of 2 categories selected. Deselect one to change.
+                </Alert>
+            )}
 
-                    <Divider />
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                {CATEGORIES.map(cat => (
+                    <Paper
+                        key={cat.key}
+                        sx={{
+                            p: 3, flex: '1 1 200px', cursor: 'pointer',
+                            border: selected.has(cat.key) ? '2px solid' : '2px solid transparent',
+                            borderColor: selected.has(cat.key) ? 'primary.main' : 'transparent',
+                            opacity: !selected.has(cat.key) && selected.size >= 2 ? 0.5 : 1,
+                            transition: 'all 0.2s',
+                            '&:hover': { borderColor: selected.size < 2 || selected.has(cat.key) ? 'primary.light' : 'transparent' },
+                        }}
+                        onClick={() => handleToggle(cat.key)}
+                    >
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={selected.has(cat.key)}
+                                        disabled={!selected.has(cat.key) && selected.size >= 2}
+                                    />
+                                }
+                                label={<Typography variant="h6">{cat.label}</Typography>}
+                            />
+                        </FormGroup>
+                        <Typography variant="body2" color="text.secondary">{cat.empDesc}</Typography>
+                        <Typography variant="body2" color="text.secondary">{cat.salesDesc}</Typography>
+                    </Paper>
+                ))}
+            </Box>
 
-                    <Box>
-                        <Typography variant="subtitle1" gutterBottom fontWeight="bold">
-                            Annual Sales ($)
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                            Target Range: ${salesRange[0].toLocaleString()} - ${salesRange[1].toLocaleString()}
-                        </Typography>
-                        <Slider
-                            value={salesRange}
-                            onChange={(_, newValue) => setSalesRange(newValue as number[])}
-                            valueLabelDisplay="auto"
-                            min={0}
-                            max={100000000}
-                            step={100000}
-                        />
-                        <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-                            <TextField
-                                label="Min ($)"
-                                type="number"
-                                size="small"
-                                value={salesRange[0]}
-                                onChange={(e) => setSalesRange([Number(e.target.value), salesRange[1]])}
-                            />
-                            <TextField
-                                label="Max ($)"
-                                type="number"
-                                size="small"
-                                value={salesRange[1]}
-                                onChange={(e) => setSalesRange([salesRange[0], Number(e.target.value)])}
-                            />
-                        </Stack>
-                    </Box>
-                </Stack>
-            </Paper>
+            <Typography variant="caption" sx={{ mt: 2, display: 'block' }}>
+                Selected: {Array.from(selected).join(', ') || 'None'}
+            </Typography>
         </Box>
     );
 };

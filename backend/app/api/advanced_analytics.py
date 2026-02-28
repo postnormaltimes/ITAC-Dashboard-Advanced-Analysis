@@ -4,63 +4,85 @@ from pydantic import BaseModel
 import duckdb
 import numpy as np
 import pandas as pd
-from app.models.schemas import AdvancedStep1Request, AdvancedStep1Response, AdvancedMeasure
+from app.models.schemas import (
+    AdvancedStep1Request, AdvancedStep1Response, AdvancedMeasure,
+    MeasureDistributionRequest, MeasureDistributionResponse,
+    CategoryFilterRequest, AdvancedStep3Response,
+    PrimaryCurveRequest, PrimaryCurveResponse, PrimaryCurvePoint, EconomicSummary,
+    NEBDetailsRequest, NEBDetailsResponse, NEBMeasureDetail,
+)
 from app.db.connection import DB_PATH
 from app.lookups.arc_codes import get_arc_label
+from app.utils.energy_constants import (
+    PEF_ELEC, PEF_GAS, compute_crf,
+    DEFAULT_DISCOUNT_RATE, DEFAULT_LIFETIME,
+)
+from app.utils.cce_primary import (
+    observation_primary_energy_gj, compute_cce_primary,
+    compute_obs_metrics, compute_neb_categories,
+    classify_firm_size, compute_primary_price_cutoff,
+    compute_economic_potential_summary,
+)
 
 router = APIRouter()
 
 def get_db_connection():
     return duckdb.connect(str(DB_PATH), read_only=True)
 
-# --- Helper Logic ---
+
+# ===================================================================
+# Helpers: category filtering
+# ===================================================================
+
+def _apply_category_filter(df: pd.DataFrame, categories: Optional[List[str]]) -> pd.DataFrame:
+    """Filter DataFrame by firm-size categories. Returns df unchanged if categories is None/empty."""
+    if not categories:
+        return df
+    df = df.copy()
+    df["_firm_category"] = df.apply(
+        lambda r: classify_firm_size(int(r.get("employees", 0) or 0), float(r.get("sales", 0) or 0)),
+        axis=1,
+    )
+    return df[df["_firm_category"].isin(categories)]
+
+
+# ===================================================================
+# Core: _process_dataset
+# ===================================================================
 
 def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
     """
     Core logic to calculate metrics, scores, and rankings from a DataFrame.
+    Now includes cce_primary ($/GJ_primary) alongside legacy cce.
     """
-    # 1. Industry Median Energy Cost (Proxy for Bill/Energy)
-    # We will use the median of (Total Savings / Total Conserved Energy) for implemented projects as the industry proxy.
-    industry_energy_cost = 0.10 # Default $/Unit (approx $/kWh or $/MMBtu mix)
+    industry_energy_cost = 0.0  # No longer used for display; kept for backward compat
 
-    # 2. Group by ARC
-    # Ensure columns exist (handle demo data or missing ingest)
-    required_cols = ['psaved', 'ssaved', 'tsaved', 'qsaved', 
-                    'pconserved', 'sconserved', 'tconserved', 'qconserved',
-                    'psourccode', 'ssourccode', 'tsourccode', 'qsourccode']
-    
-    # Fill missing columns with 0/Nan if not present (robustness)
+    required_cols = ['psaved', 'ssaved', 'tsaved', 'qsaved',
+                     'pconserved', 'sconserved', 'tconserved', 'qconserved',
+                     'psourccode', 'ssourccode', 'tsourccode', 'qsourccode']
     for col in required_cols:
         if col not in df.columns:
             df[col] = 0 if 'sourccode' not in col else None
 
-    # Calculate Total Gross Savings ($) per row
+    # Total Gross Savings ($) per row
     df['total_savings'] = (
-        df['psaved'].fillna(0) + 
-        df['ssaved'].fillna(0) + 
-        df['tsaved'].fillna(0) + 
+        df['psaved'].fillna(0) +
+        df['ssaved'].fillna(0) +
+        df['tsaved'].fillna(0) +
         df['qsaved'].fillna(0)
     )
 
-    # Calculate Total Conserved Energy (MMBtu) per row
-    # We need to normalize units. 
-    # EC (Electricity) = kWh -> 0.003412 MMBtu
-    # E* (Fuel) = MMBtu -> 1.0
-    # Others -> Ignore for "Energy" CCE? Or treat as 0? 
-    # For now, let's strictly convert EC and sum E*.
-    
+    # Legacy: Total Conserved Energy (MMBtu-mixed) per row
     def get_mmbtu(val, code):
         if pd.isna(val) or val == 0: return 0
-        if not isinstance(code, str): return 0 # or assume MMBtu?
+        if not isinstance(code, str): return 0
         code = code.upper().strip()
-        if code == 'EC' or code == 'E13': # Electricity
+        if code == 'EC' or code == 'E13' or code == 'E1':
             return val * 0.003412
-        if code.startswith('E'): # Other Energy (E2, E3...)
+        if code.startswith('E'):
             return val
-        return 0 # Non-energy (Water, Waste, etc.)
+        return 0
 
-    # Vectorized approach or apply is fine for dataset size
-    # Let's use simple apply for readability for P, S, T, Q
     df['total_energy_conserved'] = (
         df.apply(lambda x: get_mmbtu(x['pconserved'], x['psourccode']), axis=1) +
         df.apply(lambda x: get_mmbtu(x['sconserved'], x['ssourccode']), axis=1) +
@@ -68,49 +90,52 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
         df.apply(lambda x: get_mmbtu(x['qconserved'], x['qsourccode']), axis=1)
     )
 
+    # Primary energy (GJ) per row — using new utility
+    df['e_primary_gj'] = df.apply(
+        lambda x: observation_primary_energy_gj(x.to_dict()), axis=1
+    )
+
     grouped = df.groupby('arc')
 
-    # Constants for CCE
-    r = 0.07
-    t = 15
-    crf = (r * (1 + r)**t) / ((1 + r)**t - 1)
+    crf = compute_crf(DEFAULT_DISCOUNT_RATE, DEFAULT_LIFETIME)
 
     measures = []
-    
+
     for arc, group in grouped:
         count = len(group)
-        
-        # Implementation Rate: Occurrences of "I" / Total Count
-        # IMPSTATUS can be 'I', 'Implemented', etc. Check for "I" or "Implemented".
-        # User said: occurances of "I" in "IMPSTATUS".
-        # Our ingest normalizes to "Implemented" or keeps raw? 
-        # Ingest script had: NULLIF(CAST(impstatus AS VARCHAR), 'nan')
-        # Let's check string content broadly.
+
+        # Implementation Rate
         implemented = group['impstatus'].astype(str).str.upper().apply(lambda x: 'I' in x or 'IMPL' in x)
         imp_rate = implemented.sum() / count if count > 0 else 0
-        
-        # Gross Savings: Median of Sums(P+S+T+Q SAVED)
-        # Using the pre-calculated 'total_savings' column
+
+        # Gross Savings: Median
         gross_savings = group['total_savings'].median()
-        
-        # Payback: Median of (IMPCOST / Sum(SAVED))
-        # Filter for rows with savings > 0 to avoid Div/0
+
+        # Payback: Median
         valid_payback = group[group['total_savings'] > 0].copy()
         if not valid_payback.empty:
             valid_payback['calc_payback'] = valid_payback['implementation_cost'] / valid_payback['total_savings']
             payback = valid_payback['calc_payback'].median()
         else:
             payback = 0.0
-            
-        # CCE: Median of (IMPCOST * CRF / Total Conserved)
-        # Filter for rows with Energy Conserved > 0
+
+        # Legacy CCE (MMBtu-mixed)
         valid_cce = group[group['total_energy_conserved'] > 0].copy()
         if not valid_cce.empty:
             valid_cce['calc_cce'] = (valid_cce['implementation_cost'] * crf) / valid_cce['total_energy_conserved']
             cce = valid_cce['calc_cce'].median()
         else:
-            cce = 0.0 # Or infinite?
-            
+            cce = 0.0
+
+        # NEW: CCE Primary ($/GJ_primary)
+        valid_primary = group[group['e_primary_gj'] > 0].copy()
+        if not valid_primary.empty:
+            valid_primary['calc_cce_primary'] = (valid_primary['implementation_cost'] * crf) / valid_primary['e_primary_gj']
+            cce_primary = valid_primary['calc_cce_primary'].median()
+        else:
+            cce_primary = 0.0
+
+        # Legacy: separate elec/gas CCE
         def get_elec_mwh(val, code):
             if pd.isna(val) or val == 0: return 0.0
             if isinstance(code, str) and (code.upper() in ['EC', 'E13'] or code.upper() == 'E1'):
@@ -131,68 +156,63 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
                 if isinstance(code, str) and code.upper() == 'E2': return float(val)
             return 0.0
 
-        # Create localized dataframes for CCE Gas vs Elec
-        group_elec = group.copy()
-        group_elec['elec_mwh'] = (
-            group_elec.apply(lambda x: get_elec_mwh(x['pconserved'], x['psourccode']), axis=1) +
-            group_elec.apply(lambda x: get_elec_mwh(x['sconserved'], x['ssourccode']), axis=1) +
-            group_elec.apply(lambda x: get_elec_mwh(x['tconserved'], x['tsourccode']), axis=1) +
-            group_elec.apply(lambda x: get_elec_mwh(x['qconserved'], x['qsourccode']), axis=1)
+        group_copy = group.copy()
+        group_copy['elec_mwh'] = (
+            group_copy.apply(lambda x: get_elec_mwh(x['pconserved'], x['psourccode']), axis=1) +
+            group_copy.apply(lambda x: get_elec_mwh(x['sconserved'], x['ssourccode']), axis=1) +
+            group_copy.apply(lambda x: get_elec_mwh(x['tconserved'], x['tsourccode']), axis=1) +
+            group_copy.apply(lambda x: get_elec_mwh(x['qconserved'], x['qsourccode']), axis=1)
         )
-        group_elec['elec_dollars'] = (
-            group_elec.apply(lambda x: get_dollar_portion(x['psaved'], x['psourccode'], True), axis=1) +
-            group_elec.apply(lambda x: get_dollar_portion(x['ssaved'], x['ssourccode'], True), axis=1) +
-            group_elec.apply(lambda x: get_dollar_portion(x['tsaved'], x['tsourccode'], True), axis=1) +
-            group_elec.apply(lambda x: get_dollar_portion(x['qsaved'], x['qsourccode'], True), axis=1)
+        group_copy['elec_dollars'] = (
+            group_copy.apply(lambda x: get_dollar_portion(x['psaved'], x['psourccode'], True), axis=1) +
+            group_copy.apply(lambda x: get_dollar_portion(x['ssaved'], x['ssourccode'], True), axis=1) +
+            group_copy.apply(lambda x: get_dollar_portion(x['tsaved'], x['tsourccode'], True), axis=1) +
+            group_copy.apply(lambda x: get_dollar_portion(x['qsaved'], x['qsourccode'], True), axis=1)
         )
-        cce_elec_vals = group_elec[group_elec['elec_mwh'] > 0]
+        cce_elec_vals = group_copy[group_copy['elec_mwh'] > 0]
         if not cce_elec_vals.empty:
-            # Prop cost = total cost * (elec_dollars / total_savings)
             prop_cost = cce_elec_vals['implementation_cost'] * (cce_elec_vals['elec_dollars'] / cce_elec_vals['total_savings'].replace(0, 1))
-            cce_elec_vals['calc'] = (prop_cost * crf) / cce_elec_vals['elec_mwh']
-            cce_elec = cce_elec_vals['calc'].median()
+            cce_elec = (prop_cost * crf / cce_elec_vals['elec_mwh']).median()
         else:
             cce_elec = None
 
-        group_gas = group.copy()
-        group_gas['gas_mmbtu'] = (
-            group_gas.apply(lambda x: get_gas_mmbtu(x['pconserved'], x['psourccode']), axis=1) +
-            group_gas.apply(lambda x: get_gas_mmbtu(x['sconserved'], x['ssourccode']), axis=1) +
-            group_gas.apply(lambda x: get_gas_mmbtu(x['tconserved'], x['tsourccode']), axis=1) +
-            group_gas.apply(lambda x: get_gas_mmbtu(x['qconserved'], x['qsourccode']), axis=1)
+        group_copy['gas_mmbtu'] = (
+            group_copy.apply(lambda x: get_gas_mmbtu(x['pconserved'], x['psourccode']), axis=1) +
+            group_copy.apply(lambda x: get_gas_mmbtu(x['sconserved'], x['ssourccode']), axis=1) +
+            group_copy.apply(lambda x: get_gas_mmbtu(x['tconserved'], x['tsourccode']), axis=1) +
+            group_copy.apply(lambda x: get_gas_mmbtu(x['qconserved'], x['qsourccode']), axis=1)
         )
-        group_gas['gas_dollars'] = (
-            group_gas.apply(lambda x: get_dollar_portion(x['psaved'], x['psourccode'], False), axis=1) +
-            group_gas.apply(lambda x: get_dollar_portion(x['ssaved'], x['ssourccode'], False), axis=1) +
-            group_gas.apply(lambda x: get_dollar_portion(x['tsaved'], x['tsourccode'], False), axis=1) +
-            group_gas.apply(lambda x: get_dollar_portion(x['qsaved'], x['qsourccode'], False), axis=1)
+        group_copy['gas_dollars'] = (
+            group_copy.apply(lambda x: get_dollar_portion(x['psaved'], x['psourccode'], False), axis=1) +
+            group_copy.apply(lambda x: get_dollar_portion(x['ssaved'], x['ssourccode'], False), axis=1) +
+            group_copy.apply(lambda x: get_dollar_portion(x['tsaved'], x['tsourccode'], False), axis=1) +
+            group_copy.apply(lambda x: get_dollar_portion(x['qsaved'], x['qsourccode'], False), axis=1)
         )
-        cce_gas_vals = group_gas[group_gas['gas_mmbtu'] > 0]
+        cce_gas_vals = group_copy[group_copy['gas_mmbtu'] > 0]
         if not cce_gas_vals.empty:
             prop_cost = cce_gas_vals['implementation_cost'] * (cce_gas_vals['gas_dollars'] / cce_gas_vals['total_savings'].replace(0, 1))
-            cce_gas_vals['calc'] = (prop_cost * crf) / cce_gas_vals['gas_mmbtu']
-            cce_gas = cce_gas_vals['calc'].median()
+            cce_gas = (prop_cost * crf / cce_gas_vals['gas_mmbtu']).median()
         else:
             cce_gas = None
 
-        # Extract Non-Energy Resource Codes
+        # NEB codes
         neb_codes = set()
         for src_col in ['psourccode', 'ssourccode', 'tsourccode', 'qsourccode']:
             if src_col in group.columns:
                 for code in group[src_col].dropna().unique():
                     code_str = str(code).upper().strip()
-                    # Skip blank, 0, or main electricity/gas codes
                     if code_str and code_str != '0' and code_str not in ('E1', 'EC', 'E2'):
                         neb_codes.add(code_str)
 
         measures.append({
             'arc': arc,
-            'description': get_arc_label(arc), 
+            'description': get_arc_label(arc),
             'count': count,
             'imp_rate': imp_rate,
             'gross_savings': gross_savings,
             'payback': payback,
             'cce': cce,
+            'cce_primary': cce_primary,
             'cce_elec': cce_elec,
             'cce_gas': cce_gas,
             'neb_codes': sorted(list(neb_codes))
@@ -201,26 +221,25 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
     if not measures:
         return [], industry_energy_cost
 
-    # 3. Validation & Scoring
+    # Scoring
     results_df = pd.DataFrame(measures)
-    
+
     def normalize_max_better(series):
         if series.max() == series.min(): return 1.0
         return (series - series.min()) / (series.max() - series.min())
-        
+
     def normalize_min_better(series):
         if series.max() == series.min(): return 1.0
         return (series.max() - series) / (series.max() - series.min())
-    
-    # Handle NaNs if any column is all 0/NaN
+
     results_df = results_df.fillna(0)
-        
+
     results_df['norm_count'] = normalize_max_better(results_df['count'])
     results_df['norm_imp'] = normalize_max_better(results_df['imp_rate'])
     results_df['norm_savings'] = normalize_max_better(results_df['gross_savings'])
-    results_df['norm_cce'] = normalize_min_better(results_df['cce'])
+    results_df['norm_cce'] = normalize_min_better(results_df['cce_primary'])
     results_df['norm_payback'] = normalize_min_better(results_df['payback'])
-    
+
     results_df['score'] = 100 * (
         results_df['norm_count'] * 0.30 +
         results_df['norm_imp'] * 0.25 +
@@ -228,9 +247,9 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
         results_df['norm_payback'] * 0.15 +
         results_df['norm_savings'] * 0.10
     )
-    
+
     results_df = results_df.sort_values('score', ascending=False)
-    
+
     final_measures = []
     for _, row in results_df.iterrows():
         final_measures.append(AdvancedMeasure(
@@ -241,13 +260,19 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             gross_savings=float(row['gross_savings']),
             payback=float(row['payback']),
             cce=float(row['cce']),
+            cce_primary=float(row['cce_primary']),
             score=float(row['score']),
             cce_elec=float(row['cce_elec']) if pd.notnull(row['cce_elec']) else None,
             cce_gas=float(row['cce_gas']) if pd.notnull(row['cce_gas']) else None,
             neb_codes=row['neb_codes']
         ))
-        
+
     return final_measures, industry_energy_cost
+
+
+# ===================================================================
+# Demo data generator
+# ===================================================================
 
 def _get_demo_data(naics, seed=42):
     np.random.seed(seed)
@@ -260,13 +285,12 @@ def _get_demo_data(naics, seed=42):
         'payback': np.random.uniform(0.5, 5.0, n_rows),
         'sales': np.random.uniform(1e6, 1e8, n_rows),
         'employees': np.random.randint(10, 1000, n_rows),
-        # New Detailed Cols
         'psaved': np.random.exponential(500, n_rows),
         'ssaved': np.random.exponential(200, n_rows),
         'tsaved': np.zeros(n_rows),
         'qsaved': np.zeros(n_rows),
-        'pconserved': np.random.exponential(10000, n_rows), # kWh?
-        'sconserved': np.random.exponential(500, n_rows), # MMBtu?
+        'pconserved': np.random.exponential(10000, n_rows),
+        'sconserved': np.random.exponential(500, n_rows),
         'tconserved': np.zeros(n_rows),
         'qconserved': np.zeros(n_rows),
         'psourccode': np.random.choice(['EC', 'E2'], n_rows),
@@ -275,12 +299,13 @@ def _get_demo_data(naics, seed=42):
         'qsourccode': [''] * n_rows
     })
 
-# --- Endpoints ---
 
-@router.post("/step1_evaluate", response_model=AdvancedStep1Response)
-def evaluate_step1(request: AdvancedStep1Request):
-    naics = request.naics_code
-    con = get_db_connection()
+def _load_naics_df(naics: str, con=None) -> pd.DataFrame:
+    """Load recommendations for a given NAICS from DB, falling back to demo data."""
+    close_con = False
+    if con is None:
+        con = get_db_connection()
+        close_con = True
     try:
         query = "SELECT * FROM recommendations WHERE naics LIKE ?"
         df = con.execute(query, [f"{naics}%"]).fetch_df()
@@ -288,18 +313,33 @@ def evaluate_step1(request: AdvancedStep1Request):
         print(f"DB Error: {e}")
         df = pd.DataFrame()
     finally:
-        con.close()
+        if close_con:
+            con.close()
 
     if df.empty and naics in ["3323", "32221"]:
         df = _get_demo_data(naics)
-    elif df.empty:
+    return df
+
+
+# ===================================================================
+# Endpoints
+# ===================================================================
+
+# --- Step 1: Evaluate ---
+
+@router.post("/step1_evaluate", response_model=AdvancedStep1Response)
+def evaluate_step1(request: AdvancedStep1Request):
+    naics = request.naics_code
+    df = _load_naics_df(naics)
+
+    if df.empty:
         return AdvancedStep1Response(measures=[], naics_code=naics, industry_median_energy_cost=0.0)
 
     measures, cost = _process_dataset(df, naics)
     return AdvancedStep1Response(measures=measures, naics_code=naics, industry_median_energy_cost=cost)
 
 
-# --- Step 2: Distributions ---
+# --- Step 2: Distributions (employees/sales – legacy) ---
 
 class DistributionRequest(BaseModel):
     measure_ids: List[str]
@@ -319,16 +359,16 @@ def get_distributions(request: DistributionRequest):
     try:
         if not request.measure_ids:
             return Step2Response(employees=HistogramData(bin_edges=[], counts=[]), sales=HistogramData(bin_edges=[], counts=[]))
-            
+
         placeholders = ','.join(['?'] * len(request.measure_ids))
         query = f"SELECT sales, employees FROM recommendations WHERE naics LIKE ? AND arc IN ({placeholders})"
         params = [f"{request.naics_code}%"] + request.measure_ids
         df = con.execute(query, params).fetch_df()
-        
+
         if df.empty and request.naics_code in ['3323', '32221']:
             df = _get_demo_data(request.naics_code)[['sales', 'employees']]
         elif df.empty:
-             return Step2Response(employees=HistogramData(bin_edges=[], counts=[]), sales=HistogramData(bin_edges=[], counts=[]))
+            return Step2Response(employees=HistogramData(bin_edges=[], counts=[]), sales=HistogramData(bin_edges=[], counts=[]))
 
         def make_histogram(data):
             data = data.dropna()
@@ -351,250 +391,315 @@ def get_distributions(request: DistributionRequest):
         con.close()
 
 
-# --- Step 3: Filtered Evaluation (Comparison) ---
+# --- NEW: Per-measure distributions (Gross Savings, Payback, CCE_primary) ---
+
+@router.post("/step2_measure_distributions", response_model=MeasureDistributionResponse)
+def get_measure_distributions(request: MeasureDistributionRequest):
+    """Get per-observation distribution arrays for a single ARC measure."""
+    con = get_db_connection()
+    try:
+        query = "SELECT * FROM recommendations WHERE naics LIKE ? AND arc = ?"
+        df = con.execute(query, [f"{request.naics_code}%", request.arc_code]).fetch_df()
+
+        if df.empty and request.naics_code in ['3323', '32221']:
+            full_df = _get_demo_data(request.naics_code)
+            df = full_df[full_df['arc'] == request.arc_code]
+
+        if df.empty:
+            return MeasureDistributionResponse(gross_savings=[], payback=[], cce_primary=[], count=0)
+
+        # Apply category filter
+        df = _apply_category_filter(df, request.categories)
+        if df.empty:
+            return MeasureDistributionResponse(gross_savings=[], payback=[], cce_primary=[], count=0)
+
+        crf = compute_crf()
+        gs_list, pb_list, cce_list = [], [], []
+
+        for _, row in df.iterrows():
+            metrics = compute_obs_metrics(row.to_dict(), crf)
+            gs = metrics["gross_savings"]
+            if gs and gs > 0:
+                gs_list.append(float(gs))
+            pb = metrics["payback"]
+            if pb is not None and pb > 0:
+                pb_list.append(float(pb))
+            cce = metrics["cce_primary"]
+            if cce is not None:
+                cce_list.append(float(cce))
+
+        return MeasureDistributionResponse(
+            gross_savings=gs_list,
+            payback=pb_list,
+            cce_primary=cce_list,
+            count=len(df),
+        )
+    except Exception as e:
+        print(f"Error in measure distributions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        con.close()
+
+
+# --- Step 3: Filtered Evaluation (Category-based + legacy range-based) ---
 
 class FilteredRequest(BaseModel):
     naics_code: str
-    min_employees: float
-    max_employees: float
-    min_sales: float
-    max_sales: float
-
-class AdvancedStep3Response(BaseModel):
-    cluster_metrics: List[AdvancedMeasure]
-    cluster_median_energy_cost: float = 0.0
-    cluster_size: int
-
-# Fix type hint
-from typing import Any
-AdvancedStep3Response.__annotations__['cluster_median_energy_cost'] = float
+    min_employees: float = 0
+    max_employees: float = 1e9
+    min_sales: float = 0
+    max_sales: float = 1e15
+    categories: Optional[List[str]] = None  # NEW: category-based filtering
 
 @router.post("/step3_filtered_evaluate", response_model=AdvancedStep3Response)
 def evaluate_filtered(request: FilteredRequest):
     naics = request.naics_code
-    con = get_db_connection()
-    try:
-        # Query with filters
-        query = """
-            SELECT * FROM recommendations 
-            WHERE naics LIKE ? 
-            AND employees BETWEEN ? AND ?
-            AND sales BETWEEN ? AND ?
-        """
-        params = [
-            f"{naics}%", 
-            request.min_employees, request.max_employees,
-            request.min_sales, request.max_sales
-        ]
-        df = con.execute(query, params).fetch_df()
-    except Exception as e:
-        print(f"DB Error: {e}")
-        df = pd.DataFrame()
-    finally:
-        con.close()
+    df = _load_naics_df(naics)
 
-    # Fallback/Demo logic for filtering
-    if df.empty and naics in ["3323", "32221"]:
-        # Generate full demo data then filter in pandas
-        full_df = _get_demo_data(naics)
-        df = full_df[
-            (full_df['employees'] >= request.min_employees) & 
-            (full_df['employees'] <= request.max_employees) &
-            (full_df['sales'] >= request.min_sales) & 
-            (full_df['sales'] <= request.max_sales)
+    if df.empty:
+        return AdvancedStep3Response(cluster_metrics=[], cluster_median_energy_cost=0.0, cluster_size=0)
+
+    # Apply category filter if provided, else fall back to range
+    if request.categories:
+        df = _apply_category_filter(df, request.categories)
+    else:
+        df = df[
+            (df['employees'] >= request.min_employees) &
+            (df['employees'] <= request.max_employees) &
+            (df['sales'] >= request.min_sales) &
+            (df['sales'] <= request.max_sales)
         ]
-    
+
     if df.empty:
         return AdvancedStep3Response(cluster_metrics=[], cluster_median_energy_cost=0.0, cluster_size=0)
 
     measures, cost = _process_dataset(df, naics)
-    
+
     return AdvancedStep3Response(
         cluster_metrics=measures,
         cluster_median_energy_cost=cost,
         cluster_size=len(df)
     )
 
-# --- Step 4: Curves & Gap Analysis ---
 
-class CurveRequest(BaseModel):
-    naics_code: str
-    selected_measure_ids: List[str]
-    resource_type: str = "all" # "all", "electricity", "natural_gas"
-    
-class CurvePoint(BaseModel):
-    x: float # Cumulative Savings
-    y: float # CCE
-    width: float # Savings of this measure
-    label: str
-    id: str
-    resource_type: str
-    units: str
+# --- Step 4: Primary Curves + Economic Potential ---
 
-class Step4Response(BaseModel):
-    baseline_curve: List[CurvePoint]
-    electricity_curve: List[CurvePoint]
-    gas_curve: List[CurvePoint]
-    
-@router.post("/step4_curves", response_model=Step4Response)
-def get_curves(request: CurveRequest):
+@router.post("/step4_curves", response_model=PrimaryCurveResponse)
+def get_primary_curves(request: PrimaryCurveRequest):
     con = get_db_connection()
     try:
         if not request.selected_measure_ids:
-            return Step4Response(baseline_curve=[], electricity_curve=[], gas_curve=[])
-            
+            empty_summary = EconomicSummary(
+                total_technical_gj=0, economic_gj=0, share_economic=0,
+                count_economic=0, count_total=0, cutoff_price=0
+            )
+            return PrimaryCurveResponse(
+                primary_curve=[], cutoff_price_gj_primary=0, economic_summary=empty_summary
+            )
+
         placeholders = ','.join(['?'] * len(request.selected_measure_ids))
         query = f"SELECT * FROM recommendations WHERE naics LIKE ? AND arc IN ({placeholders})"
         params = [f"{request.naics_code}%"] + request.selected_measure_ids
         df = con.execute(query, params).fetch_df()
-        
-        # Demo Fallback implementation omitted for brevity, keeping simple if empty
+
         if df.empty and request.naics_code in ['3323', '32221']:
-             full_df = _get_demo_data(request.naics_code)
-             df = full_df[full_df['arc'].isin(request.selected_measure_ids)]
-             
+            full_df = _get_demo_data(request.naics_code)
+            df = full_df[full_df['arc'].isin(request.selected_measure_ids)]
+
         if df.empty:
-            return Step4Response(baseline_curve=[], electricity_curve=[], gas_curve=[])
+            empty_summary = EconomicSummary(
+                total_technical_gj=0, economic_gj=0, share_economic=0,
+                count_economic=0, count_total=0, cutoff_price=0
+            )
+            return PrimaryCurveResponse(
+                primary_curve=[], cutoff_price_gj_primary=0, economic_summary=empty_summary
+            )
 
-        from app.lookups.resource_codes import is_electricity, is_natural_gas
+        # Apply category filter
+        if request.categories:
+            df = _apply_category_filter(df, request.categories)
 
-        r = 0.07
-        t = 15
-        crf = (r * (1 + r)**t) / ((1 + r)**t - 1)
-        
-        # 1. Fill missing
-        required_cols = ['psaved', 'ssaved', 'tsaved', 'qsaved', 
-                         'pconserved', 'sconserved', 'tconserved', 'qconserved',
-                         'psourccode', 'ssourccode', 'tsourccode', 'qsourccode']
-        for col in required_cols:
-            if col not in df.columns:
-                df[col] = 0 if 'sourccode' not in col else None
-                
-        def get_elec(val, code):
-            if pd.isna(val) or val == 0: return 0.0
-            if is_electricity(code): return val * 0.001 # kWh to MWh
-            return 0.0
-            
-        def get_gas(val, code):
-            if pd.isna(val) or val == 0: return 0.0
-            if is_natural_gas(code): return float(val) # MMBtu
-            return 0.0
-            
-        def get_elec_dollars(val, code):
-            if pd.isna(val) or val == 0: return 0.0
-            if is_electricity(code): return float(val)
-            return 0.0
-            
-        def get_gas_dollars(val, code):
-            if pd.isna(val) or val == 0: return 0.0
-            if is_natural_gas(code): return float(val)
-            return 0.0
+        pef_elec = request.pef_elec
+        pef_gas = request.pef_gas
+        crf = compute_crf()
 
-        df['elec_saved_mwh'] = (
-            df.apply(lambda x: get_elec(x['pconserved'], x['psourccode']), axis=1) +
-            df.apply(lambda x: get_elec(x['sconserved'], x['ssourccode']), axis=1) +
-            df.apply(lambda x: get_elec(x['tconserved'], x['tsourccode']), axis=1) +
-            df.apply(lambda x: get_elec(x['qconserved'], x['qsourccode']), axis=1)
+        # Compute primary energy per row
+        df['e_primary_gj'] = df.apply(
+            lambda x: observation_primary_energy_gj(x.to_dict(), pef_elec, pef_gas), axis=1
         )
-        
-        df['gas_saved_mmbtu'] = (
-            df.apply(lambda x: get_gas(x['pconserved'], x['psourccode']), axis=1) +
-            df.apply(lambda x: get_gas(x['sconserved'], x['ssourccode']), axis=1) +
-            df.apply(lambda x: get_gas(x['tconserved'], x['tsourccode']), axis=1) +
-            df.apply(lambda x: get_gas(x['qconserved'], x['qsourccode']), axis=1)
-        )
-        
-        df['elec_dollars'] = (
-            df.apply(lambda x: get_elec_dollars(x['psaved'], x['psourccode']), axis=1) +
-            df.apply(lambda x: get_elec_dollars(x['ssaved'], x['ssourccode']), axis=1) +
-            df.apply(lambda x: get_elec_dollars(x['tsaved'], x['tsourccode']), axis=1) +
-            df.apply(lambda x: get_elec_dollars(x['qsaved'], x['qsourccode']), axis=1)
-        )
-        
-        df['gas_dollars'] = (
-            df.apply(lambda x: get_gas_dollars(x['psaved'], x['psourccode']), axis=1) +
-            df.apply(lambda x: get_gas_dollars(x['ssaved'], x['ssourccode']), axis=1) +
-            df.apply(lambda x: get_gas_dollars(x['tsaved'], x['tsourccode']), axis=1) +
-            df.apply(lambda x: get_gas_dollars(x['qsaved'], x['qsourccode']), axis=1)
-        )
-        
-        df['total_dollars'] = df['elec_dollars'] + df['gas_dollars']
-        
-        # Allocations
-        df['elec_ratio'] = 0.0
-        df['gas_ratio'] = 0.0
-        
-        mask_dollars = df['total_dollars'] > 0
-        df.loc[mask_dollars, 'elec_ratio'] = df.loc[mask_dollars, 'elec_dollars'] / df.loc[mask_dollars, 'total_dollars']
-        df.loc[mask_dollars, 'gas_ratio'] = df.loc[mask_dollars, 'gas_dollars'] / df.loc[mask_dollars, 'total_dollars']
-        
-        # Fallback to physical energy ratio if dollars missing
-        mask_no_dollars = (~mask_dollars) & ((df['elec_saved_mwh'] > 0) | (df['gas_saved_mmbtu'] > 0))
-        # Convert MMBtu back to kWh roughly for ratio? Or 50/50? Let's use 50/50 fallback if no dollars to simplify.
-        df.loc[mask_no_dollars, 'elec_ratio'] = np.where(df.loc[mask_no_dollars, 'elec_saved_mwh'] > 0, 0.5, 0.0)
-        df.loc[mask_no_dollars, 'gas_ratio'] = np.where(df.loc[mask_no_dollars, 'gas_saved_mmbtu'] > 0, 0.5, 0.0)
-        # Normalize to 1 if one is 0.5 and other is 0
-        df['sum_ratio'] = df['elec_ratio'] + df['gas_ratio']
-        mask_fix = (df['sum_ratio'] > 0) & (df['sum_ratio'] < 1.0)
-        df.loc[mask_fix, 'elec_ratio'] = df.loc[mask_fix, 'elec_ratio'] / df.loc[mask_fix, 'sum_ratio']
-        df.loc[mask_fix, 'gas_ratio'] = df.loc[mask_fix, 'gas_ratio'] / df.loc[mask_fix, 'sum_ratio']
 
-        df['elec_cost'] = df['implementation_cost'] * df['elec_ratio']
-        df['gas_cost'] = df['implementation_cost'] * df['gas_ratio']
-
-        elec_points = []
-        gas_points = []
-        
+        # Group by ARC and compute median primary CCE + width
         grouped = df.groupby('arc')
+        curve_points = []
+        total_primary_elec = 0.0
+        total_primary_gas = 0.0
+
         for arc, group in grouped:
-            # Electricity CCE
-            e_group = group[group['elec_saved_mwh'] > 0].copy()
-            if not e_group.empty:
-                e_group['cce'] = (e_group['elec_cost'] * crf) / e_group['elec_saved_mwh']
-                median_cce = e_group['cce'].median()
-                median_savings = e_group['elec_saved_mwh'].median()
-                elec_points.append({
-                    'id': str(arc), 'label': get_arc_label(arc),
-                    'y': median_cce, 'width': median_savings,
-                    'resource_type': 'electricity', 'units': 'MWh'
-                })
-                
-            # Gas CCE
-            g_group = group[group['gas_saved_mmbtu'] > 0].copy()
-            if not g_group.empty:
-                g_group['cce'] = (g_group['gas_cost'] * crf) / g_group['gas_saved_mmbtu']
-                median_cce = g_group['cce'].median()
-                median_savings = g_group['gas_saved_mmbtu'].median()
-                gas_points.append({
-                    'id': str(arc), 'label': get_arc_label(arc),
-                    'y': median_cce, 'width': median_savings,
-                    'resource_type': 'natural_gas', 'units': 'MMBtu'
-                })
+            valid = group[group['e_primary_gj'] > 0].copy()
+            if valid.empty:
+                continue
 
-        def build_curve(points: List[dict]) -> List[CurvePoint]:
-            points.sort(key=lambda p: p['y'])
-            cum = 0
-            final = []
-            for p in points:
-                final.append(CurvePoint(
-                    id=p['id'], label=p['label'], y=p['y'], width=p['width'],
-                    x=cum + p['width'], resource_type=p['resource_type'], units=p['units']
-                ))
-                cum += p['width']
-            return final
+            valid['cce_p'] = (valid['implementation_cost'] * crf) / valid['e_primary_gj']
+            median_cce = valid['cce_p'].median()
+            median_width = valid['e_primary_gj'].median()
 
-        e_curve = build_curve(elec_points)
-        g_curve = build_curve(gas_points)
-        
-        # Determine which to return in "baseline_curve" for backward compat
-        return Step4Response(
-            baseline_curve=e_curve if request.resource_type == "electricity" else g_curve if request.resource_type == "natural_gas" else e_curve,
-            electricity_curve=e_curve,
-            gas_curve=g_curve
+            curve_points.append({
+                'id': str(arc),
+                'label': get_arc_label(arc),
+                'cce_primary': float(median_cce),
+                'width': float(median_width),
+            })
+
+            # Track weights for cutoff price
+            for _, r in valid.iterrows():
+                row_dict = r.to_dict()
+                for prefix in ("p", "s", "t", "q"):
+                    conserved = row_dict.get(f"{prefix}conserved", 0) or 0
+                    code = row_dict.get(f"{prefix}sourccode", "")
+                    if not code or conserved == 0:
+                        continue
+                    c = str(code).upper().strip()
+                    from app.utils.energy_constants import ELECTRICITY_CODES, NATURAL_GAS_CODES, KWH_TO_MJ, MMBTU_TO_GJ, MJ_PER_GJ
+                    if c in ELECTRICITY_CODES:
+                        total_primary_elec += conserved * KWH_TO_MJ * pef_elec / MJ_PER_GJ
+                    elif c in NATURAL_GAS_CODES:
+                        total_primary_gas += conserved * MMBTU_TO_GJ * pef_gas
+
+        # Sort by CCE ascending
+        curve_points.sort(key=lambda p: (p['cce_primary'], -p['width']))
+
+        # Build staircase
+        cum_x = 0.0
+        primary_curve = []
+        for pt in curve_points:
+            primary_curve.append(PrimaryCurvePoint(
+                x=cum_x, y=pt['cce_primary'], width=pt['width'],
+                label=pt['label'], id=pt['id'],
+            ))
+            cum_x += pt['width']
+
+        # Compute cutoff price
+        total_primary = total_primary_elec + total_primary_gas
+        w_elec = total_primary_elec / total_primary if total_primary > 0 else 0.5
+        w_gas = 1.0 - w_elec
+
+        cutoff = compute_primary_price_cutoff(
+            request.electricity_price_mwh, request.gas_price_mmbtu,
+            pef_elec, pef_gas, w_elec, w_gas,
+        )
+
+        # Economic summary
+        summary_data = compute_economic_potential_summary(
+            [{'cce_primary': p['cce_primary'], 'width': p['width']} for p in curve_points],
+            cutoff,
+        )
+
+        return PrimaryCurveResponse(
+            primary_curve=primary_curve,
+            cutoff_price_gj_primary=cutoff,
+            economic_summary=EconomicSummary(
+                total_technical_gj=summary_data['total_technical_gj'],
+                economic_gj=summary_data['economic_gj'],
+                share_economic=summary_data['share_economic'],
+                count_economic=summary_data['count_economic'],
+                count_total=summary_data['count_total'],
+                cutoff_price=cutoff,
+            ),
         )
 
     except Exception as e:
-        print(f"Error in curves: {e}")
+        print(f"Error in primary curves: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        con.close()
+
+
+# --- Step 8: NEB Details ---
+
+@router.post("/step8_neb_details", response_model=NEBDetailsResponse)
+def get_neb_details(request: NEBDetailsRequest):
+    con = get_db_connection()
+    try:
+        if not request.selected_measure_ids:
+            return NEBDetailsResponse(measures=[])
+
+        placeholders = ','.join(['?'] * len(request.selected_measure_ids))
+        query = f"SELECT * FROM recommendations WHERE naics LIKE ? AND arc IN ({placeholders})"
+        params = [f"{request.naics_code}%"] + request.selected_measure_ids
+        df = con.execute(query, params).fetch_df()
+
+        if df.empty and request.naics_code in ['3323', '32221']:
+            full_df = _get_demo_data(request.naics_code)
+            df = full_df[full_df['arc'].isin(request.selected_measure_ids)]
+
+        if df.empty:
+            return NEBDetailsResponse(measures=[])
+
+        # Apply category filter
+        if request.categories:
+            df = _apply_category_filter(df, request.categories)
+
+        # Ensure required cols
+        for col in ['psaved', 'ssaved', 'tsaved', 'qsaved',
+                     'psourccode', 'ssourccode', 'tsourccode', 'qsourccode']:
+            if col not in df.columns:
+                df[col] = 0 if 'sourccode' not in col else None
+
+        df['total_savings'] = (
+            df['psaved'].fillna(0) + df['ssaved'].fillna(0) +
+            df['tsaved'].fillna(0) + df['qsaved'].fillna(0)
+        )
+
+        grouped = df.groupby('arc')
+        neb_measures = []
+
+        for arc, group in grouped:
+            # Imp cost median
+            imp_costs = group['implementation_cost'].dropna()
+            imp_costs = imp_costs[imp_costs > 0]
+            imp_cost_median = float(imp_costs.median()) if not imp_costs.empty else None
+
+            # Energy savings median
+            es = group['total_savings'].dropna()
+            es = es[es > 0]
+            energy_savings_median = float(es.median()) if not es.empty else None
+
+            # NEB categories per observation
+            waste_vals, prod_vals, res_vals, other_e_vals = [], [], [], []
+            for _, row in group.iterrows():
+                neb = compute_neb_categories(row.to_dict())
+                if neb['waste'] != 0:
+                    waste_vals.append(neb['waste'])
+                if neb['production'] != 0:
+                    prod_vals.append(neb['production'])
+                if neb['resource'] != 0:
+                    res_vals.append(neb['resource'])
+                if neb['other_energy'] != 0:
+                    other_e_vals.append(neb['other_energy'])
+
+            def safe_median(vals):
+                if not vals:
+                    return None
+                return float(np.median(vals))
+
+            neb_measures.append(NEBMeasureDetail(
+                arc=str(arc),
+                description=get_arc_label(arc),
+                imp_cost_median=imp_cost_median,
+                energy_savings_median=energy_savings_median,
+                other_energy_median=safe_median(other_e_vals),
+                waste_costs_median=safe_median(waste_vals),
+                production_costs_median=safe_median(prod_vals),
+                resource_costs_median=safe_median(res_vals),
+                waste_values=waste_vals,
+                production_values=prod_vals,
+                resource_values=res_vals,
+            ))
+
+        return NEBDetailsResponse(measures=neb_measures)
+
+    except Exception as e:
+        print(f"Error in NEB details: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         con.close()

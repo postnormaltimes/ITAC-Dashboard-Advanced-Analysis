@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import type { SearchFilters, SearchResponse, Recommendation, RecommendationDetail, IFacetsResponse, CostCurveParams, CostCurveResponse, WaterfallResponse, KPIMetrics, AnalyticsChartsResponse, SensitivityParams, SensitivityResponse, Step0Response, Step1Response, Step2Response, Step3Response, AdvancedStep1Response, AdvancedStep2Response, AdvancedStep3Response, AdvancedStep4Response } from '../types';
+import type { SearchFilters, SearchResponse, Recommendation, RecommendationDetail, IFacetsResponse, CostCurveParams, CostCurveResponse, WaterfallResponse, KPIMetrics, AnalyticsChartsResponse, SensitivityParams, SensitivityResponse, Step0Response, Step1Response, Step2Response, Step3Response, AdvancedStep1Response, AdvancedStep2Response, AdvancedStep3Response, AdvancedStep4Response, MeasureDistributionResponse, PrimaryCurveResponse, NEBDetailsResponse, FirmSizeCategory } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
@@ -126,10 +126,11 @@ export const api = {
     getAdvancedStep3: async (
         naics_code: string,
         min_employees: number, max_employees: number,
-        min_sales: number, max_sales: number
+        min_sales: number, max_sales: number,
+        categories?: FirmSizeCategory[],
     ): Promise<AdvancedStep3Response> => {
         const response = await client.post<AdvancedStep3Response>('/advanced/step3_filtered_evaluate', {
-            naics_code, min_employees, max_employees, min_sales, max_sales
+            naics_code, min_employees, max_employees, min_sales, max_sales, categories
         });
         return response.data;
     },
@@ -139,5 +140,42 @@ export const api = {
             naics_code, selected_measure_ids, resource_type
         });
         return response.data;
-    }
+    },
+
+    // --- NEW: Per-measure distributions ---
+    getMeasureDistributions: async (
+        naics_code: string, arc_code: string, categories?: FirmSizeCategory[]
+    ): Promise<MeasureDistributionResponse> => {
+        const response = await client.post<MeasureDistributionResponse>('/advanced/step2_measure_distributions', {
+            naics_code, arc_code, categories
+        });
+        return response.data;
+    },
+
+    // --- NEW: Primary energy curves ---
+    getPrimaryCurves: async (
+        naics_code: string,
+        selected_measure_ids: string[],
+        electricity_price_mwh?: number,
+        gas_price_mmbtu?: number,
+        categories?: FirmSizeCategory[],
+    ): Promise<PrimaryCurveResponse> => {
+        const response = await client.post<PrimaryCurveResponse>('/advanced/step4_curves', {
+            naics_code, selected_measure_ids,
+            electricity_price_mwh: electricity_price_mwh ?? 70.0,
+            gas_price_mmbtu: gas_price_mmbtu ?? 5.0,
+            categories,
+        });
+        return response.data;
+    },
+
+    // --- NEW: NEB Details ---
+    getNEBDetails: async (
+        naics_code: string, selected_measure_ids: string[], categories?: FirmSizeCategory[]
+    ): Promise<NEBDetailsResponse> => {
+        const response = await client.post<NEBDetailsResponse>('/advanced/step8_neb_details', {
+            naics_code, selected_measure_ids, categories
+        });
+        return response.data;
+    },
 };

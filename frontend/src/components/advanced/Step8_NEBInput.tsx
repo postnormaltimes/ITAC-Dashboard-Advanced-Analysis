@@ -1,38 +1,84 @@
-import { Box, Typography, Paper, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Chip } from '@mui/material';
-import type { AdvancedMeasure } from '../../types';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Paper, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, TextField } from '@mui/material';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { api } from '../../api/client';
+import type { AdvancedMeasure, FirmSizeCategory, NEBMeasureDetail } from '../../types';
 import { sanitizeMeasureDescription } from '../../utils/text';
+import { computeHistogram, computeStats } from '../../utils/stats';
 
 interface Step8Props {
-    measures: AdvancedMeasure[]; // Full list or filtered list? better pass full list and filter by ID
+    naicsCode: string;
+    measures: AdvancedMeasure[];
     selectedMeasureIds: string[];
+    selectedCategories: FirmSizeCategory[];
     nebInputs: Record<string, { opCost: number, nebValue: number }>;
-    setNebInputs: (inputs: Record<string, { opCost: number, nebValue: number }>) => void;
+    setNebInputs: React.Dispatch<React.SetStateAction<Record<string, { opCost: number, nebValue: number }>>>;
     onBack: () => void;
     onNext: () => void;
 }
 
-const Step8_NEBInput: React.FC<Step8Props> = ({ measures, selectedMeasureIds, nebInputs, setNebInputs, onBack, onNext }) => {
-    // Filter measures to only show selected ones
-    const selectedMeasures = measures.filter(m => selectedMeasureIds.includes(m.arc));
+const Step8_NEBInput: React.FC<Step8Props> = ({ naicsCode, selectedMeasureIds, selectedCategories, nebInputs, setNebInputs, onBack, onNext }) => {
+    const [loading, setLoading] = useState(true);
+    const [nebData, setNebData] = useState<NEBMeasureDetail[]>([]);
+    const [activeMeasure, setActiveMeasure] = useState<string>('');
 
-    const handleInputChange = (id: string, field: 'opCost' | 'nebValue', value: string) => {
-        const numVal = parseFloat(value) || 0;
-        setNebInputs({
-            ...nebInputs,
-            [id]: {
-                ...nebInputs[id],
-                [field]: numVal
-            }
-        });
+    useEffect(() => {
+        let mounted = true;
+        api.getNEBDetails(naicsCode, selectedMeasureIds, selectedCategories)
+            .then(d => {
+                if (mounted) {
+                    setNebData(d.measures);
+                    if (d.measures.length > 0) setActiveMeasure(d.measures[0].arc);
+                }
+            })
+            .catch(console.error)
+            .finally(() => { if (mounted) setLoading(false); });
+        return () => { mounted = false; };
+    }, [naicsCode, selectedMeasureIds, selectedCategories]);
+
+    const handleInputChange = (arc: string, field: 'opCost' | 'nebValue', value: number) => {
+        setNebInputs(prev => ({
+            ...prev,
+            [arc]: { ...prev[arc] || { opCost: 0, nebValue: 0 }, [field]: value }
+        }));
     };
+
+    const fmt = (v: number | null | undefined) => v != null ? `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '—';
+
+    const activeData = nebData.find(m => m.arc === activeMeasure);
+
+    const renderDistribution = (values: number[], title: string, color: string) => {
+        if (!values?.length) return null;
+        const hist = computeHistogram(values);
+        const stats = computeStats(values);
+        return (
+            <Paper sx={{ p: 2, flex: '1 1 250px' }}>
+                <Typography variant="subtitle2" gutterBottom>{title}</Typography>
+                <ResponsiveContainer width="100%" height={140}>
+                    <BarChart data={hist.bins}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="label" tick={{ fontSize: 8 }} interval="preserveStartEnd" />
+                        <YAxis tick={{ fontSize: 10 }} />
+                        <Tooltip />
+                        <Bar dataKey="count" fill={color} />
+                    </BarChart>
+                </ResponsiveContainer>
+                <Typography variant="caption" color="text.secondary">
+                    Median: ${stats.median.toFixed(0)} | N: {values.length}
+                </Typography>
+            </Paper>
+        );
+    };
+
+    if (loading) return <Box sx={{ p: 4, textAlign: 'center' }}><CircularProgress /></Box>;
 
     return (
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'center' }}>
                 <Box>
-                    <Typography variant="h5">Step 8: Non-Energy Benefits (NEB)</Typography>
+                    <Typography variant="h5">Step 8: Non-Energy Benefits</Typography>
                     <Typography color="text.secondary">
-                        Quantify operational impacts to adjust the financial curve.
+                        Review NEB categories per measure. Enter operating costs and NEB adjustments.
                     </Typography>
                 </Box>
                 <Box>
@@ -41,60 +87,69 @@ const Step8_NEBInput: React.FC<Step8Props> = ({ measures, selectedMeasureIds, ne
                 </Box>
             </Box>
 
-            <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
+            {/* NEB Distributions for active measure */}
+            {activeData && (
+                <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+                    {renderDistribution(activeData.waste_values || [], `Waste Savings ($) — ${activeMeasure}`, '#ff9800')}
+                    {renderDistribution(activeData.production_values || [], `Production Savings ($) — ${activeMeasure}`, '#4caf50')}
+                    {renderDistribution(activeData.resource_values || [], `Resource Savings ($) — ${activeMeasure}`, '#9c27b0')}
+                </Box>
+            )}
+
+            <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
                 <Table stickyHeader size="small">
                     <TableHead>
                         <TableRow>
-                            <TableCell>ARC Code</TableCell>
-                            <TableCell>Description</TableCell>
-                            <TableCell>NEB Source Codes</TableCell>
-                            <TableCell align="right">Energy Savings ($)</TableCell>
+                            <TableCell>Measure</TableCell>
                             <TableCell align="right">Imp. Cost ($)</TableCell>
-                            <TableCell align="right" sx={{ bgcolor: '#e3f2fd' }}>Op. Cost Increase ($/yr)</TableCell>
-                            <TableCell align="right" sx={{ bgcolor: '#e8f5e9' }}>Non-Energy Benefits ($/yr)</TableCell>
+                            <TableCell align="right">Energy Savings ($)</TableCell>
+                            <TableCell align="right">Other Energy ($)</TableCell>
+                            <TableCell align="right">Waste ($)</TableCell>
+                            <TableCell align="right">Production ($)</TableCell>
+                            <TableCell align="right">Resource ($)</TableCell>
+                            <TableCell align="center">Op. Cost ($)</TableCell>
+                            <TableCell align="center">NEB ($)</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {selectedMeasures.map((m) => {
+                        {nebData.map(m => {
+                            const isActive = m.arc === activeMeasure;
                             const inputs = nebInputs[m.arc] || { opCost: 0, nebValue: 0 };
-                            // Approximate Energy Savings $ = Payback formula inverse? 
-                            // We don't have exact $ savings here without industry cost.
-                            // But we can show other static info.
                             return (
-                                <TableRow key={m.arc} hover>
-                                    <TableCell>{m.arc}</TableCell>
-                                    <TableCell>{sanitizeMeasureDescription(m.arc, m.description)}</TableCell>
+                                <TableRow
+                                    key={m.arc} hover selected={isActive}
+                                    onClick={() => setActiveMeasure(m.arc)} sx={{ cursor: 'pointer' }}
+                                >
                                     <TableCell>
-                                        <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                                            {m.neb_codes && m.neb_codes.length > 0 ? (
-                                                m.neb_codes.map(code => (
-                                                    <Chip key={code} label={code} size="small" color="secondary" variant="outlined" />
-                                                ))
-                                            ) : (
-                                                <Typography variant="caption" color="text.secondary">None</Typography>
-                                            )}
-                                        </Box>
+                                        <Typography variant="body2" fontWeight="bold">{m.arc}</Typography>
+                                        <Typography variant="caption" color="text.secondary" noWrap sx={{ maxWidth: 180, display: 'block' }}>
+                                            {sanitizeMeasureDescription(m.arc, m.description)}
+                                        </Typography>
                                     </TableCell>
-                                    <TableCell align="right">${Math.round(m.gross_savings).toLocaleString()}</TableCell>
-                                    <TableCell align="right">-</TableCell>
-                                    <TableCell align="right" sx={{ bgcolor: '#e3f2fd' }}>
+                                    <TableCell align="right">{fmt(m.imp_cost_median)}</TableCell>
+                                    <TableCell align="right">{fmt(m.energy_savings_median)}</TableCell>
+                                    <TableCell align="right">{fmt(m.other_energy_median)}</TableCell>
+                                    <TableCell align="right" sx={{ color: (m.waste_costs_median ?? 0) > 0 ? 'success.main' : undefined }}>
+                                        {fmt(m.waste_costs_median)}
+                                    </TableCell>
+                                    <TableCell align="right" sx={{ color: (m.production_costs_median ?? 0) > 0 ? 'success.main' : undefined }}>
+                                        {fmt(m.production_costs_median)}
+                                    </TableCell>
+                                    <TableCell align="right" sx={{ color: (m.resource_costs_median ?? 0) > 0 ? 'success.main' : undefined }}>
+                                        {fmt(m.resource_costs_median)}
+                                    </TableCell>
+                                    <TableCell align="center" onClick={e => e.stopPropagation()}>
                                         <TextField
-                                            size="small"
-                                            type="number"
-                                            value={inputs.opCost || ''}
-                                            onChange={(e) => handleInputChange(m.arc, 'opCost', e.target.value)}
-                                            placeholder="0"
-                                            InputProps={{ inputProps: { min: 0 } }}
+                                            size="small" type="number" value={inputs.opCost}
+                                            onChange={e => handleInputChange(m.arc, 'opCost', +e.target.value)}
+                                            sx={{ width: 80 }}
                                         />
                                     </TableCell>
-                                    <TableCell align="right" sx={{ bgcolor: '#e8f5e9' }}>
+                                    <TableCell align="center" onClick={e => e.stopPropagation()}>
                                         <TextField
-                                            size="small"
-                                            type="number"
-                                            value={inputs.nebValue || ''}
-                                            onChange={(e) => handleInputChange(m.arc, 'nebValue', e.target.value)}
-                                            placeholder="0"
-                                            InputProps={{ inputProps: { min: 0 } }}
+                                            size="small" type="number" value={inputs.nebValue}
+                                            onChange={e => handleInputChange(m.arc, 'nebValue', +e.target.value)}
+                                            sx={{ width: 80 }}
                                         />
                                     </TableCell>
                                 </TableRow>
