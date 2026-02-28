@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Paper, Button, TextField, CircularProgress } from '@mui/material';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine, ReferenceArea, Label } from 'recharts';
 import { api } from '../../api/client';
 import type { FirmSizeCategory, PrimaryCurvePoint, EconomicSummary } from '../../types';
-import { buildSupplyCurveSteps } from '../../utils/stats';
+import SupplyCurveChart from './SupplyCurveChart';
+import type { SupplyCurveItem } from './SupplyCurveChart';
 
 interface Step7Props {
     naicsCode: string;
@@ -37,22 +37,13 @@ const Step7_BaselineCurve: React.FC<Step7Props> = ({ naicsCode, selectedMeasureI
 
     useEffect(() => { loadCurve(); }, [naicsCode, selectedMeasureIds, selectedCategories]);
 
-    // Build staircase data for Recharts
-    const steps = buildSupplyCurveSteps(
-        curve.map(pt => ({ savings: pt.width, cce: pt.y, label: pt.label, units: 'GJ_primary' }))
-    );
-
-    const maxX = steps.length ? Math.max(...steps.map(s => s.x)) : 1;
-    const maxY = steps.length ? Math.max(...steps.map(s => s.y), cutoff * 1.2) : 1;
-
-    // Find the x where cce exceeds cutoff (for area shading)
-    let econBoundaryX = maxX;
-    for (const pt of curve) {
-        if (pt.y > cutoff) {
-            econBoundaryX = pt.x;
-            break;
-        }
-    }
+    // Convert API curve to SupplyCurveItem format
+    const curveItems: SupplyCurveItem[] = curve.map(pt => ({
+        savings: pt.width,
+        cce: pt.y,
+        label: pt.label,
+        id: pt.id,
+    }));
 
     return (
         <Box>
@@ -84,7 +75,7 @@ const Step7_BaselineCurve: React.FC<Step7Props> = ({ naicsCode, selectedMeasureI
                 <Button variant="outlined" onClick={loadCurve}>Update Curve</Button>
                 {cutoff > 0 && (
                     <Typography variant="body2" color="text.secondary">
-                        Cutoff: <strong>${cutoff.toFixed(2)}/GJ_primary</strong>
+                        Weighted Cutoff: <strong>${cutoff.toFixed(2)}/GJ_primary</strong>
                     </Typography>
                 )}
             </Paper>
@@ -93,39 +84,15 @@ const Step7_BaselineCurve: React.FC<Step7Props> = ({ naicsCode, selectedMeasureI
                 <Box sx={{ textAlign: 'center', p: 4 }}><CircularProgress /></Box>
             ) : (
                 <>
-                    <Paper sx={{ p: 2, mb: 3 }}>
-                        <ResponsiveContainer width="100%" height={400}>
-                            <BarChart data={steps} barCategoryGap={0} barGap={0}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis
-                                    dataKey="x" type="number" domain={[0, maxX * 1.05]}
-                                    label={{ value: 'Cumulative Primary Energy Saved (GJ)', position: 'insideBottom', offset: -5 }}
-                                    tick={{ fontSize: 10 }}
-                                />
-                                <YAxis
-                                    domain={[0, maxY * 1.1]}
-                                    label={{ value: '$/GJ primary', angle: -90, position: 'insideLeft' }}
-                                    tick={{ fontSize: 10 }}
-                                />
-                                <Tooltip
-                                    formatter={(value: number | string) => [`$${Number(value).toFixed(2)}/GJ`, 'CCE']}
-                                    labelFormatter={(val) => `@ ${Number(val).toFixed(0)} GJ`}
-                                />
-                                <ReferenceLine y={cutoff} stroke="#f44336" strokeDasharray="5 5">
-                                    <Label value={`Cutoff: $${cutoff.toFixed(2)}/GJ`} position="right" fill="#f44336" />
-                                </ReferenceLine>
-                                {/* Economic region (green) */}
-                                <ReferenceArea x1={0} x2={econBoundaryX} y1={0} y2={cutoff} fill="#4caf50" fillOpacity={0.08} />
-                                {/* Non-economic region (red) */}
-                                <ReferenceArea x1={econBoundaryX} x2={maxX} y1={cutoff} y2={maxY * 1.1} fill="#f44336" fillOpacity={0.05} />
-                                <Bar dataKey="y" fill="#1976d2" isAnimationActive={false} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </Paper>
+                    <SupplyCurveChart
+                        items={curveItems}
+                        marketPrice={cutoff}
+                        title="Cost of Conserved Energy Supply Curve"
+                    />
 
                     {/* Economic Potential Summary */}
                     {summary && (
-                        <Paper sx={{ p: 2 }}>
+                        <Paper sx={{ p: 2, mt: 3 }}>
                             <Typography variant="h6" gutterBottom>Economic Potential Summary</Typography>
                             <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
                                 <Box>
@@ -141,12 +108,8 @@ const Step7_BaselineCurve: React.FC<Step7Props> = ({ naicsCode, selectedMeasureI
                                     <Typography variant="h6">{(summary.share_economic * 100).toFixed(1)}%</Typography>
                                 </Box>
                                 <Box>
-                                    <Typography variant="caption" color="text.secondary">Measures Below Cutoff</Typography>
+                                    <Typography variant="caption" color="text.secondary">Measures ≤ Cutoff</Typography>
                                     <Typography variant="h6">{summary.count_economic} / {summary.count_total}</Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="caption" color="text.secondary">Weighted Cutoff</Typography>
-                                    <Typography variant="h6">${summary.cutoff_price.toFixed(2)} /GJ</Typography>
                                 </Box>
                             </Box>
                         </Paper>

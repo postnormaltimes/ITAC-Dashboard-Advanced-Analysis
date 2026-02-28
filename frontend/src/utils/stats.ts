@@ -191,6 +191,66 @@ export function buildSupplyCurveSteps(items: { savings: number; cce: number; lab
         currentX += width;
     }
 
-    // Usually we add a final point at y=0 or just let it end.
     return points;
 }
+
+/**
+ * Given measures sorted by CCE and a market price, find the x position
+ * where the curve first exceeds the market price (the economic boundary).
+ * Since the curve is stepwise, intersection is at the boundary of the last
+ * measure where cce <= marketPrice.
+ */
+export function computeEconomicCutoffX(
+    measures: { savings: number; cce: number }[],
+    marketPrice: number
+): { cutoffX: number; economicCount: number } {
+    // Filter and sort same as buildSupplyCurveSteps
+    const valid = measures
+        .filter(m => m.savings > 0 && typeof m.cce === 'number' && !isNaN(m.cce) && isFinite(m.cce))
+        .sort((a, b) => {
+            if (a.cce !== b.cce) return a.cce - b.cce;
+            return b.savings - a.savings;
+        });
+
+    let cutoffX = 0;
+    let economicCount = 0;
+    for (const m of valid) {
+        if (m.cce <= marketPrice) {
+            cutoffX += m.savings;
+            economicCount++;
+        } else {
+            break;
+        }
+    }
+    return { cutoffX, economicCount };
+}
+
+/**
+ * Build a closed polygon for the economic region (where CCE <= marketPrice).
+ * The polygon starts at (0,0), follows the staircase up to x_cutoff,
+ * then drops back to (x_cutoff, 0) and closes to (0, 0).
+ */
+export function buildEconomicAreaPolygon(
+    stepPoints: SupplyCurvePoint[],
+    cutoffX: number
+): { x: number; y: number }[] {
+    if (stepPoints.length === 0 || cutoffX <= 0) return [];
+
+    const polygon: { x: number; y: number }[] = [{ x: 0, y: 0 }];
+
+    for (const pt of stepPoints) {
+        if (pt.x > cutoffX) break;
+        polygon.push({ x: pt.x, y: pt.y });
+    }
+
+    // Close polygon: drop to (cutoffX, 0)
+    const lastPt = polygon[polygon.length - 1];
+    if (lastPt.x < cutoffX) {
+        // The cutoff is mid-step; extend horizontally to cutoffX at the same height
+        polygon.push({ x: cutoffX, y: lastPt.y });
+    }
+    polygon.push({ x: cutoffX, y: 0 });
+
+    return polygon;
+}
+

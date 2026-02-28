@@ -8,6 +8,11 @@ describe('sanitizeMeasureDescription', () => {
         expect(sanitizeMeasureDescription('2.1111', '2.1111 Upgrade lighting')).toBe('Upgrade lighting');
     });
 
+    it('should strip leading "- " prefix even without arc code', () => {
+        expect(sanitizeMeasureDescription('2.1111', '- Upgrade lighting')).toBe('Upgrade lighting');
+        expect(sanitizeMeasureDescription('2.1111', '-  Spaced description')).toBe('Spaced description');
+    });
+
     it('should handle missing descriptions or arc codes safely', () => {
         expect(sanitizeMeasureDescription('2.1111', '')).toBe('');
         expect(sanitizeMeasureDescription('', 'Upgrade lighting')).toBe('Upgrade lighting');
