@@ -1,4 +1,3 @@
-import { useRef, useEffect } from 'react';
 import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
 import AdvancedDashboard from './components/advanced/AdvancedDashboard';
 
