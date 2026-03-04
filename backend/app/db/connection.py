@@ -1,8 +1,16 @@
 
 import duckdb
 import os
+from pathlib import Path
 
-DB_PATH = os.getenv("DB_PATH", "../data/warehouse.duckdb")
+# Resolve absolute project root from this file's location:
+#   connection.py is at  backend/app/db/connection.py
+#   backend dir  =       3 parents up  (db -> app -> backend)
+_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+# Default DB lives at <repo_root>/data/warehouse.duckdb
+_DEFAULT_DB_PATH = str(_BACKEND_DIR.parent / "data" / "warehouse.duckdb")
+
+DB_PATH = os.getenv("DB_PATH", _DEFAULT_DB_PATH)
 
 class DuckDBManager:
     def __init__(self, db_path=DB_PATH):

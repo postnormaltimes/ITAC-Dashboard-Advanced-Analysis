@@ -1,11 +1,14 @@
 import duckdb
 import logging
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DB_PATH = "data/warehouse.duckdb"
+# Resolve absolute path: scripts/setup_shadow_db.py -> repo_root/data/warehouse.duckdb
+_SCRIPT_DIR = Path(__file__).resolve().parent
+DB_PATH = str(_SCRIPT_DIR.parent / "data" / "warehouse.duckdb")
 
 def setup_shadow_views():
     con = duckdb.connect(DB_PATH)

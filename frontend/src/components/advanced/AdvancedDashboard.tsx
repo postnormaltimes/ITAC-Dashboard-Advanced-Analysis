@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Stepper, Step, StepLabel, Container } from '@mui/material';
+import { Box, Stepper, Step, StepLabel, Container, Alert } from '@mui/material';
 import Step1_NAICS from './Step1_NAICS';
 import Step2_MeasureTable from './Step2_MeasureTable';
 import Step3_Distributions from './Step3_Distributions';
@@ -34,17 +34,21 @@ const AdvancedDashboard: React.FC = () => {
     const [clusterMeasures, setClusterMeasures] = useState<AdvancedMeasure[]>([]);
     const [selection, setSelection] = useState<string[]>([]);
     const [nebInputs, setNebInputs] = useState<Record<string, { opCost: number, nebValue: number }>>({});
+    const [step1Error, setStep1Error] = useState<string | null>(null);
 
     const handleStep1Next = async (naics: string) => {
         try {
+            setStep1Error(null);
             setNaicsCode(naics);
             setStep1Data(null);
 
             const data = await api.getAdvancedStep1(naics);
             setStep1Data({ measures: data.measures, industryMedianCost: data.industry_median_energy_cost });
             setActiveStep(1);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Failed to fetch Step 1 data", error);
+            const detail = error?.response?.data?.detail || error?.message || 'Unknown error';
+            setStep1Error(`Failed to load data for NAICS "${naics}". Server responded: ${detail}`);
         }
     };
 
@@ -59,7 +63,16 @@ const AdvancedDashboard: React.FC = () => {
             </Stepper>
 
             <Box>
-                {activeStep === 0 && <Step1_NAICS onNext={handleStep1Next} />}
+                {activeStep === 0 && (
+                    <>
+                        {step1Error && (
+                            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setStep1Error(null)}>
+                                {step1Error}
+                            </Alert>
+                        )}
+                        <Step1_NAICS onNext={handleStep1Next} />
+                    </>
+                )}
 
                 {activeStep === 1 && step1Data && (
                     <Step2_MeasureTable
