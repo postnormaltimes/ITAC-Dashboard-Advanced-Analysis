@@ -7,18 +7,18 @@ import csv
 import openpyxl
 from pathlib import Path
 
-# Setup logging
+# Resolve absolute paths from this script's location:
+#   scripts/ingest_excel.py -> repo_root/data/
+_SCRIPT_DIR = Path(__file__).resolve().parent
+_REPO_ROOT = _SCRIPT_DIR.parent
+DATA_DIR = _REPO_ROOT / "data"
+DB_PATH = DATA_DIR / "warehouse.duckdb"
+
+# Setup logging (stderr only — avoids needing a logs/ directory on Render)
 logging.basicConfig(
-    filename='logs/ingestion.log',
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-logging.getLogger('').addHandler(console)
-
-DATA_DIR = Path("data")
-DB_PATH = DATA_DIR / "warehouse.duckdb"
 
 def clean_column_name(col):
     """Normalize column name to snake_case."""
