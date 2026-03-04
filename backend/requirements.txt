@@ -2,5 +2,6 @@ fastapi
 uvicorn
 duckdb
 pandas
+numpy
 openpyxl
 pydantic
