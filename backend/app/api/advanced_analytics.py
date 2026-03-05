@@ -267,7 +267,9 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             neb_codes=row['neb_codes']
         ))
 
-    return final_measures, industry_energy_cost
+    total_assessments = df['assessmentid'].nunique() if 'assessmentid' in df.columns else 0
+
+    return final_measures, industry_energy_cost, total_assessments
 
 
 # ===================================================================

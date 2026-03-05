@@ -33,7 +33,7 @@ const AdvancedDashboard: React.FC = () => {
 
     // State Store — persists across navigation
     const [naicsCode, setNaicsCode] = useState<string>('');
-    const [step1Data, setStep1Data] = useState<{ measures: AdvancedMeasure[], industryMedianCost: number } | null>(null);
+    const [step1Data, setStep1Data] = useState<{ measures: AdvancedMeasure[], industryMedianCost: number, totalAssessments: number } | null>(null);
     const [selectedCategories, setSelectedCategories] = useState<FirmSizeCategory[]>([]);
     const [clusterMeasures, setClusterMeasures] = useState<AdvancedMeasure[]>([]);
     const [selection, setSelection] = useState<string[]>([]);
@@ -52,7 +52,7 @@ const AdvancedDashboard: React.FC = () => {
             setStep1Data(null);
 
             const data = await api.getAdvancedStep1(naics);
-            setStep1Data({ measures: data.measures, industryMedianCost: data.industry_median_energy_cost });
+            setStep1Data({ measures: data.measures, industryMedianCost: data.industry_median_energy_cost, totalAssessments: data.total_assessments });
             setActiveStep(1);
         } catch (error: any) {
             console.error("Failed to fetch Step 1 data", error);
@@ -109,6 +109,7 @@ const AdvancedDashboard: React.FC = () => {
                         measures={step1Data.measures}
                         industryMedianCost={step1Data.industryMedianCost}
                         naicsCode={naicsCode}
+                        totalAssessments={step1Data.totalAssessments}
                         onBack={() => setActiveStep(0)}
                         onNext={() => setActiveStep(2)}
                     />

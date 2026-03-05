@@ -37,11 +37,12 @@ interface Step2Props {
     measures: AdvancedMeasure[];
     industryMedianCost: number;
     naicsCode: string;
+    totalAssessments: number;
     onBack: () => void;
     onNext: () => void;
 }
 
-const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost: _industryMedianCost, naicsCode, onBack, onNext }) => {
+const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost: _industryMedianCost, naicsCode, totalAssessments, onBack, onNext }) => {
     const defaultWeights = [30, 25, 20, 15, 10];
     const [weights, setWeights] = useState<number[]>(defaultWeights);
     const [editIdx, setEditIdx] = useState<number | null>(null);
@@ -240,7 +241,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                                 Scoring Weights (sum=100%)
                             </Typography>
-                            {renderWeightControl('Freq / Count', 0)}
+                            {renderWeightControl('Rec. Rate', 0)}
                             {renderWeightControl('Implementation Rate', 1)}
                             {renderWeightControl('Cost of Conserved Energy', 2)}
                             {renderWeightControl('Payback Period', 3)}
@@ -283,7 +284,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                         <TableRow>
                             <TableCell>Rank</TableCell>
                             <TableCell>ARC Code</TableCell>
-                            <TableCell align="right">Count</TableCell>
+                            <TableCell align="right">Rec. Rate</TableCell>
                             <TableCell align="right">Imp Rate</TableCell>
                             <TableCell align="right">Gross Savings (Median)</TableCell>
                             <TableCell align="right">Payback (Median)</TableCell>
@@ -304,7 +305,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                                         </Typography>
                                     </Box>
                                 </TableCell>
-                                <TableCell align="right">{row.count}</TableCell>
+                                <TableCell align="right">{totalAssessments > 0 ? ((row.count / totalAssessments) * 100).toFixed(1) : '0.0'}%</TableCell>
                                 <TableCell align="right">{(row.imp_rate * 100).toFixed(1)}%</TableCell>
                                 <TableCell align="right">{row.gross_savings.toLocaleString()}</TableCell>
                                 <TableCell align="right">{row.payback.toFixed(2)} yrs</TableCell>

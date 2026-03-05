@@ -57,6 +57,7 @@ describe('Step2_MeasureTable NAICS Fallback Integration', () => {
                 measures={mockMeasures}
                 industryMedianCost={10}
                 naicsCode="33231"
+                totalAssessments={100}
                 onBack={vi.fn()}
                 onNext={vi.fn()}
             />
