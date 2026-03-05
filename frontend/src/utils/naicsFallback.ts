@@ -9,20 +9,18 @@ export interface ResolverResult {
     distributions: MeasureDistributionResponse | null;
 }
 
-// In-memory cache to prevent redundant API calls during rapid re-renders
 const resolverCache = new Map<string, ResolverResult>();
 
-/**
- * Extracts only the digits from a NAICS string
- */
 export function normalizeNaics(naics: string): string {
     return naics.replace(/\D/g, '');
 }
 
 /**
- * Resolves NAICS scope for Step-2 CCE using strict hierarchy:
- * exact -> truncated prefixes (down to minNaicsDigits) -> all industries.
- * The first scope with any valid CCE values is selected.
+ * Resolve NAICS scope for Step-2 CCE:
+ * 1) exact -> broader prefixes down to minNaicsDigits
+ * 2) return first prefix meeting minValidN
+ * 3) if none meet minValidN but some have >0, use the largest sample (most specific on ties)
+ * 4) if all prefixes have 0, fallback to all industries
  */
 export async function resolveNaicsScopeForMeasureCCE({
     selectedNaics,
@@ -45,6 +43,8 @@ export async function resolveNaicsScopeForMeasureCCE({
         return resolverCache.get(cacheKey)!;
     }
 
+    let bestInvalidScope: { prefix: string; count: number; dists: MeasureDistributionResponse } | null = null;
+
     for (let len = naicsDigits.length; len >= minNaicsDigits; len--) {
         const prefix = naicsDigits.slice(0, len);
 
@@ -63,9 +63,27 @@ export async function resolveNaicsScopeForMeasureCCE({
                 resolverCache.set(cacheKey, result);
                 return result;
             }
+
+            if (validCount > 0) {
+                if (!bestInvalidScope || validCount > bestInvalidScope.count) {
+                    bestInvalidScope = { prefix, count: validCount, dists };
+                }
+            }
         } catch (err) {
             console.error(`Error fetching distributions for NAICS ${prefix}:`, err);
         }
+    }
+
+    if (bestInvalidScope) {
+        const result: ResolverResult = {
+            scope: bestInvalidScope.prefix === naicsDigits ? 'exact' : 'prefix',
+            usedNaicsPrefix: bestInvalidScope.prefix,
+            validCount: bestInvalidScope.count,
+            reason: 'insufficient_data',
+            distributions: bestInvalidScope.dists,
+        };
+        resolverCache.set(cacheKey, result);
+        return result;
     }
 
     try {

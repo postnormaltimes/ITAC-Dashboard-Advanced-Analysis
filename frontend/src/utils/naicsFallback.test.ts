@@ -30,77 +30,92 @@ describe('resolveNaicsScopeForMeasureCCE', () => {
 
     it('returns exact scope when exact NAICS has any valid CCE sample', async () => {
         const mockApi = api.getMeasureDistributions as any;
-        mockApi.mockResolvedValueOnce(mockDistResponse(2));
+        mockApi.mockResolvedValueOnce(mockDistResponse(6));
 
         const result = await resolveNaicsScopeForMeasureCCE({
             selectedNaics: '32221',
-            arcCode: 'EXACT-ANY-NONZERO',
+            arcCode: 'EXACT-MATCH',
             minValidN: 5,
         });
 
         expect(mockApi).toHaveBeenCalledTimes(1);
         expect(mockApi).toHaveBeenCalledWith('32221', 'EXACT-ANY-NONZERO', undefined);
         expect(result.scope).toBe('exact');
-        expect(result.usedNaicsPrefix).toBe('32221');
-        expect(result.reason).toBe('insufficient_data');
-        expect(result.validCount).toBe(2);
+        expect(result.reason).toBe('ok');
+        expect(result.validCount).toBe(6);
     });
 
-    it('falls back to first broader prefix with non-zero CCE (no min-N gating)', async () => {
+    it('broadens to prefix when exact has data but is below minValidN and prefix meets minValidN', async () => {
         const mockApi = api.getMeasureDistributions as any;
-        mockApi.mockResolvedValueOnce(mockDistResponse(0)); // 32221
-        mockApi.mockResolvedValueOnce(mockDistResponse(3)); // 3222
+        mockApi.mockResolvedValueOnce(mockDistResponse(1)); // exact insufficient
+        mockApi.mockResolvedValueOnce(mockDistResponse(6)); // prefix sufficient
 
         const result = await resolveNaicsScopeForMeasureCCE({
             selectedNaics: '32221',
-            arcCode: 'FIRST-PREFIX-NONZERO',
+            arcCode: 'BROADEN-FOR-STABILITY',
             minValidN: 5,
         });
 
         expect(mockApi).toHaveBeenCalledTimes(2);
-        expect(mockApi).toHaveBeenNthCalledWith(1, '32221', 'FIRST-PREFIX-NONZERO', undefined);
-        expect(mockApi).toHaveBeenNthCalledWith(2, '3222', 'FIRST-PREFIX-NONZERO', undefined);
-
+        expect(mockApi).toHaveBeenNthCalledWith(1, '32221', 'BROADEN-FOR-STABILITY', undefined);
+        expect(mockApi).toHaveBeenNthCalledWith(2, '3222', 'BROADEN-FOR-STABILITY', undefined);
         expect(result.scope).toBe('prefix');
         expect(result.usedNaicsPrefix).toBe('3222');
         expect(result.reason).toBe('insufficient_data');
         expect(result.validCount).toBe(3);
     });
 
-    it('stops truncation at minNaicsDigits (3) and then falls back to all', async () => {
+    it('keeps best insufficient prefix when none reach minValidN', async () => {
         const mockApi = api.getMeasureDistributions as any;
-        mockApi.mockResolvedValueOnce(mockDistResponse(0)); // 32221
-        mockApi.mockResolvedValueOnce(mockDistResponse(0)); // 3222
-        mockApi.mockResolvedValueOnce(mockDistResponse(0)); // 322
-        mockApi.mockResolvedValueOnce(mockDistResponse(9)); // all
+        mockApi.mockResolvedValueOnce(mockDistResponse(1)); // 32221
+        mockApi.mockResolvedValueOnce(mockDistResponse(4)); // 3222
+        mockApi.mockResolvedValueOnce(mockDistResponse(4)); // 322 (tie -> keep 3222, more specific)
 
         const result = await resolveNaicsScopeForMeasureCCE({
             selectedNaics: '32221',
-            arcCode: 'ALL-AFTER-3DIGIT',
+            arcCode: 'BEST-INSUFFICIENT',
             minNaicsDigits: 3,
             minValidN: 5,
         });
 
-        expect(mockApi).toHaveBeenCalledTimes(4);
-        expect(mockApi).toHaveBeenNthCalledWith(1, '32221', 'ALL-AFTER-3DIGIT', undefined);
-        expect(mockApi).toHaveBeenNthCalledWith(2, '3222', 'ALL-AFTER-3DIGIT', undefined);
-        expect(mockApi).toHaveBeenNthCalledWith(3, '322', 'ALL-AFTER-3DIGIT', undefined);
-        expect(mockApi).toHaveBeenNthCalledWith(4, '', 'ALL-AFTER-3DIGIT', undefined);
-
-        expect(result.scope).toBe('all');
-        expect(result.usedNaicsPrefix).toBeNull();
-        expect(result.reason).toBe('ok');
-        expect(result.validCount).toBe(9);
+        expect(mockApi).toHaveBeenCalledTimes(3);
+        expect(result.scope).toBe('prefix');
+        expect(result.usedNaicsPrefix).toBe('3222');
+        expect(result.reason).toBe('insufficient_data');
+        expect(result.validCount).toBe(4);
     });
 
-    it('normalizes NAICS input before prefix iteration', async () => {
+    it('falls back to all only if every prefix down to min digits has zero', async () => {
+        const mockApi = api.getMeasureDistributions as any;
+        mockApi.mockResolvedValueOnce(mockDistResponse(0)); // 3323
+        mockApi.mockResolvedValueOnce(mockDistResponse(0)); // 332
+        mockApi.mockResolvedValueOnce(mockDistResponse(8)); // all
+
+        const result = await resolveNaicsScopeForMeasureCCE({
+            selectedNaics: '3323',
+            arcCode: 'ALL-FALLBACK',
+            minNaicsDigits: 3,
+            minValidN: 5,
+        });
+
+        expect(mockApi).toHaveBeenCalledTimes(3);
+        expect(mockApi).toHaveBeenNthCalledWith(1, '3323', 'ALL-FALLBACK', undefined);
+        expect(mockApi).toHaveBeenNthCalledWith(2, '332', 'ALL-FALLBACK', undefined);
+        expect(mockApi).toHaveBeenNthCalledWith(3, '', 'ALL-FALLBACK', undefined);
+        expect(result.scope).toBe('all');
+        expect(result.reason).toBe('ok');
+        expect(result.validCount).toBe(8);
+    });
+
+    it('normalizes NAICS before prefix iteration', async () => {
         const mockApi = api.getMeasureDistributions as any;
         mockApi.mockResolvedValueOnce(mockDistResponse(0)); // 32221
-        mockApi.mockResolvedValueOnce(mockDistResponse(2)); // 3222
+        mockApi.mockResolvedValueOnce(mockDistResponse(5)); // 3222
 
         const result = await resolveNaicsScopeForMeasureCCE({
             selectedNaics: '32-221',
             arcCode: 'NORMALIZED',
+            minValidN: 5,
         });
 
         expect(mockApi).toHaveBeenNthCalledWith(1, '32221', 'NORMALIZED', undefined);
@@ -108,7 +123,7 @@ describe('resolveNaicsScopeForMeasureCCE', () => {
         expect(result.usedNaicsPrefix).toBe('3222');
     });
 
-    it('returns no_data_found when nothing is valid, including all-industries', async () => {
+    it('returns no_data_found when all scopes are empty', async () => {
         const mockApi = api.getMeasureDistributions as any;
         mockApi.mockResolvedValue(mockDistResponse(0));
 
