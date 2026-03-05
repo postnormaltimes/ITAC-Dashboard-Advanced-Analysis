@@ -52,12 +52,12 @@ export async function resolveNaicsScopeForMeasureCCE({
             const dists = await api.getMeasureDistributions(prefix, arcCode, categories);
             const validCount = dists.cce_primary.length;
 
-            if (validCount >= minValidN) {
+            if (validCount > 0) {
                 const result: ResolverResult = {
                     scope: len === naicsDigits.length ? 'exact' : 'prefix',
                     usedNaicsPrefix: prefix,
                     validCount,
-                    reason: 'ok',
+                    reason: validCount >= minValidN ? 'ok' : 'insufficient_data',
                     distributions: dists,
                 };
                 resolverCache.set(cacheKey, result);

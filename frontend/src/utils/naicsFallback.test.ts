@@ -28,7 +28,7 @@ describe('resolveNaicsScopeForMeasureCCE', () => {
         vi.resetAllMocks();
     });
 
-    it('returns exact scope if minValidN is met immediately', async () => {
+    it('returns exact scope when exact NAICS has any valid CCE sample', async () => {
         const mockApi = api.getMeasureDistributions as any;
         mockApi.mockResolvedValueOnce(mockDistResponse(6));
 
@@ -39,7 +39,7 @@ describe('resolveNaicsScopeForMeasureCCE', () => {
         });
 
         expect(mockApi).toHaveBeenCalledTimes(1);
-        expect(mockApi).toHaveBeenCalledWith('32221', 'EXACT-MATCH', undefined);
+        expect(mockApi).toHaveBeenCalledWith('32221', 'EXACT-ANY-NONZERO', undefined);
         expect(result.scope).toBe('exact');
         expect(result.reason).toBe('ok');
         expect(result.validCount).toBe(6);
@@ -61,8 +61,8 @@ describe('resolveNaicsScopeForMeasureCCE', () => {
         expect(mockApi).toHaveBeenNthCalledWith(2, '3222', 'BROADEN-FOR-STABILITY', undefined);
         expect(result.scope).toBe('prefix');
         expect(result.usedNaicsPrefix).toBe('3222');
-        expect(result.reason).toBe('ok');
-        expect(result.validCount).toBe(6);
+        expect(result.reason).toBe('insufficient_data');
+        expect(result.validCount).toBe(3);
     });
 
     it('keeps best insufficient prefix when none reach minValidN', async () => {
