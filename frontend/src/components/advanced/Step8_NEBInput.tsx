@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, TextField } from '@mui/material';
+import { Box, Typography, Paper, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, TextField, Alert } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { api } from '../../api/client';
 import type { AdvancedMeasure, FirmSizeCategory, NEBMeasureDetail } from '../../types';
@@ -45,6 +45,12 @@ const Step8_NEBInput: React.FC<Step8Props> = ({ naicsCode, selectedMeasureIds, s
 
     const fmt = (v: number | null | undefined) => v != null ? `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '—';
 
+    /** Returns 'error.main' for negative, 'success.main' for positive, undefined for zero/null */
+    const nebColor = (v: number | null | undefined): string | undefined => {
+        if (v == null || v === 0) return undefined;
+        return v < 0 ? 'error.main' : 'success.main';
+    };
+
     const activeData = nebData.find(m => m.arc === activeMeasure);
 
     const renderDistribution = (values: number[], title: string, color: string) => {
@@ -87,6 +93,12 @@ const Step8_NEBInput: React.FC<Step8Props> = ({ naicsCode, selectedMeasureIds, s
                 </Box>
             </Box>
 
+            <Alert severity="info" sx={{ mb: 2 }}>
+                <strong>N.B.</strong> Negative values (shown in <span style={{ color: '#d32f2f', fontWeight: 600 }}>red</span>) represent a <em>negative benefit</em>,
+                i.e. an <strong>increase in costs</strong> rather than a saving.
+                Positive values (shown in <span style={{ color: '#2e7d32', fontWeight: 600 }}>green</span>) represent actual cost savings.
+            </Alert>
+
             {/* NEB Distributions for active measure */}
             {activeData && (
                 <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
@@ -128,14 +140,16 @@ const Step8_NEBInput: React.FC<Step8Props> = ({ naicsCode, selectedMeasureIds, s
                                     </TableCell>
                                     <TableCell align="right">{fmt(m.imp_cost_median)}</TableCell>
                                     <TableCell align="right">{fmt(m.energy_savings_median)}</TableCell>
-                                    <TableCell align="right">{fmt(m.other_energy_median)}</TableCell>
-                                    <TableCell align="right" sx={{ color: (m.waste_costs_median ?? 0) > 0 ? 'success.main' : undefined }}>
+                                    <TableCell align="right" sx={{ color: nebColor(m.other_energy_median), fontWeight: m.other_energy_median ? 600 : undefined }}>
+                                        {fmt(m.other_energy_median)}
+                                    </TableCell>
+                                    <TableCell align="right" sx={{ color: nebColor(m.waste_costs_median), fontWeight: m.waste_costs_median ? 600 : undefined }}>
                                         {fmt(m.waste_costs_median)}
                                     </TableCell>
-                                    <TableCell align="right" sx={{ color: (m.production_costs_median ?? 0) > 0 ? 'success.main' : undefined }}>
+                                    <TableCell align="right" sx={{ color: nebColor(m.production_costs_median), fontWeight: m.production_costs_median ? 600 : undefined }}>
                                         {fmt(m.production_costs_median)}
                                     </TableCell>
-                                    <TableCell align="right" sx={{ color: (m.resource_costs_median ?? 0) > 0 ? 'success.main' : undefined }}>
+                                    <TableCell align="right" sx={{ color: nebColor(m.resource_costs_median), fontWeight: m.resource_costs_median ? 600 : undefined }}>
                                         {fmt(m.resource_costs_median)}
                                     </TableCell>
                                     <TableCell align="center" onClick={e => e.stopPropagation()}>

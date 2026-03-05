@@ -702,4 +702,180 @@ def get_neb_details(request: NEBDetailsRequest):
         print(f"Error in NEB details: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        con.close()
+        if con is not None:
+            con.close()
+
+
+# ===================================================================
+# Step 5B: BAT Alignment & Improvement Gap
+# ===================================================================
+
+from app.models.schemas import (
+    Step5BRequest, Step5BResponse, BatAlignmentMeasure, BatLink, BrefInfo,
+    Step5CRequest, Step5CResponse, PriorityMeasure,
+)
+from app.utils.bat_mapping import (
+    get_bat_links_for_arc, get_available_brefs, compute_improvement_index,
+    compute_priority_index,
+)
+
+@router.post("/step5b_bat_alignment", response_model=Step5BResponse)
+def step5b_bat_alignment(request: Step5BRequest):
+    """Compute BAT alignment + Improvement Index for cluster-scoped measures."""
+    con = None
+    try:
+        con = get_db_connection()
+        query = "SELECT * FROM recommendations WHERE naics LIKE ?"
+        df = con.execute(query, [f"{request.naics_code}%"]).fetch_df()
+
+        if df.empty:
+            brefs = [BrefInfo(**b) for b in get_available_brefs(request.naics_code)]
+            return Step5BResponse(measures=[], available_brefs=brefs)
+
+        # Apply cluster filter
+        df = _apply_category_filter(df, request.categories)
+
+        # Process measures (get scores, descriptions, etc.)
+        measure_data, _ = _process_dataset(df, request.naics_code)
+
+        # Build per-ARC implementation counts from raw data
+        arc_stats = {}
+        for arc, group in df.groupby('arc'):
+            count = len(group)
+            implemented = group['impstatus'].astype(str).str.upper().apply(lambda x: 'I' in x or 'IMPL' in x)
+            arc_stats[arc] = {
+                'recommended': count,
+                'implemented': int(implemented.sum()),
+            }
+
+        # Get available BREFs
+        brefs = [BrefInfo(**b) for b in get_available_brefs(request.naics_code)]
+
+        # Build result measures
+        result_measures = []
+        for m in measure_data:
+            arc = m.arc
+            bat_links_raw = get_bat_links_for_arc(arc, request.naics_code, request.bref_id)
+            is_bat_linked = len(bat_links_raw) > 0
+
+            if request.bat_only and not is_bat_linked:
+                continue
+
+            stats = arc_stats.get(arc, {'recommended': 0, 'implemented': 0})
+            recommended = stats['recommended']
+            implemented = stats['implemented']
+            imp_rate = (implemented + 1) / (recommended + 2) if recommended > 0 else 0.0
+
+            # Compute avg confidence from primary links (fallback all)
+            primary_confs = [l['confidence'] for l in bat_links_raw if l['matchRole'] == 'primary']
+            all_confs = [l['confidence'] for l in bat_links_raw]
+            avg_conf = (sum(primary_confs) / len(primary_confs)) if primary_confs else (
+                (sum(all_confs) / len(all_confs)) if all_confs else 1.0
+            )
+
+            improvement_idx = compute_improvement_index(recommended, implemented, avg_conf)
+
+            bat_links_pydantic = [BatLink(**bl) for bl in bat_links_raw]
+
+            result_measures.append(BatAlignmentMeasure(
+                arc=arc,
+                description=m.description,
+                score=m.score,
+                count=recommended,
+                implemented_count=implemented,
+                imp_rate=round(imp_rate, 4),
+                imp_gap=round(1.0 - imp_rate, 4),
+                improvement_index=improvement_idx,
+                avg_confidence=round(avg_conf, 3),
+                is_bat_linked=is_bat_linked,
+                bat_links=bat_links_pydantic,
+            ))
+
+        # Sort by improvement_index desc (None last)
+        result_measures.sort(key=lambda x: (x.improvement_index is not None, x.improvement_index or 0), reverse=True)
+
+        return Step5BResponse(measures=result_measures, available_brefs=brefs)
+
+    except Exception as e:
+        print(f"Error in step5b: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if con is not None:
+            con.close()
+
+
+# ===================================================================
+# Step 5C: Priority Index
+# ===================================================================
+
+@router.post("/step5c_priority_index", response_model=Step5CResponse)
+def step5c_priority_index(request: Step5CRequest):
+    """Compute Priority Index = weighted combination of Criticality + Improvement."""
+    con = None
+    try:
+        con = get_db_connection()
+        query = "SELECT * FROM recommendations WHERE naics LIKE ?"
+        df = con.execute(query, [f"{request.naics_code}%"]).fetch_df()
+
+        if df.empty:
+            return Step5CResponse(measures=[])
+
+        df = _apply_category_filter(df, request.categories)
+        measure_data, _ = _process_dataset(df, request.naics_code)
+
+        # Build per-ARC stats
+        arc_stats = {}
+        for arc, group in df.groupby('arc'):
+            count = len(group)
+            implemented = group['impstatus'].astype(str).str.upper().apply(lambda x: 'I' in x or 'IMPL' in x)
+            arc_stats[arc] = {'recommended': count, 'implemented': int(implemented.sum())}
+
+        result = []
+        for m in measure_data:
+            arc = m.arc
+            bat_links_raw = get_bat_links_for_arc(arc, request.naics_code, request.bref_id)
+            is_bat_linked = len(bat_links_raw) > 0
+
+            stats = arc_stats.get(arc, {'recommended': 0, 'implemented': 0})
+            primary_confs = [l['confidence'] for l in bat_links_raw if l['matchRole'] == 'primary']
+            all_confs = [l['confidence'] for l in bat_links_raw]
+            avg_conf = (sum(primary_confs) / len(primary_confs)) if primary_confs else (
+                (sum(all_confs) / len(all_confs)) if all_confs else 1.0
+            )
+
+            improvement_idx = compute_improvement_index(
+                stats['recommended'], stats['implemented'], avg_conf
+            )
+            criticality = m.score
+            priority_idx = compute_priority_index(
+                criticality, improvement_idx,
+                w_criticality=request.w_criticality,
+                w_improvement=request.w_improvement,
+                include_missing=request.include_missing,
+            )
+
+            result.append(PriorityMeasure(
+                arc=arc,
+                description=m.description,
+                criticality_index=criticality,
+                improvement_index=improvement_idx,
+                priority_index=priority_idx,
+                bat_link_count=len(bat_links_raw),
+                is_bat_linked=is_bat_linked,
+            ))
+
+        # Sort by priority_index desc (None last), tiebreak by criticality desc, then arc
+        result.sort(key=lambda x: (
+            x.priority_index is not None,
+            x.priority_index or 0,
+            x.criticality_index,
+        ), reverse=True)
+
+        return Step5CResponse(measures=result)
+
+    except Exception as e:
+        print(f"Error in step5c: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if con is not None:
+            con.close()

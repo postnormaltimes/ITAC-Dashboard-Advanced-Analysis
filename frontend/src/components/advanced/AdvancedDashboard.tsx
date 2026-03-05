@@ -5,29 +5,33 @@ import Step2_MeasureTable from './Step2_MeasureTable';
 import Step3_Distributions from './Step3_Distributions';
 import Step4_ClusterDef from './Step4_ClusterDef';
 import Step5_Comparison from './Step5_Comparison';
+import Step5B_BatAlignment from './Step5B_BatAlignment';
+import Step5C_PriorityIndex from './Step5C_PriorityIndex';
 import Step6_Selection from './Step6_Selection';
 import Step7_BaselineCurve from './Step7_BaselineCurve';
 import Step8_NEBInput from './Step8_NEBInput';
 import Step9_GapAnalysis from './Step9_GapAnalysis';
 import { api } from '../../api/client';
-import type { AdvancedMeasure, FirmSizeCategory } from '../../types';
+import type { AdvancedMeasure, PriorityMeasure, FirmSizeCategory } from '../../types';
 
 const STEPS = [
-    'Industry Selection',
-    'Measure Ranking',
-    'Distributions',
-    'Cluster Definition',
-    'Comparison',
-    'Selection',
-    'Baseline Curve',
-    'Non-Energy Benefits',
-    'Gap Analysis'
+    'Industry Selection',    // 0
+    'Measure Ranking',       // 1
+    'Distributions',         // 2
+    'Cluster Definition',    // 3
+    'Comparison',            // 4
+    'BAT Alignment',         // 5
+    'Priority Index',        // 6
+    'Selection',             // 7
+    'Baseline Curve',        // 8
+    'Non-Energy Benefits',   // 9
+    'Gap Analysis'           // 10
 ];
 
 const AdvancedDashboard: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
 
-    // State Store
+    // State Store — persists across navigation
     const [naicsCode, setNaicsCode] = useState<string>('');
     const [step1Data, setStep1Data] = useState<{ measures: AdvancedMeasure[], industryMedianCost: number } | null>(null);
     const [selectedCategories, setSelectedCategories] = useState<FirmSizeCategory[]>([]);
@@ -35,6 +39,12 @@ const AdvancedDashboard: React.FC = () => {
     const [selection, setSelection] = useState<string[]>([]);
     const [nebInputs, setNebInputs] = useState<Record<string, { opCost: number, nebValue: number }>>({});
     const [step1Error, setStep1Error] = useState<string | null>(null);
+
+    // Step 5C lifted state — persists when navigating back/forward
+    const [currentRankingMode, setCurrentRankingMode] = useState<'criticality' | 'priority'>('priority');
+    const [wCrit, setWCrit] = useState(60);
+    const [includeMissing, setIncludeMissing] = useState(false);
+    const [priorityMeasures, setPriorityMeasures] = useState<PriorityMeasure[]>([]);
 
     const handleStep1Next = async (naics: string) => {
         try {
@@ -50,6 +60,27 @@ const AdvancedDashboard: React.FC = () => {
             const detail = error?.response?.data?.detail || error?.message || 'Unknown error';
             setStep1Error(`Failed to load data for NAICS "${naics}". Server responded: ${detail}`);
         }
+    };
+
+    // Build the measures list for Step 6 based on ranking mode
+    const getSelectionMeasures = (): AdvancedMeasure[] => {
+        const baseMeasures = clusterMeasures.length ? clusterMeasures : (step1Data?.measures ?? []);
+
+        if (currentRankingMode === 'priority' && priorityMeasures.length > 0) {
+            // Build a priority order map: arc → rank
+            const priorityOrder = new Map<string, number>();
+            priorityMeasures.forEach((pm, idx) => {
+                priorityOrder.set(pm.arc, idx);
+            });
+            // Sort base measures by priority order; unranked measures go to the end
+            return [...baseMeasures].sort((a, b) => {
+                const aRank = priorityOrder.get(a.arc) ?? 9999;
+                const bRank = priorityOrder.get(b.arc) ?? 9999;
+                return aRank - bRank;
+            });
+        }
+
+        return baseMeasures;
     };
 
     return (
@@ -116,28 +147,56 @@ const AdvancedDashboard: React.FC = () => {
                     />
                 )}
 
-                {activeStep === 5 && step1Data && (
-                    <Step6_Selection
-                        measures={clusterMeasures.length ? clusterMeasures : step1Data.measures}
+                {/* Step 5B — BAT Alignment */}
+                {activeStep === 5 && (
+                    <Step5B_BatAlignment
+                        naicsCode={naicsCode}
+                        selectedCategories={selectedCategories}
                         onBack={() => setActiveStep(4)}
-                        onNext={(selectedIds) => {
-                            setSelection(selectedIds);
-                            setActiveStep(6);
-                        }}
+                        onNext={() => setActiveStep(6)}
                     />
                 )}
 
+                {/* Step 5C — Priority Index (state lifted to dashboard) */}
                 {activeStep === 6 && (
-                    <Step7_BaselineCurve
+                    <Step5C_PriorityIndex
                         naicsCode={naicsCode}
-                        selectedMeasureIds={selection}
                         selectedCategories={selectedCategories}
+                        wCrit={wCrit}
+                        setWCrit={setWCrit}
+                        includeMissing={includeMissing}
+                        setIncludeMissing={setIncludeMissing}
+                        rankingMode={currentRankingMode}
+                        setRankingMode={setCurrentRankingMode}
+                        onPriorityMeasuresLoaded={setPriorityMeasures}
                         onBack={() => setActiveStep(5)}
                         onNext={() => setActiveStep(7)}
                     />
                 )}
 
                 {activeStep === 7 && step1Data && (
+                    <Step6_Selection
+                        measures={getSelectionMeasures()}
+                        rankingMode={currentRankingMode}
+                        onBack={() => setActiveStep(6)}
+                        onNext={(selectedIds) => {
+                            setSelection(selectedIds);
+                            setActiveStep(8);
+                        }}
+                    />
+                )}
+
+                {activeStep === 8 && (
+                    <Step7_BaselineCurve
+                        naicsCode={naicsCode}
+                        selectedMeasureIds={selection}
+                        selectedCategories={selectedCategories}
+                        onBack={() => setActiveStep(7)}
+                        onNext={() => setActiveStep(9)}
+                    />
+                )}
+
+                {activeStep === 9 && step1Data && (
                     <Step8_NEBInput
                         naicsCode={naicsCode}
                         measures={clusterMeasures.length ? clusterMeasures : step1Data.measures}
@@ -145,18 +204,18 @@ const AdvancedDashboard: React.FC = () => {
                         selectedCategories={selectedCategories}
                         nebInputs={nebInputs}
                         setNebInputs={setNebInputs}
-                        onBack={() => setActiveStep(6)}
-                        onNext={() => setActiveStep(8)}
+                        onBack={() => setActiveStep(8)}
+                        onNext={() => setActiveStep(10)}
                     />
                 )}
 
-                {activeStep === 8 && (
+                {activeStep === 10 && (
                     <Step9_GapAnalysis
                         naicsCode={naicsCode}
                         selectedMeasureIds={selection}
                         selectedCategories={selectedCategories}
                         nebInputs={nebInputs}
-                        onBack={() => setActiveStep(7)}
+                        onBack={() => setActiveStep(9)}
                         onReset={() => setActiveStep(0)}
                     />
                 )}
@@ -167,3 +226,4 @@ const AdvancedDashboard: React.FC = () => {
 };
 
 export default AdvancedDashboard;
+

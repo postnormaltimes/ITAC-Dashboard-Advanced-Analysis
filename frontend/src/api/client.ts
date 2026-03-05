@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import type { SearchFilters, SearchResponse, Recommendation, RecommendationDetail, IFacetsResponse, CostCurveParams, CostCurveResponse, WaterfallResponse, KPIMetrics, AnalyticsChartsResponse, SensitivityParams, SensitivityResponse, Step0Response, Step1Response, Step2Response, Step3Response, AdvancedStep1Response, AdvancedStep2Response, AdvancedStep3Response, AdvancedStep4Response, MeasureDistributionResponse, PrimaryCurveResponse, NEBDetailsResponse, FirmSizeCategory } from '../types';
+import type { SearchFilters, SearchResponse, Recommendation, RecommendationDetail, IFacetsResponse, CostCurveParams, CostCurveResponse, WaterfallResponse, KPIMetrics, AnalyticsChartsResponse, SensitivityParams, SensitivityResponse, Step0Response, Step1Response, Step2Response, Step3Response, AdvancedStep1Response, AdvancedStep2Response, AdvancedStep3Response, AdvancedStep4Response, MeasureDistributionResponse, PrimaryCurveResponse, NEBDetailsResponse, FirmSizeCategory, Step5BResponse, Step5CResponse } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
@@ -175,6 +175,34 @@ export const api = {
     ): Promise<NEBDetailsResponse> => {
         const response = await client.post<NEBDetailsResponse>('/advanced/step8_neb_details', {
             naics_code, selected_measure_ids, categories
+        });
+        return response.data;
+    },
+
+    // --- NEW: Step 5B BAT Alignment ---
+    getStep5BBatAlignment: async (
+        naics_code: string,
+        categories?: FirmSizeCategory[],
+        bref_id?: string,
+        bat_only: boolean = true,
+    ): Promise<Step5BResponse> => {
+        const response = await client.post<Step5BResponse>('/advanced/step5b_bat_alignment', {
+            naics_code, categories, bref_id, bat_only,
+        });
+        return response.data;
+    },
+
+    // --- NEW: Step 5C Priority Index ---
+    getStep5CPriorityIndex: async (
+        naics_code: string,
+        categories?: FirmSizeCategory[],
+        bref_id?: string,
+        w_criticality: number = 60,
+        w_improvement: number = 40,
+        include_missing: boolean = false,
+    ): Promise<Step5CResponse> => {
+        const response = await client.post<Step5CResponse>('/advanced/step5c_priority_index', {
+            naics_code, categories, bref_id, w_criticality, w_improvement, include_missing,
         });
         return response.data;
     },

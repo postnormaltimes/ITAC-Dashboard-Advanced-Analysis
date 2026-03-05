@@ -362,3 +362,60 @@ export interface AdvancedStep4Response {
     electricity_curve: CurvePoint[];
     gas_curve: CurvePoint[];
 }
+
+// --- BAT Alignment (Step 5B) ---
+
+export interface BatLink {
+    naics: string;
+    brefId: string;
+    brefTitle: string;
+    batId: string;
+    batTitle: string;
+    batText: string;
+    arcKey: string;
+    arcAppCode: number | null;
+    matchRole: 'primary' | 'secondary';
+    matchType: 'direct' | 'partial' | 'proxy';
+    confidence: number;
+    notes: string;
+}
+
+export interface BatAlignmentMeasure {
+    arc: string;
+    description: string;
+    score: number;  // Criticality Index
+    count: number;  // recommendedCount
+    implemented_count: number;
+    imp_rate: number;
+    imp_gap: number;
+    improvement_index: number | null;
+    avg_confidence: number;
+    is_bat_linked: boolean;
+    bat_links: BatLink[];
+}
+
+export interface BrefInfo {
+    brefId: string;
+    brefTitle: string;
+}
+
+export interface Step5BResponse {
+    measures: BatAlignmentMeasure[];
+    available_brefs: BrefInfo[];
+}
+
+// --- Priority Index (Step 5C) ---
+
+export interface PriorityMeasure {
+    arc: string;
+    description: string;
+    criticality_index: number;
+    improvement_index: number | null;
+    priority_index: number | null;
+    bat_link_count: number;
+    is_bat_linked: boolean;
+}
+
+export interface Step5CResponse {
+    measures: PriorityMeasure[];
+}

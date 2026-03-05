@@ -279,3 +279,68 @@ class NEBDetailsRequest(BaseModel):
 class NEBDetailsResponse(BaseModel):
     measures: List[NEBMeasureDetail]
 
+
+# --- BAT Alignment (Step 5B) ---
+
+class BatLink(BaseModel):
+    naics: str
+    brefId: str
+    brefTitle: str
+    batId: str
+    batTitle: str
+    batText: str = ""
+    arcKey: str
+    arcAppCode: Optional[int] = None
+    matchRole: str  # primary | secondary
+    matchType: str  # direct | partial | proxy
+    confidence: float
+    notes: str = ""
+
+class BatAlignmentMeasure(BaseModel):
+    arc: str
+    description: str
+    score: float  # Criticality Index from Step 5
+    count: int  # recommendedCount
+    implemented_count: int
+    imp_rate: float
+    imp_gap: float
+    improvement_index: Optional[int] = None
+    avg_confidence: float = 1.0
+    is_bat_linked: bool = False
+    bat_links: List[BatLink] = []
+
+class BrefInfo(BaseModel):
+    brefId: str
+    brefTitle: str
+
+class Step5BRequest(BaseModel):
+    naics_code: str
+    categories: Optional[List[str]] = None
+    bref_id: Optional[str] = None  # filter by BREF
+    bat_only: bool = True  # show only BAT-linked measures
+
+class Step5BResponse(BaseModel):
+    measures: List[BatAlignmentMeasure]
+    available_brefs: List[BrefInfo]
+
+# --- Priority Index (Step 5C) ---
+
+class Step5CRequest(BaseModel):
+    naics_code: str
+    categories: Optional[List[str]] = None
+    bref_id: Optional[str] = None
+    w_criticality: float = 60.0
+    w_improvement: float = 40.0
+    include_missing: bool = False
+
+class PriorityMeasure(BaseModel):
+    arc: str
+    description: str
+    criticality_index: float
+    improvement_index: Optional[int] = None
+    priority_index: Optional[int] = None
+    bat_link_count: int = 0
+    is_bat_linked: bool = False
+
+class Step5CResponse(BaseModel):
+    measures: List[PriorityMeasure]

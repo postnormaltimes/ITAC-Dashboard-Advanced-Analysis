@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Box, Typography, Paper, Button, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, Paper, Button, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
 import type { AdvancedMeasure } from '../../types';
 import { sanitizeMeasureDescription } from '../../utils/text';
 
 interface Step6Props {
-    measures: AdvancedMeasure[]; // From Step 5 / Cluster
+    measures: AdvancedMeasure[]; // From Step 5 / Cluster, sorted by rankingMode
+    rankingMode?: 'criticality' | 'priority';
     onBack: () => void;
     onNext: (selectedIds: string[]) => void;
 }
 
-const Step6_Selection: React.FC<Step6Props> = ({ measures, onBack, onNext }) => {
+const Step6_Selection: React.FC<Step6Props> = ({ measures, rankingMode = 'criticality', onBack, onNext }) => {
     // Default select all? Or top 10?
     // Let's select top 10 by default
     const [selected, setSelected] = useState<string[]>(measures.slice(0, 10).map(m => m.arc));
@@ -37,6 +38,9 @@ const Step6_Selection: React.FC<Step6Props> = ({ measures, onBack, onNext }) => 
                     <Typography variant="h5">Step 6: Measure Selection</Typography>
                     <Typography color="text.secondary">
                         Select the measures to include in the Cost Curve and Financial Analysis.
+                        {rankingMode === 'priority' && (
+                            <Chip label="Sorted by Priority Index" size="small" color="primary" sx={{ ml: 1 }} />
+                        )}
                     </Typography>
                 </Box>
                 <Box>
@@ -64,7 +68,9 @@ const Step6_Selection: React.FC<Step6Props> = ({ measures, onBack, onNext }) => 
                             </TableCell>
                             <TableCell>ARC Code</TableCell>
                             <TableCell>Description</TableCell>
-                            <TableCell align="right">Score</TableCell>
+                            <TableCell align="right">
+                                {rankingMode === 'priority' ? 'Score (Priority)' : 'Score (Criticality)'}
+                            </TableCell>
                             <TableCell align="right">Payback (Yrs)</TableCell>
                             <TableCell align="right">CCE</TableCell>
                         </TableRow>
