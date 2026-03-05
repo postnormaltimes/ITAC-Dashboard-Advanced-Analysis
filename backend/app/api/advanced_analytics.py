@@ -321,6 +321,48 @@ def _load_naics_df(naics: str, con=None) -> pd.DataFrame:
     return df
 
 
+def _load_measure_distribution_df(naics_code: str, arc_code: str, con=None) -> pd.DataFrame:
+    """Load rows for a single ARC/NAICS scope, with demo-data fallback that also supports NAICS prefixes."""
+    close_con = False
+    if con is None:
+        con = get_db_connection()
+        close_con = True
+
+    try:
+        query = "SELECT * FROM recommendations WHERE naics LIKE ? AND arc = ?"
+        df = con.execute(query, [f"{naics_code}%", arc_code]).fetch_df()
+    except Exception as e:
+        print(f"DB Error in measure distribution load: {e}")
+        df = pd.DataFrame()
+    finally:
+        if close_con:
+            con.close()
+
+    if not df.empty:
+        return df
+
+    # Demo fallback: support exact NAICS, prefix NAICS (e.g., 332 -> 3323), and all-industries ("").
+    demo_naics = ["3323", "32221"]
+    if naics_code:
+        matching_demo_naics = [code for code in demo_naics if code.startswith(naics_code)]
+    else:
+        matching_demo_naics = demo_naics
+
+    if not matching_demo_naics:
+        return df
+
+    demo_frames = []
+    for code in matching_demo_naics:
+        demo_df = _get_demo_data(code)
+        if not demo_df.empty:
+            demo_frames.append(demo_df[demo_df["arc"] == arc_code])
+
+    if not demo_frames:
+        return pd.DataFrame()
+
+    return pd.concat(demo_frames, ignore_index=True)
+
+
 # ===================================================================
 # Endpoints
 # ===================================================================
@@ -398,12 +440,7 @@ def get_measure_distributions(request: MeasureDistributionRequest):
     """Get per-observation distribution arrays for a single ARC measure."""
     con = get_db_connection()
     try:
-        query = "SELECT * FROM recommendations WHERE naics LIKE ? AND arc = ?"
-        df = con.execute(query, [f"{request.naics_code}%", request.arc_code]).fetch_df()
-
-        if df.empty and request.naics_code in ['3323', '32221']:
-            full_df = _get_demo_data(request.naics_code)
-            df = full_df[full_df['arc'] == request.arc_code]
+        df = _load_measure_distribution_df(request.naics_code, request.arc_code, con)
 
         if df.empty:
             return MeasureDistributionResponse(gross_savings=[], payback=[], cce_primary=[], count=0)
@@ -869,5 +906,4 @@ def step5c_priority_index(request: Step5CRequest):
     finally:
         if con is not None:
             con.close()
-
 
