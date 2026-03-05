@@ -5,12 +5,16 @@ Loads the normalized bref_bat_to_arc.json and provides:
 - parse_arc_key(arc_key) → (arcCode, arcAppCode)
 - get_bat_links_for_arc(arc_code, naics) → list of BatLink dicts
 - attach_bat_links(measures, naics) → measures with isBatLinked + batLinks
-- compute_improvement_index(recommended, implemented, avg_confidence, n0=30)
+- compute_improvement_index(recommended, implemented, avg_confidence)
+- compute_bat_count(bat_links) → unique BAT count
+- compute_confidence_factor(bat_links) → confidence factor [0,1]
+- compute_bat_premium(bat_additive_max, confidence_factor) → additive points
+- compute_priority_score_additive(criticality, is_bat_linked, bat_premium) → [0,100]
 """
 import json
 import re
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 LOOKUPS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "data" / "lookups"
 JSON_PATH = LOOKUPS_DIR / "bref_bat_to_arc.json"
@@ -50,7 +54,6 @@ def get_bat_links_for_arc(arc_code: str, naics: str, bref_id: Optional[str] = No
     for m in _mapping_data.get("mappings", []):
         if m["arcCode"] != arc_code:
             continue
-        # NAICS prefix matching (e.g., "3323" matches "33231" etc.)
         if not m["naics"].startswith(naics) and not naics.startswith(m["naics"]):
             continue
         if bref_id and m["brefId"] != bref_id:
@@ -128,25 +131,59 @@ def compute_improvement_index(
     return max(0, min(100, round(raw)))
 
 
-def compute_priority_score(
+# ---------------------------------------------------------------------------
+# Additive BAT premium model (Step 5C)
+# ---------------------------------------------------------------------------
+
+def compute_bat_count(bat_links: List[dict]) -> int:
+    """Count unique batId entries (de-duplicated)."""
+    return len({link["batId"] for link in bat_links})
+
+
+def compute_confidence_factor(bat_links: List[dict]) -> float:
+    """Compute a single confidence factor in [0,1] from bat links.
+
+    Strategy:
+    1. Take max confidence among primary-role links.
+    2. Else use max confidence across all links.
+    3. If the selected max link has matchType=='proxy', dampen by 0.6.
+    4. Returns 0.0 if no links.
+    """
+    if not bat_links:
+        return 0.0
+
+    primary_links = [l for l in bat_links if l.get("matchRole") == "primary"]
+    pool = primary_links if primary_links else bat_links
+
+    best_link = max(pool, key=lambda l: l.get("confidence", 0.0))
+    conf = best_link.get("confidence", 0.0)
+
+    # Proxy dampening
+    if best_link.get("matchType") == "proxy":
+        conf *= 0.6
+
+    return min(1.0, max(0.0, conf))
+
+
+def compute_bat_premium(bat_additive_max: int, confidence_factor: float) -> int:
+    """Compute BAT additive premium (integer points).
+
+    premium = round(batAdditiveMax * confidenceFactor)
+    Clamped >= 0.
+    """
+    return max(0, round(bat_additive_max * confidence_factor))
+
+
+def compute_priority_score_additive(
     criticality_index: float,
     is_bat_linked: bool,
-    improvement_index: Optional[int],
-    w_improvement: int = 20,
+    bat_premium: int = 0,
 ) -> int:
-    """Compute Priority Score (0-100).
+    """Compute Priority Score using additive BAT premium.
 
-    - If the measure is NOT BAT-linked, priorityScore == criticalityIndex (unmodified).
-    - If the measure IS BAT-linked:
-        wCriticality = 100 - wImprovement
-        priorityScore = round((wCriticality * criticalityIndex + wImprovement * (improvementIndex ?? 0)) / 100)
-    - Clamped [0, 100].
+    - Non-BAT: priorityScore = round(criticalityIndex)
+    - BAT-linked: priorityScore = clamp(criticalityIndex + batPremium, 0, 100)
     """
     if not is_bat_linked:
         return max(0, min(100, round(criticality_index)))
-
-    w_crit = 100 - w_improvement
-    imp = improvement_index if improvement_index is not None else 0
-    raw = (w_crit * criticality_index + w_improvement * imp) / 100.0
-    return max(0, min(100, round(raw)))
-
+    return max(0, min(100, round(criticality_index + bat_premium)))

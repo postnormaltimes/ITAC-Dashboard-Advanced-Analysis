@@ -5,7 +5,10 @@ from app.utils.bat_mapping import (
     get_bat_links_for_arc,
     attach_bat_links,
     compute_improvement_index,
-    compute_priority_score,
+    compute_bat_count,
+    compute_confidence_factor,
+    compute_bat_premium,
+    compute_priority_score_additive,
 )
 
 
@@ -135,43 +138,84 @@ class TestComputeImprovementIndex:
 
 
 # ---------------------------------------------------------------------------
-# compute_priority_index
+# Additive BAT Premium Model (Step 5C)
 # ---------------------------------------------------------------------------
 
-class TestComputePriorityScore:
-    def test_non_bat_returns_criticality(self):
-        """Non-BAT: priorityScore == criticalityIndex for any wImprovement."""
-        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=20) == 80
-        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=50) == 80
-        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=0) == 80
-        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=100) == 80
+class TestBatCount:
+    def test_unique_bat_ids(self):
+        links = [
+            {"batId": "BAT1", "matchRole": "primary"},
+            {"batId": "BAT2", "matchRole": "secondary"},
+            {"batId": "BAT1", "matchRole": "secondary"},  # duplicate id
+        ]
+        from app.utils.bat_mapping import compute_bat_count
+        assert compute_bat_count(links) == 2
 
-    def test_bat_linked_weighted_combo(self):
-        """BAT-linked: priorityScore uses weighted formula."""
-        # wImp=20, wCrit=80: (80*80 + 20*60) / 100 = (6400+1200)/100 = 76
-        assert compute_priority_score(80, is_bat_linked=True, improvement_index=60, w_improvement=20) == 76
+    def test_empty_links(self):
+        from app.utils.bat_mapping import compute_bat_count
+        assert compute_bat_count([]) == 0
 
-    def test_bat_linked_null_improvement(self):
-        """BAT-linked with null improvementIndex: treated as 0."""
-        # wImp=20, wCrit=80: (80*80 + 20*0) / 100 = 64
-        assert compute_priority_score(80, is_bat_linked=True, improvement_index=None, w_improvement=20) == 64
 
-    def test_weight_invariant_edges(self):
-        """wCrit + wImp == 100 always; edge values 0 and 100."""
-        # wImp=0 → pure criticality
-        assert compute_priority_score(75, is_bat_linked=True, improvement_index=90, w_improvement=0) == 75
-        # wImp=100 → pure improvement
-        assert compute_priority_score(75, is_bat_linked=True, improvement_index=90, w_improvement=100) == 90
+class TestConfidenceFactor:
+    def test_primary_max(self):
+        links = [
+            {"matchRole": "primary", "confidence": 0.5, "matchType": "direct"},
+            {"matchRole": "primary", "confidence": 0.8, "matchType": "direct"},
+            {"matchRole": "secondary", "confidence": 1.0, "matchType": "direct"},
+        ]
+        from app.utils.bat_mapping import compute_confidence_factor
+        assert compute_confidence_factor(links) == 0.8  # Ignores secondary 1.0 because primary exists
 
-    def test_bat_score_increases_with_improvement(self):
-        """Holding criticality constant, higher improvementIndex → higher priorityScore."""
-        s_low = compute_priority_score(60, is_bat_linked=True, improvement_index=20, w_improvement=30)
-        s_high = compute_priority_score(60, is_bat_linked=True, improvement_index=80, w_improvement=30)
-        assert s_high > s_low
+    def test_fallback_to_secondary(self):
+        links = [
+            {"matchRole": "secondary", "confidence": 0.4, "matchType": "partial"},
+            {"matchRole": "secondary", "confidence": 0.9, "matchType": "partial"},
+        ]
+        from app.utils.bat_mapping import compute_confidence_factor
+        assert compute_confidence_factor(links) == 0.9
 
-    def test_bounds(self):
-        idx = compute_priority_score(100, is_bat_linked=True, improvement_index=100, w_improvement=50)
-        assert 0 <= idx <= 100
-        idx2 = compute_priority_score(0, is_bat_linked=True, improvement_index=0, w_improvement=50)
-        assert 0 <= idx2 <= 100
+    def test_proxy_dampening(self):
+        # Best link is a proxy
+        links = [
+            {"matchRole": "primary", "confidence": 1.0, "matchType": "proxy"},
+        ]
+        from app.utils.bat_mapping import compute_confidence_factor
+        assert compute_confidence_factor(links) == 0.6  # 1.0 * 0.6
+
+    def test_empty(self):
+        from app.utils.bat_mapping import compute_confidence_factor
+        assert compute_confidence_factor([]) == 0.0
+
+
+class TestBatPremium:
+    def test_basic_calculation(self):
+        from app.utils.bat_mapping import compute_bat_premium
+        assert compute_bat_premium(10, 1.0) == 10
+        assert compute_bat_premium(10, 0.45) == 4  # 4.5 rounds to 4 in Python 3 for even halves, or 5 if using math.round tie-breaker, but `round` is round-half-to-even. Actually round(4.5) is 4, round(5.5) is 6. Wait, round(10 * 0.45) = round(4.5) = 4. Let's just use exact non-halves for test stability.
+        assert compute_bat_premium(10, 0.4) == 4
+        assert compute_bat_premium(10, 0.5) == 5  # Wait, wait, actually let's just test 0.4 and 0.6 to avoid half-even flakiness.
+        assert compute_bat_premium(10, 0.6) == 6
+
+    def test_zero_clamp(self):
+        from app.utils.bat_mapping import compute_bat_premium
+        assert compute_bat_premium(0, 1.0) == 0
+        assert compute_bat_premium(-5, 1.0) == 0
+
+
+class TestPriorityScoreAdditive:
+    def test_non_bat_measure(self):
+        from app.utils.bat_mapping import compute_priority_score_additive
+        # Should return exactly criticality index (rounded)
+        assert compute_priority_score_additive(80.5, is_bat_linked=False, bat_premium=10) == 80  # half-even rounding
+        assert compute_priority_score_additive(85.0, is_bat_linked=False, bat_premium=10) == 85
+
+    def test_bat_measure(self):
+        from app.utils.bat_mapping import compute_priority_score_additive
+        assert compute_priority_score_additive(85.0, is_bat_linked=True, bat_premium=10) == 95
+
+    def test_clamping(self):
+        from app.utils.bat_mapping import compute_priority_score_additive
+        assert compute_priority_score_additive(95.0, is_bat_linked=True, bat_premium=10) == 100
+        assert compute_priority_score_additive(-5.0, is_bat_linked=True, bat_premium=0) == 0
+
 

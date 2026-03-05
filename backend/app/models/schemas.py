@@ -323,23 +323,21 @@ class Step5BResponse(BaseModel):
     measures: List[BatAlignmentMeasure]
     available_brefs: List[BrefInfo]
 
-# --- Priority Index (Step 5C) ---
+# --- Priority Score (Step 5C) — Additive BAT Premium ---
 
 class Step5CRequest(BaseModel):
     naics_code: str
     categories: Optional[List[str]] = None
     bref_id: Optional[str] = None
-    w_improvement: int = 20  # wCriticality = 100 - wImprovement
+    bat_additive_max: int = 10  # max additive points (0..30)
 
 class PriorityMeasure(BaseModel):
     arc: str
     description: str
     criticality_index: float
-    improvement_index: Optional[int] = None
-    priority_score: int  # always present; equals criticality for non-BAT
-    bat_link_count: int = 0
+    priority_score: int  # criticality + bat premium (or just criticality for non-BAT)
+    bat_count: int = 0  # unique BAT links
     is_bat_linked: bool = False
 
 class Step5CResponse(BaseModel):
     measures: List[PriorityMeasure]
-

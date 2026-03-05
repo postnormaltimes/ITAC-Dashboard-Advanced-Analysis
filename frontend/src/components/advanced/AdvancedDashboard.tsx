@@ -42,7 +42,7 @@ const AdvancedDashboard: React.FC = () => {
 
     // Step 5C lifted state — persists when navigating back/forward
     const [currentRankingMode, setCurrentRankingMode] = useState<'criticality' | 'priority'>('priority');
-    const [wImprovement, setWImprovement] = useState(20);
+    const [batAdditiveMax, setBatAdditiveMax] = useState(10);
     const [priorityMeasures, setPriorityMeasures] = useState<PriorityMeasure[]>([]);
 
     const handleStep1Next = async (naics: string) => {
@@ -161,8 +161,8 @@ const AdvancedDashboard: React.FC = () => {
                     <Step5C_PriorityIndex
                         naicsCode={naicsCode}
                         selectedCategories={selectedCategories}
-                        wImprovement={wImprovement}
-                        setWImprovement={setWImprovement}
+                        batAdditiveMax={batAdditiveMax}
+                        setBatAdditiveMax={setBatAdditiveMax}
                         rankingMode={currentRankingMode}
                         setRankingMode={setCurrentRankingMode}
                         onPriorityMeasuresLoaded={setPriorityMeasures}

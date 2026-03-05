@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
     Box, Paper, Typography, Button, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Chip, Slider, Alert,
-    CircularProgress, Tooltip, Stack,
+    TableHead, TableRow, Chip, Alert,
+    CircularProgress, Tooltip, Stack, TextField, InputAdornment
 } from '@mui/material';
 import { api } from '../../api/client';
 import { sanitizeMeasureDescription } from '../../utils/text';
@@ -12,8 +12,8 @@ interface Step5CProps {
     naicsCode: string;
     selectedCategories: FirmSizeCategory[];
     // Lifted state — persists across back/forward navigation
-    wImprovement: number;
-    setWImprovement: (v: number) => void;
+    batAdditiveMax: number;
+    setBatAdditiveMax: (v: number) => void;
     rankingMode: 'criticality' | 'priority';
     setRankingMode: (v: 'criticality' | 'priority') => void;
     onPriorityMeasuresLoaded: (measures: PriorityMeasure[]) => void;
@@ -23,15 +23,13 @@ interface Step5CProps {
 
 const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
     naicsCode, selectedCategories,
-    wImprovement, setWImprovement,
+    batAdditiveMax, setBatAdditiveMax,
     rankingMode, setRankingMode, onPriorityMeasuresLoaded,
     onBack, onNext,
 }) => {
     const [measures, setMeasures] = useState<PriorityMeasure[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    const wCrit = 100 - wImprovement;
 
     const fetchData = async () => {
         setLoading(true);
@@ -41,7 +39,7 @@ const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
                 naicsCode,
                 selectedCategories.length ? selectedCategories : undefined,
                 undefined,
-                wImprovement,
+                batAdditiveMax,
             );
             setMeasures(data.measures);
             onPriorityMeasuresLoaded(data.measures);
@@ -52,7 +50,7 @@ const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
         }
     };
 
-    useEffect(() => { fetchData(); }, [naicsCode, selectedCategories, wImprovement]);
+    useEffect(() => { fetchData(); }, [naicsCode, selectedCategories, batAdditiveMax]);
 
     return (
         <Paper sx={{ p: 3 }}>
@@ -60,32 +58,31 @@ const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
                 Step 5C — Priority Score
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                BAT-linked measures receive a weighted Priority Score combining Criticality and Improvement.
+                BAT-linked measures receive a weighted Priority Score adjusting their Criticality upwards to reflect their BAT alignment.
                 Non-BAT measures keep their original Criticality score unchanged.
             </Typography>
 
             {/* Weight Controls */}
-            <Box sx={{ mb: 3, maxWidth: 500 }}>
-                <Typography variant="subtitle2" gutterBottom>
-                    Criticality Weight: {wCrit}% — Improvement Weight: {wImprovement}%
-                </Typography>
-                <Slider
-                    value={wImprovement}
-                    onChange={(_, v) => setWImprovement(v as number)}
-                    min={0}
-                    max={100}
-                    step={5}
-                    marks={[
-                        { value: 0, label: '0%' },
-                        { value: 50, label: '50/50' },
-                        { value: 100, label: '100%' },
-                    ]}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(v) => `Imp: ${v}%`}
+            <Box sx={{ mb: 3, maxWidth: 350 }}>
+                <TextField
+                    label="BAT additive (max points)"
+                    type="number"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    value={batAdditiveMax}
+                    onChange={(e) => {
+                        let val = parseInt(e.target.value, 10);
+                        if (isNaN(val)) val = 0;
+                        setBatAdditiveMax(Math.max(0, Math.min(30, val)));
+                    }}
+                    InputProps={{
+                        inputProps: { min: 0, max: 30, step: 1 },
+                        endAdornment: <InputAdornment position="end">pts</InputAdornment>
+                    }}
                 />
-                <Typography variant="caption" color="text.secondary">
-                    Increasing the improvement weight boosts BAT-linked measures with high implementation gaps.
-                    Non-BAT measures are unaffected.
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                    Applied only to BAT-linked measures, scaled by mapping confidence.
                 </Typography>
             </Box>
 
@@ -121,12 +118,14 @@ const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
                                 <TableCell sx={{ fontWeight: 700 }}>#</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }}>ARC</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }}>Description</TableCell>
-                                <TableCell sx={{ fontWeight: 700 }} align="center">BAT</TableCell>
-                                <TableCell sx={{ fontWeight: 700 }} align="center">Criticality</TableCell>
-                                <TableCell sx={{ fontWeight: 700 }} align="center">Improvement</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">
-                                    <Tooltip title={`BAT: (${wCrit}% × Crit + ${wImprovement}% × Imp) | Non-BAT: = Criticality`}>
+                                    <Tooltip title={'Final adjusted score (Criticality + BAT premium)'}>
                                         <span>Priority Score</span>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 700 }} align="center">
+                                    <Tooltip title={'Number of unique BATs mapped to this measure'}>
+                                        <span>BATs</span>
                                     </Tooltip>
                                 </TableCell>
                             </TableRow>
@@ -135,33 +134,16 @@ const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
                             {measures.map((m, idx) => (
                                 <TableRow key={m.arc} hover>
                                     <TableCell>{idx + 1}</TableCell>
-                                    <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{m.arc}</TableCell>
-                                    <TableCell>{sanitizeMeasureDescription(m.arc, m.description)}</TableCell>
-                                    <TableCell align="center">
-                                        {m.is_bat_linked ? (
-                                            <Chip
-                                                label={`BAT (${m.bat_link_count})`}
-                                                size="small"
-                                                variant="outlined"
-                                                color="primary"
-                                            />
-                                        ) : '—'}
+                                    <TableCell sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                                        {m.arc}
                                     </TableCell>
-                                    <TableCell align="center">{m.criticality_index.toFixed(0)}</TableCell>
-                                    <TableCell align="center">
-                                        {m.is_bat_linked ? (
-                                            m.improvement_index !== null ? (
-                                                <Chip
-                                                    label={m.improvement_index}
-                                                    size="small"
-                                                    color={m.improvement_index >= 60 ? 'success' : m.improvement_index >= 30 ? 'warning' : 'default'}
-                                                />
-                                            ) : (
-                                                <Tooltip title="Insufficient BAT data (recommended count = 0)">
-                                                    <Chip label="N/A" size="small" color="default" variant="outlined" />
-                                                </Tooltip>
-                                            )
-                                        ) : '—'}
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            {sanitizeMeasureDescription(m.arc, m.description)}
+                                            {m.is_bat_linked && (
+                                                <Chip label="BAT-linked" size="small" variant="outlined" color="primary" sx={{ height: 20, fontSize: '0.65rem' }} />
+                                            )}
+                                        </Box>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Chip
@@ -170,6 +152,9 @@ const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
                                             color={m.priority_score >= 60 ? 'success' : m.priority_score >= 30 ? 'warning' : 'default'}
                                             variant="filled"
                                         />
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {m.is_bat_linked ? m.bat_count : '—'}
                                     </TableCell>
                                 </TableRow>
                             ))}

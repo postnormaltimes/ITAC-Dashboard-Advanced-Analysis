@@ -411,8 +411,8 @@ export interface PriorityMeasure {
     description: string;
     criticality_index: number;
     improvement_index: number | null;
-    priority_score: number;  // always present; equals criticality for non-BAT
-    bat_link_count: number;
+    priority_score: number;  // criticality + bat premium
+    bat_count: number;
     is_bat_linked: boolean;
 }
 

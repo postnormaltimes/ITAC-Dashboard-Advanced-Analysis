@@ -103,12 +103,6 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                                 <TableCell sx={{ fontWeight: 700 }} align="center">Criticality</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">Rec.</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">Impl.</TableCell>
-                                <TableCell sx={{ fontWeight: 700 }} align="center">Impl Gap</TableCell>
-                                <TableCell sx={{ fontWeight: 700 }} align="center">
-                                    <Tooltip title="0–100: higher = more improvement potential">
-                                        <span>Improvement Idx</span>
-                                    </Tooltip>
-                                </TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">BATs</TableCell>
                             </TableRow>
                         </TableHead>
@@ -129,16 +123,6 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                                         <TableCell align="center">{m.score.toFixed(0)}</TableCell>
                                         <TableCell align="center">{m.count}</TableCell>
                                         <TableCell align="center">{m.implemented_count}</TableCell>
-                                        <TableCell align="center">{(m.imp_gap * 100).toFixed(1)}%</TableCell>
-                                        <TableCell align="center">
-                                            {m.improvement_index !== null ? (
-                                                <Chip
-                                                    label={m.improvement_index}
-                                                    size="small"
-                                                    color={m.improvement_index >= 60 ? 'success' : m.improvement_index >= 30 ? 'warning' : 'default'}
-                                                />
-                                            ) : '—'}
-                                        </TableCell>
                                         <TableCell align="center">
                                             <IconButton size="small">
                                                 {expandedRow === m.arc ? <ExpandLess /> : <ExpandMore />}
@@ -148,7 +132,7 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
 
                                     {/* Expandable BAT links */}
                                     <TableRow>
-                                        <TableCell colSpan={8} sx={{ p: 0 }}>
+                                        <TableCell colSpan={6} sx={{ p: 0 }}>
                                             <Collapse in={expandedRow === m.arc} timeout="auto" unmountOnExit>
                                                 <Box sx={{ p: 2, bgcolor: '#f5f5f5' }}>
                                                     <Typography variant="subtitle2" gutterBottom>

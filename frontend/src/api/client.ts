@@ -197,10 +197,10 @@ export const api = {
         naics_code: string,
         categories?: FirmSizeCategory[],
         bref_id?: string,
-        w_improvement: number = 20,
+        bat_additive_max: number = 10,
     ): Promise<Step5CResponse> => {
         const response = await client.post<Step5CResponse>('/advanced/step5c_priority_index', {
-            naics_code, categories, bref_id, w_improvement,
+            naics_code, categories, bref_id, bat_additive_max,
         });
         return response.data;
     },
