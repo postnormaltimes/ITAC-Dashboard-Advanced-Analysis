@@ -14,7 +14,8 @@ import {
     Card,
     CardContent,
     TextField,
-    IconButton
+    IconButton,
+    CircularProgress
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -23,6 +24,7 @@ import type { AdvancedMeasure, MeasureDistributionResponse } from '../../types';
 import { computeStats, computeHistogram, normalizeWeights } from '../../utils/stats';
 import { sanitizeMeasureDescription } from '../../utils/text';
 import { api } from '../../api/client';
+import { resolveNaicsScopeForMeasureCCE } from '../../utils/naicsFallback';
 
 // Colors shared with Step 5 for cognitive continuity
 const CHART_COLORS = {
@@ -46,13 +48,41 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
     const [editVal, setEditVal] = useState<string>('');
     const [activeMeasure, setActiveMeasure] = useState<string>(measures[0]?.arc || '');
     const [distData, setDistData] = useState<MeasureDistributionResponse | null>(null);
+    const [cceFallbackData, setCceFallbackData] = useState<{ dists: MeasureDistributionResponse, prefix: string | null } | null>(null);
+    const [isLoadingDists, setIsLoadingDists] = useState(false);
 
     useEffect(() => {
         if (!activeMeasure || !naicsCode) return;
         let mounted = true;
-        api.getMeasureDistributions(naicsCode, activeMeasure)
-            .then(d => { if (mounted) setDistData(d); })
-            .catch(console.error);
+        setIsLoadingDists(true);
+
+        const loadDistributions = async () => {
+            try {
+                // 1. Fetch exact distributions for Gross Savings and Payback
+                const exactDists = await api.getMeasureDistributions(naicsCode, activeMeasure);
+
+                // 2. Resolve fallback distributions specifically for CCE
+                const cceResolved = await resolveNaicsScopeForMeasureCCE({
+                    selectedNaics: naicsCode,
+                    arcCode: activeMeasure,
+                });
+
+                if (mounted) {
+                    setDistData(exactDists);
+                    setCceFallbackData(cceResolved.distributions ? {
+                        dists: cceResolved.distributions,
+                        prefix: cceResolved.scope === 'exact' ? null : cceResolved.usedNaicsPrefix,
+                    } : null);
+                }
+            } catch (err) {
+                console.error("Failed to load measure distributions", err);
+            } finally {
+                if (mounted) setIsLoadingDists(false);
+            }
+        };
+
+        loadDistributions();
+
         return () => { mounted = false; };
     }, [activeMeasure, naicsCode]);
 
@@ -121,14 +151,15 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
 
     const displayMeasures = recalculatedMeasures.slice(0, 50);
 
-    // Per-measure distributions from API
-    const perMeasureHists = distData ? {
+    // Per-measure distributions from API (GS and PB use exact data, CCE uses fallback data)
+    const perMeasureHists = (distData && cceFallbackData?.dists) ? {
         gs: computeHistogram(distData.gross_savings),
         pb: computeHistogram(distData.payback),
-        cce: computeHistogram(distData.cce_primary),
+        cce: computeHistogram(cceFallbackData.dists.cce_primary),
         gsStats: computeStats(distData.gross_savings),
         pbStats: computeStats(distData.payback),
-        cceStats: computeStats(distData.cce_primary),
+        cceStats: computeStats(cceFallbackData.dists.cce_primary),
+        ccePrefix: cceFallbackData.prefix
     } : null;
 
     const renderWeightControl = (title: string, wIndex: number) => (
@@ -224,12 +255,22 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                             {renderHistogram(`Payback — ${activeMeasure}`, perMeasureHists.pb, perMeasureHists.pbStats, 'yrs', CHART_COLORS.payback)}
                         </Box>
                         <Box sx={{ width: { xs: '100%', md: 'calc(25% - 16px)' } }}>
-                            {renderHistogram(`CCE ($/GJ) — ${activeMeasure}`, perMeasureHists.cce, perMeasureHists.cceStats, '$/GJ', CHART_COLORS.ccePrimary)}
+                            {renderHistogram(
+                                `CCE ($/GJ) — ${activeMeasure}${perMeasureHists.ccePrefix !== null ? ` (fallback: NAICS ${perMeasureHists.ccePrefix || 'All'})` : ''}`,
+                                perMeasureHists.cce,
+                                perMeasureHists.cceStats,
+                                '$/GJ',
+                                CHART_COLORS.ccePrimary
+                            )}
                         </Box>
                     </>
                 ) : (
                     <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Typography color="text.secondary">Select a measure to view distributions</Typography>
+                        {isLoadingDists ? (
+                            <CircularProgress size={24} />
+                        ) : (
+                            <Typography color="text.secondary">Select a measure to view distributions</Typography>
+                        )}
                     </Box>
                 )}
             </Box>
