@@ -5,7 +5,7 @@ from app.utils.bat_mapping import (
     get_bat_links_for_arc,
     attach_bat_links,
     compute_improvement_index,
-    compute_priority_index,
+    compute_priority_score,
 )
 
 
@@ -104,11 +104,15 @@ class TestComputeImprovementIndex:
         idx_high_impl = compute_improvement_index(30, 25)
         assert idx_low_impl > idx_high_impl
 
-    def test_small_sample_dampened(self):
-        """Small sample (evidence < 1) dampens the score."""
+    def test_small_vs_large_sample(self):
+        """Without evidence dampening, only Laplace smoothing affects small samples."""
         idx_small = compute_improvement_index(5, 0)
         idx_large = compute_improvement_index(30, 0)
-        assert idx_small < idx_large
+        # Both should be high (low implementation), large slightly higher due to less Laplace pull
+        assert idx_small is not None
+        assert idx_large is not None
+        assert idx_small > 0
+        assert idx_large > 0
 
     def test_confidence_weighting(self):
         idx_full = compute_improvement_index(30, 5, avg_confidence=1.0)
@@ -125,8 +129,8 @@ class TestComputeImprovementIndex:
 
     def test_laplace_smoothing(self):
         """With 0 implementations out of 30, implRate = 1/32 ≈ 0.03125, gap = 0.96875."""
-        idx = compute_improvement_index(30, 0, avg_confidence=1.0, n0=30)
-        # evidence = 1.0, implGap ≈ 0.969, result ≈ 97
+        idx = compute_improvement_index(30, 0, avg_confidence=1.0)
+        # implGap ≈ 0.969, result ≈ 97
         assert idx == 97
 
 
@@ -134,23 +138,40 @@ class TestComputeImprovementIndex:
 # compute_priority_index
 # ---------------------------------------------------------------------------
 
-class TestComputePriorityIndex:
-    def test_basic(self):
-        idx = compute_priority_index(80, 60, w_criticality=60, w_improvement=40)
-        # (60*80 + 40*60) / 100 = (4800 + 2400) / 100 = 72
-        assert idx == 72
+class TestComputePriorityScore:
+    def test_non_bat_returns_criticality(self):
+        """Non-BAT: priorityScore == criticalityIndex for any wImprovement."""
+        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=20) == 80
+        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=50) == 80
+        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=0) == 80
+        assert compute_priority_score(80, is_bat_linked=False, improvement_index=None, w_improvement=100) == 80
 
-    def test_none_improvement_excluded(self):
-        idx = compute_priority_index(80, None, include_missing=False)
-        assert idx is None
+    def test_bat_linked_weighted_combo(self):
+        """BAT-linked: priorityScore uses weighted formula."""
+        # wImp=20, wCrit=80: (80*80 + 20*60) / 100 = (6400+1200)/100 = 76
+        assert compute_priority_score(80, is_bat_linked=True, improvement_index=60, w_improvement=20) == 76
 
-    def test_none_improvement_included_as_zero(self):
-        idx = compute_priority_index(80, None, include_missing=True)
-        # (60*80 + 40*0) / 100 = 48
-        assert idx == 48
+    def test_bat_linked_null_improvement(self):
+        """BAT-linked with null improvementIndex: treated as 0."""
+        # wImp=20, wCrit=80: (80*80 + 20*0) / 100 = 64
+        assert compute_priority_score(80, is_bat_linked=True, improvement_index=None, w_improvement=20) == 64
+
+    def test_weight_invariant_edges(self):
+        """wCrit + wImp == 100 always; edge values 0 and 100."""
+        # wImp=0 → pure criticality
+        assert compute_priority_score(75, is_bat_linked=True, improvement_index=90, w_improvement=0) == 75
+        # wImp=100 → pure improvement
+        assert compute_priority_score(75, is_bat_linked=True, improvement_index=90, w_improvement=100) == 90
+
+    def test_bat_score_increases_with_improvement(self):
+        """Holding criticality constant, higher improvementIndex → higher priorityScore."""
+        s_low = compute_priority_score(60, is_bat_linked=True, improvement_index=20, w_improvement=30)
+        s_high = compute_priority_score(60, is_bat_linked=True, improvement_index=80, w_improvement=30)
+        assert s_high > s_low
 
     def test_bounds(self):
-        idx = compute_priority_index(100, 100)
+        idx = compute_priority_score(100, is_bat_linked=True, improvement_index=100, w_improvement=50)
         assert 0 <= idx <= 100
-        idx2 = compute_priority_index(0, 0)
+        idx2 = compute_priority_score(0, is_bat_linked=True, improvement_index=0, w_improvement=50)
         assert 0 <= idx2 <= 100
+

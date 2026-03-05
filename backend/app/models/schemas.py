@@ -329,18 +329,17 @@ class Step5CRequest(BaseModel):
     naics_code: str
     categories: Optional[List[str]] = None
     bref_id: Optional[str] = None
-    w_criticality: float = 60.0
-    w_improvement: float = 40.0
-    include_missing: bool = False
+    w_improvement: int = 20  # wCriticality = 100 - wImprovement
 
 class PriorityMeasure(BaseModel):
     arc: str
     description: str
     criticality_index: float
     improvement_index: Optional[int] = None
-    priority_index: Optional[int] = None
+    priority_score: int  # always present; equals criticality for non-BAT
     bat_link_count: int = 0
     is_bat_linked: bool = False
 
 class Step5CResponse(BaseModel):
     measures: List[PriorityMeasure]
+

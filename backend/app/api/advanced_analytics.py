@@ -716,7 +716,7 @@ from app.models.schemas import (
 )
 from app.utils.bat_mapping import (
     get_bat_links_for_arc, get_available_brefs, compute_improvement_index,
-    compute_priority_index,
+    compute_priority_score,
 )
 
 @router.post("/step5b_bat_alignment", response_model=Step5BResponse)
@@ -810,7 +810,11 @@ def step5b_bat_alignment(request: Step5BRequest):
 
 @router.post("/step5c_priority_index", response_model=Step5CResponse)
 def step5c_priority_index(request: Step5CRequest):
-    """Compute Priority Index = weighted combination of Criticality + Improvement."""
+    """Compute Priority Score = conditional weighted combo of Criticality + Improvement.
+
+    BAT-linked measures: priorityScore = round((wCrit * crit + wImp * imp) / 100)
+    Non-BAT measures: priorityScore = criticalityIndex (unchanged)
+    """
     con = None
     try:
         con = get_db_connection()
@@ -836,22 +840,23 @@ def step5c_priority_index(request: Step5CRequest):
             bat_links_raw = get_bat_links_for_arc(arc, request.naics_code, request.bref_id)
             is_bat_linked = len(bat_links_raw) > 0
 
-            stats = arc_stats.get(arc, {'recommended': 0, 'implemented': 0})
-            primary_confs = [l['confidence'] for l in bat_links_raw if l['matchRole'] == 'primary']
-            all_confs = [l['confidence'] for l in bat_links_raw]
-            avg_conf = (sum(primary_confs) / len(primary_confs)) if primary_confs else (
-                (sum(all_confs) / len(all_confs)) if all_confs else 1.0
-            )
+            # Compute improvement index only for BAT-linked measures
+            improvement_idx = None
+            if is_bat_linked:
+                stats = arc_stats.get(arc, {'recommended': 0, 'implemented': 0})
+                primary_confs = [l['confidence'] for l in bat_links_raw if l['matchRole'] == 'primary']
+                all_confs = [l['confidence'] for l in bat_links_raw]
+                avg_conf = (sum(primary_confs) / len(primary_confs)) if primary_confs else (
+                    (sum(all_confs) / len(all_confs)) if all_confs else 1.0
+                )
+                improvement_idx = compute_improvement_index(
+                    stats['recommended'], stats['implemented'], avg_conf
+                )
 
-            improvement_idx = compute_improvement_index(
-                stats['recommended'], stats['implemented'], avg_conf
-            )
             criticality = m.score
-            priority_idx = compute_priority_index(
-                criticality, improvement_idx,
-                w_criticality=request.w_criticality,
+            priority = compute_priority_score(
+                criticality, is_bat_linked, improvement_idx,
                 w_improvement=request.w_improvement,
-                include_missing=request.include_missing,
             )
 
             result.append(PriorityMeasure(
@@ -859,15 +864,14 @@ def step5c_priority_index(request: Step5CRequest):
                 description=m.description,
                 criticality_index=criticality,
                 improvement_index=improvement_idx,
-                priority_index=priority_idx,
+                priority_score=priority,
                 bat_link_count=len(bat_links_raw),
                 is_bat_linked=is_bat_linked,
             ))
 
-        # Sort by priority_index desc (None last), tiebreak by criticality desc, then arc
+        # Sort by priority_score DESC, tiebreak by criticality DESC, then arc
         result.sort(key=lambda x: (
-            x.priority_index is not None,
-            x.priority_index or 0,
+            x.priority_score,
             x.criticality_index,
         ), reverse=True)
 
@@ -879,3 +883,4 @@ def step5c_priority_index(request: Step5CRequest):
     finally:
         if con is not None:
             con.close()
+

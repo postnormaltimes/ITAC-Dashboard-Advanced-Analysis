@@ -42,8 +42,7 @@ const AdvancedDashboard: React.FC = () => {
 
     // Step 5C lifted state — persists when navigating back/forward
     const [currentRankingMode, setCurrentRankingMode] = useState<'criticality' | 'priority'>('priority');
-    const [wCrit, setWCrit] = useState(60);
-    const [includeMissing, setIncludeMissing] = useState(false);
+    const [wImprovement, setWImprovement] = useState(20);
     const [priorityMeasures, setPriorityMeasures] = useState<PriorityMeasure[]>([]);
 
     const handleStep1Next = async (naics: string) => {
@@ -67,7 +66,7 @@ const AdvancedDashboard: React.FC = () => {
         const baseMeasures = clusterMeasures.length ? clusterMeasures : (step1Data?.measures ?? []);
 
         if (currentRankingMode === 'priority' && priorityMeasures.length > 0) {
-            // Build a priority order map: arc → rank
+            // Build a priority order map: arc → rank (based on priority_score sort from backend)
             const priorityOrder = new Map<string, number>();
             priorityMeasures.forEach((pm, idx) => {
                 priorityOrder.set(pm.arc, idx);
@@ -157,15 +156,13 @@ const AdvancedDashboard: React.FC = () => {
                     />
                 )}
 
-                {/* Step 5C — Priority Index (state lifted to dashboard) */}
+                {/* Step 5C — Priority Score (state lifted to dashboard) */}
                 {activeStep === 6 && (
                     <Step5C_PriorityIndex
                         naicsCode={naicsCode}
                         selectedCategories={selectedCategories}
-                        wCrit={wCrit}
-                        setWCrit={setWCrit}
-                        includeMissing={includeMissing}
-                        setIncludeMissing={setIncludeMissing}
+                        wImprovement={wImprovement}
+                        setWImprovement={setWImprovement}
                         rankingMode={currentRankingMode}
                         setRankingMode={setCurrentRankingMode}
                         onPriorityMeasuresLoaded={setPriorityMeasures}

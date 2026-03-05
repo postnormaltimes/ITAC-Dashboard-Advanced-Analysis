@@ -108,15 +108,13 @@ def compute_improvement_index(
     recommended_count: int,
     implemented_count: int,
     avg_confidence: float = 1.0,
-    n0: int = 30,
 ) -> Optional[int]:
     """Compute the Improvement Index (0-100).
 
     Formula:
     - implRate = (implemented + 1) / (recommended + 2)  [Laplace smoothing]
     - implGap = 1 - implRate
-    - evidence = min(1, recommended / n0)
-    - index = round(100 * implGap * evidence * avgConfidence)
+    - index = round(100 * implGap * avgConfidence)
     - Clamp [0, 100]
 
     Returns None if recommended_count == 0 (insufficient data).
@@ -126,26 +124,29 @@ def compute_improvement_index(
 
     impl_rate = (implemented_count + 1) / (recommended_count + 2)
     impl_gap = 1.0 - impl_rate
-    evidence = min(1.0, recommended_count / n0)
-    raw = 100.0 * impl_gap * evidence * avg_confidence
+    raw = 100.0 * impl_gap * avg_confidence
     return max(0, min(100, round(raw)))
 
 
-def compute_priority_index(
+def compute_priority_score(
     criticality_index: float,
+    is_bat_linked: bool,
     improvement_index: Optional[int],
-    w_criticality: float = 60.0,
-    w_improvement: float = 40.0,
-    include_missing: bool = False,
-) -> Optional[int]:
-    """Compute Priority Index (0-100).
+    w_improvement: int = 20,
+) -> int:
+    """Compute Priority Score (0-100).
 
-    priorityIndex = round((wCrit * critIdx + wImp * impIdx) / 100)
+    - If the measure is NOT BAT-linked, priorityScore == criticalityIndex (unmodified).
+    - If the measure IS BAT-linked:
+        wCriticality = 100 - wImprovement
+        priorityScore = round((wCriticality * criticalityIndex + wImprovement * (improvementIndex ?? 0)) / 100)
+    - Clamped [0, 100].
     """
-    if improvement_index is None:
-        if not include_missing:
-            return None
-        improvement_index = 0
+    if not is_bat_linked:
+        return max(0, min(100, round(criticality_index)))
 
-    raw = (w_criticality * criticality_index + w_improvement * improvement_index) / 100.0
+    w_crit = 100 - w_improvement
+    imp = improvement_index if improvement_index is not None else 0
+    raw = (w_crit * criticality_index + w_improvement * imp) / 100.0
     return max(0, min(100, round(raw)))
+

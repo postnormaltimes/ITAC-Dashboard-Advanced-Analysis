@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
     Box, Paper, Typography, Button, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Chip, Switch, FormControlLabel, Select, MenuItem,
+    TableHead, TableRow, Chip, Select, MenuItem,
     InputLabel, FormControl, Alert, CircularProgress, Collapse, IconButton,
     Tooltip,
 } from '@mui/material';
-import { ExpandMore, ExpandLess, LinkOff, Link as LinkIcon } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, Link as LinkIcon } from '@mui/icons-material';
 import { api } from '../../api/client';
 import { sanitizeMeasureDescription } from '../../utils/text';
 import type { BatAlignmentMeasure, BrefInfo, FirmSizeCategory } from '../../types';
@@ -30,7 +30,6 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
     const [brefs, setBrefs] = useState<BrefInfo[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [batOnly, setBatOnly] = useState(true);
     const [selectedBref, setSelectedBref] = useState<string>('');
     const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
@@ -42,7 +41,7 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                 naicsCode,
                 selectedCategories.length ? selectedCategories : undefined,
                 selectedBref || undefined,
-                batOnly,
+                true, // always BAT-only
             );
             setMeasures(data.measures);
             setBrefs(data.available_brefs);
@@ -53,7 +52,7 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
         }
     };
 
-    useEffect(() => { fetchData(); }, [naicsCode, selectedCategories, batOnly, selectedBref]);
+    useEffect(() => { fetchData(); }, [naicsCode, selectedCategories, selectedBref]);
 
     return (
         <Paper sx={{ p: 3 }}>
@@ -61,11 +60,11 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                 Step 5B — BAT Alignment & Improvement Gap
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Measures linked to BAT/BREF best available techniques. The Improvement Index (0–100)
-                reflects how much room exists for implementation, weighted by evidence and confidence.
+                BAT-linked measures only. The Improvement Index (0–100) reflects how much room
+                exists for implementation, weighted by confidence.
             </Typography>
 
-            {/* Controls */}
+            {/* Controls — BREF filter only */}
             <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center', flexWrap: 'wrap' }}>
                 <FormControl size="small" sx={{ minWidth: 220 }}>
                     <InputLabel>BREF Filter</InputLabel>
@@ -82,11 +81,6 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                         ))}
                     </Select>
                 </FormControl>
-
-                <FormControlLabel
-                    control={<Switch checked={batOnly} onChange={(_, v) => setBatOnly(v)} />}
-                    label="Show only BAT-linked measures"
-                />
             </Box>
 
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -95,7 +89,7 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
             {!loading && measures.length === 0 && !error && (
                 <Alert severity="info" sx={{ mb: 2 }}>
                     No BAT-linked measures found for this NAICS / BREF combination.
-                    You can toggle "Show only BAT-linked" off to see all measures, or proceed to the next step.
+                    You can proceed to the next step.
                 </Alert>
             )}
 
@@ -109,7 +103,6 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                                 <TableCell sx={{ fontWeight: 700 }} align="center">Criticality</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">Rec.</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">Impl.</TableCell>
-                                <TableCell sx={{ fontWeight: 700 }} align="center">Impl Rate</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">Impl Gap</TableCell>
                                 <TableCell sx={{ fontWeight: 700 }} align="center">
                                     <Tooltip title="0–100: higher = more improvement potential">
@@ -136,7 +129,6 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                                         <TableCell align="center">{m.score.toFixed(0)}</TableCell>
                                         <TableCell align="center">{m.count}</TableCell>
                                         <TableCell align="center">{m.implemented_count}</TableCell>
-                                        <TableCell align="center">{(m.imp_rate * 100).toFixed(1)}%</TableCell>
                                         <TableCell align="center">{(m.imp_gap * 100).toFixed(1)}%</TableCell>
                                         <TableCell align="center">
                                             {m.improvement_index !== null ? (
@@ -148,19 +140,15 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
                                             ) : '—'}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {m.is_bat_linked ? (
-                                                <IconButton size="small">
-                                                    {expandedRow === m.arc ? <ExpandLess /> : <ExpandMore />}
-                                                </IconButton>
-                                            ) : (
-                                                <LinkOff fontSize="small" color="disabled" />
-                                            )}
+                                            <IconButton size="small">
+                                                {expandedRow === m.arc ? <ExpandLess /> : <ExpandMore />}
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
 
                                     {/* Expandable BAT links */}
                                     <TableRow>
-                                        <TableCell colSpan={9} sx={{ p: 0 }}>
+                                        <TableCell colSpan={8} sx={{ p: 0 }}>
                                             <Collapse in={expandedRow === m.arc} timeout="auto" unmountOnExit>
                                                 <Box sx={{ p: 2, bgcolor: '#f5f5f5' }}>
                                                     <Typography variant="subtitle2" gutterBottom>

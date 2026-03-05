@@ -192,17 +192,15 @@ export const api = {
         return response.data;
     },
 
-    // --- NEW: Step 5C Priority Index ---
+    // --- Step 5C Priority Score ---
     getStep5CPriorityIndex: async (
         naics_code: string,
         categories?: FirmSizeCategory[],
         bref_id?: string,
-        w_criticality: number = 60,
-        w_improvement: number = 40,
-        include_missing: boolean = false,
+        w_improvement: number = 20,
     ): Promise<Step5CResponse> => {
         const response = await client.post<Step5CResponse>('/advanced/step5c_priority_index', {
-            naics_code, categories, bref_id, w_criticality, w_improvement, include_missing,
+            naics_code, categories, bref_id, w_improvement,
         });
         return response.data;
     },
