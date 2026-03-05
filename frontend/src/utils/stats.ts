@@ -45,8 +45,8 @@ export function normalizeWeights(weights: number[], editedIndex: number): number
     return newWeights;
 }
 
-export function computeStats(values: number[]) {
-    if (values.length === 0) return { min: 0, max: 0, median: 0, stdev: 0, q1: 0, q3: 0 };
+export function computeStats(values: number[]): { min: number | null, max: number | null, median: number | null, stdev: number | null, q1: number | null, q3: number | null } {
+    if (!values || values.length === 0) return { min: null, max: null, median: null, stdev: null, q1: null, q3: null };
     const sorted = [...values].sort((a, b) => a - b);
     const n = sorted.length;
 

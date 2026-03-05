@@ -104,16 +104,16 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
     };
 
     const _getMinMax = (key: keyof AdvancedMeasure) => {
-        let min = Infinity;
-        let max = -Infinity;
+        let min: number | null = null;
+        let max: number | null = null;
         measures.forEach(m => {
-            const val = m[key] as number;
+            const val = m[key] as number | null;
             if (val !== undefined && val !== null) {
-                if (val < min) min = val;
-                if (val > max) max = val;
+                if (min === null || val < min) min = val;
+                if (max === null || val > max) max = val;
             }
         });
-        if (min === Infinity || max === -Infinity) return { min: 0, max: 0 };
+        if (min === null || max === null) return { min: 0, max: 0 };
         return { min, max };
     };
 
@@ -133,12 +133,21 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
     const paybackStats = _getMinMax('payback');
     const savingsStats = _getMinMax('gross_savings');
 
+    const safeMax = (val: number | null) => val === null ? -Infinity : val;
+    const safeMin = (val: number | null) => val === null ? Infinity : val;
+
     const recalculatedMeasures = measures.map(m => {
-        const normCount = normMaxBetter(m.count, countStats.min, countStats.max);
-        const normImp = normMaxBetter(m.imp_rate, impStats.min, impStats.max);
-        const normCce = normMinBetter(m.cce_primary, cceStats.min, cceStats.max);
-        const normPayback = normMinBetter(m.payback, paybackStats.min, paybackStats.max);
-        const normSavings = normMaxBetter(m.gross_savings, savingsStats.min, savingsStats.max);
+        const cStatMin = countStats.min ?? 0; const cStatMax = countStats.max ?? 0;
+        const iStatMin = impStats.min ?? 0; const iStatMax = impStats.max ?? 0;
+        const cceStatMin = cceStats.min ?? 0; const cceStatMax = cceStats.max ?? 0;
+        const pStatMin = paybackStats.min ?? 0; const pStatMax = paybackStats.max ?? 0;
+        const sStatMin = savingsStats.min ?? 0; const sStatMax = savingsStats.max ?? 0;
+
+        const normCount = normMaxBetter(m.count, cStatMin, cStatMax);
+        const normImp = normMaxBetter(m.imp_rate, iStatMin, iStatMax);
+        const normCce = (m.cce_primary === null || m.cce_primary === undefined) ? 0 : normMinBetter(m.cce_primary, cceStatMin, cceStatMax);
+        const normPayback = m.payback === null ? 0 : normMinBetter(m.payback, pStatMin, pStatMax);
+        const normSavings = m.gross_savings === null ? 0 : normMaxBetter(m.gross_savings, sStatMin, sStatMax);
 
         const newScore = 100 * (
             normCount * (weights[0] / 100) +
@@ -189,7 +198,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
         </Box>
     );
 
-    const renderHistogram = (title: string, hist: { bins: { label: string; count: number }[], excludedCount: number }, stat: { median: number; stdev: number; q1: number; q3: number }, unit: string, color: string) => (
+    const renderHistogram = (title: string, hist: { bins: { label: string; count: number }[], excludedCount: number }, stat: { median: number | null; stdev: number | null; q1: number | null; q3: number | null }, unit: string, color: string) => (
         <Card variant="outlined" sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ flex: 1, p: 1.5, '&:last-child': { pb: 1.5 } }}>
                 <Typography variant="subtitle2" gutterBottom>{title}</Typography>
@@ -209,9 +218,9 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                     )}
                 </Box>
                 <Box sx={{ mt: 1 }}>
-                    <Typography variant="caption" display="block">Median: {stat.median.toFixed(2)} {unit}</Typography>
+                    <Typography variant="caption" display="block">Median: {stat.median !== null ? stat.median.toFixed(2) : 'N/A'} {stat.median !== null ? unit : ''}</Typography>
                     <Typography variant="caption" display="block" color="text.secondary">
-                        σ: {stat.stdev.toFixed(2)} | Q1: {stat.q1.toFixed(1)} | Q3: {stat.q3.toFixed(1)}
+                        σ: {stat.stdev !== null ? stat.stdev.toFixed(2) : 'N/A'} | Q1: {stat.q1 !== null ? stat.q1.toFixed(1) : 'N/A'} | Q3: {stat.q3 !== null ? stat.q3.toFixed(1) : 'N/A'}
                     </Typography>
                 </Box>
             </CardContent>
@@ -305,11 +314,11 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                                         </Typography>
                                     </Box>
                                 </TableCell>
-                                <TableCell align="right">{totalAssessments > 0 ? ((row.count / totalAssessments) * 100).toFixed(1) : '0.0'}%</TableCell>
+                                <TableCell align="right">{totalAssessments > 0 ? ((row.count / totalAssessments) * 100).toFixed(1) + '%' : 'N/A'}</TableCell>
                                 <TableCell align="right">{(row.imp_rate * 100).toFixed(1)}%</TableCell>
-                                <TableCell align="right">{row.gross_savings.toLocaleString()}</TableCell>
-                                <TableCell align="right">{row.payback.toFixed(2)} yrs</TableCell>
-                                <TableCell align="right">${row.cce_primary.toFixed(2)}/GJ</TableCell>
+                                <TableCell align="right">{row.gross_savings !== null ? row.gross_savings.toLocaleString() : 'N/A'}</TableCell>
+                                <TableCell align="right">{row.payback !== null ? row.payback.toFixed(2) + ' yrs' : 'N/A'}</TableCell>
+                                <TableCell align="right">{row.cce_primary !== null && row.cce_primary !== undefined ? '$' + row.cce_primary.toFixed(2) + '/GJ' : 'N/A'}</TableCell>
                                 <TableCell align="right">
                                     <Chip
                                         label={row.score.toFixed(1)}

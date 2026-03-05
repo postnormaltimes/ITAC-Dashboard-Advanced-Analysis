@@ -259,10 +259,10 @@ export interface AdvancedMeasure {
     description: string;
     count: number;
     imp_rate: number;
-    gross_savings: number;
-    payback: number;
-    cce: number;
-    cce_primary: number;  // $/GJ_primary (normalized)
+    gross_savings: number | null;
+    payback: number | null;
+    cce: number | null;
+    cce_primary: number | null;  // $/GJ_primary (normalized)
     score: number;
     cce_gas?: number | null;
     cce_elec?: number | null;
@@ -273,7 +273,7 @@ export interface AdvancedStep1Response {
     measures: AdvancedMeasure[];
     naics_code: string;
     industry_median_energy_cost: number;
-    total_assessments: number;
+    total_assessments: number | null;
 }
 
 export interface HistogramData {

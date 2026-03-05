@@ -45,19 +45,19 @@ export async function resolveNaicsScopeForMeasureCCE({
 
     let bestInvalidScope: { prefix: string; count: number; dists: MeasureDistributionResponse } | null = null;
 
-    for (let len = naicsDigits.length; len >= minNaicsDigits; len--) {
+    for (let len = naicsDigits.length; len >= Math.max(3, minNaicsDigits); len--) {
         const prefix = naicsDigits.slice(0, len);
 
         try {
             const dists = await api.getMeasureDistributions(prefix, arcCode, categories);
             const validCount = dists.cce_primary.length;
 
-            if (validCount > 0) {
+            if (validCount >= minValidN) {
                 const result: ResolverResult = {
                     scope: len === naicsDigits.length ? 'exact' : 'prefix',
                     usedNaicsPrefix: prefix,
                     validCount,
-                    reason: validCount >= minValidN ? 'ok' : 'insufficient_data',
+                    reason: 'ok',
                     distributions: dists,
                 };
                 resolverCache.set(cacheKey, result);

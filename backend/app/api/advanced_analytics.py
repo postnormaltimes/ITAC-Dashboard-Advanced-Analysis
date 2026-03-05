@@ -133,7 +133,7 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             valid_primary['calc_cce_primary'] = (valid_primary['implementation_cost'] * crf) / valid_primary['e_primary_gj']
             cce_primary = valid_primary['calc_cce_primary'].median()
         else:
-            cce_primary = 0.0
+            cce_primary = None
 
         # Legacy: separate elec/gas CCE
         def get_elec_mwh(val, code):
@@ -376,11 +376,28 @@ def evaluate_step1(request: AdvancedStep1Request):
     naics = request.naics_code
     df = _load_naics_df(naics)
 
-    if df.empty:
-        return AdvancedStep1Response(measures=[], naics_code=naics, industry_median_energy_cost=0.0)
+    con = get_db_connection()
+    try:
+        # Query total assessments for the selected NAICS prefix
+        query = "SELECT COUNT(*) FROM assess WHERE naics LIKE ?"
+        assess_count_res = con.execute(query, [f"{naics}%"]).fetchone()
+        total_assessments = assess_count_res[0] if assess_count_res else 0
+    except Exception as e:
+        print(f"Error querying assess table: {e}")
+        total_assessments = 0
+    finally:
+        con.close()
 
-    measures, cost, total_assessments = _process_dataset(df, naics)
-    return AdvancedStep1Response(measures=measures, naics_code=naics, industry_median_energy_cost=cost, total_assessments=total_assessments)
+    if df.empty:
+        return AdvancedStep1Response(measures=[], naics_code=naics, industry_median_energy_cost=0.0, total_assessments=total_assessments)
+
+    measures, cost, _ = _process_dataset(df, naics)
+    return AdvancedStep1Response(
+        measures=measures,
+        naics_code=naics,
+        industry_median_energy_cost=cost,
+        total_assessments=total_assessments
+    )
 
 
 # --- Step 2: Distributions (employees/sales – legacy) ---
