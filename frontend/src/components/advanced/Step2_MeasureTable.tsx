@@ -48,7 +48,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
     const [editVal, setEditVal] = useState<string>('');
     const [activeMeasure, setActiveMeasure] = useState<string>(measures[0]?.arc || '');
     const [distData, setDistData] = useState<MeasureDistributionResponse | null>(null);
-    const [cceFallbackData, setCceFallbackData] = useState<{ dists: MeasureDistributionResponse, prefix: string | null } | null>(null);
+    const [cceFallbackData, setCceFallbackData] = useState<{ dists: MeasureDistributionResponse, prefix: string | null, scope: 'exact' | 'prefix' | 'all' } | null>(null);
     const [isLoadingDists, setIsLoadingDists] = useState(false);
 
     useEffect(() => {
@@ -72,6 +72,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                     setCceFallbackData(cceResolved.distributions ? {
                         dists: cceResolved.distributions,
                         prefix: cceResolved.scope === 'exact' ? null : cceResolved.usedNaicsPrefix,
+                        scope: cceResolved.scope,
                     } : null);
                 }
             } catch (err) {
@@ -159,7 +160,8 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
         gsStats: computeStats(distData.gross_savings),
         pbStats: computeStats(distData.payback),
         cceStats: computeStats(cceFallbackData.dists.cce_primary),
-        ccePrefix: cceFallbackData.prefix
+        ccePrefix: cceFallbackData.prefix,
+        cceScope: cceFallbackData.scope,
     } : null;
 
     const renderWeightControl = (title: string, wIndex: number) => (
@@ -256,7 +258,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                         </Box>
                         <Box sx={{ width: { xs: '100%', md: 'calc(25% - 16px)' } }}>
                             {renderHistogram(
-                                `CCE ($/GJ) — ${activeMeasure}${perMeasureHists.ccePrefix !== null ? ` (fallback: NAICS ${perMeasureHists.ccePrefix || 'All'})` : ''}`,
+                                `CCE ($/GJ) — ${activeMeasure}${perMeasureHists.cceScope === 'prefix' ? ` (fallback: NAICS ${perMeasureHists.ccePrefix})` : perMeasureHists.cceScope === 'all' ? ' (fallback: All industries)' : ''}`,
                                 perMeasureHists.cce,
                                 perMeasureHists.cceStats,
                                 '$/GJ',
