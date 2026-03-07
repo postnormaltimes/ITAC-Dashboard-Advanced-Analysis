@@ -262,10 +262,13 @@ export interface AdvancedMeasure {
     gross_savings: number;
     payback: number;
     cce: number;
-    cce_primary: number;  // $/GJ_primary (normalized)
+    cce_primary: number | null;  // $/GJ_primary (normalized)
     score: number;
     cce_gas?: number | null;
     cce_elec?: number | null;
+    cce_scope_used?: 'exact' | 'prefix' | 'all' | 'none' | null;
+    cce_naics_prefix_used?: string | null;
+    cce_valid_count?: number | null;
     neb_codes?: string[];
 }
 
@@ -297,6 +300,9 @@ export interface MeasureDistributionResponse {
     payback: number[];
     cce_primary: number[];
     count: number;
+    scope_used?: 'exact' | 'prefix' | 'all' | 'none' | null;
+    naics_prefix_used?: string | null;
+    valid_count?: number | null;
 }
 
 // --- Primary Curve ---

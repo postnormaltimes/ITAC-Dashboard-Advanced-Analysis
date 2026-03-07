@@ -134,8 +134,8 @@ const Step5_Comparison: React.FC<Step5Props> = ({ naicsCode, genericMeasures, se
                     <TableBody>
                         {rows.map((row) => {
                             const scoreDiff = row.cluster.score - (row.generic?.score || 0);
-                            const paybackDiff = row.cluster.payback - (row.generic?.payback || 0);
-                            const cceDiff = row.cluster.cce_primary - (row.generic?.cce_primary || 0);
+                            const paybackDiff = (row.cluster.payback ?? 0) - (row.generic?.payback ?? 0);
+                            const cceDiff = (row.cluster.cce_primary ?? 0) - (row.generic?.cce_primary ?? 0);
                             const isActive = row.arc === activeMeasure;
                             return (
                                 <TableRow
@@ -157,16 +157,16 @@ const Step5_Comparison: React.FC<Step5Props> = ({ naicsCode, genericMeasures, se
                                         {scoreDiff > 0 ? '+' : ''}{scoreDiff.toFixed(1)}
                                     </TableCell>
                                     <TableCell align="right" sx={{ borderLeft: '1px solid #eee', color: 'text.secondary' }}>
-                                        {row.generic?.payback.toFixed(1) || '-'}
+                                        {row.generic?.payback != null ? row.generic.payback.toFixed(1) : '-'}
                                     </TableCell>
-                                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{row.cluster.payback.toFixed(1)}</TableCell>
+                                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{row.cluster.payback != null ? row.cluster.payback.toFixed(1) : '-'}</TableCell>
                                     <TableCell align="right" sx={{ color: paybackDiff < 0 ? 'success.main' : 'error.main' }}>
                                         {paybackDiff > 0 ? '+' : ''}{paybackDiff.toFixed(1)}
                                     </TableCell>
                                     <TableCell align="right" sx={{ borderLeft: '1px solid #eee', color: 'text.secondary' }}>
-                                        {row.generic?.cce_primary.toFixed(2) || '-'}
+                                        {row.generic?.cce_primary != null ? row.generic.cce_primary.toFixed(2) : '-'}
                                     </TableCell>
-                                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{row.cluster.cce_primary.toFixed(2)}</TableCell>
+                                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{row.cluster.cce_primary != null ? row.cluster.cce_primary.toFixed(2) : '-'}</TableCell>
                                     <TableCell align="right" sx={{ color: cceDiff < 0 ? 'success.main' : 'error.main' }}>
                                         {cceDiff > 0 ? '+' : ''}{cceDiff.toFixed(2)}
                                     </TableCell>

@@ -9,20 +9,18 @@ export interface ResolverResult {
     distributions: MeasureDistributionResponse | null;
 }
 
-// In-memory cache to prevent redundant API calls during rapid re-renders
 const resolverCache = new Map<string, ResolverResult>();
 
-/**
- * Extracts only the digits from a NAICS string
- */
 export function normalizeNaics(naics: string): string {
     return naics.replace(/\D/g, '');
 }
 
 /**
- * Resolves the best NAICS scope for a given measure's CCE distribution.
- * It iteratively broadens the NAICS prefix (down to minNaicsDigits) until it finds
- * at least minValidN CCE observations. If none qualify, it falls back to 'all'.
+ * Resolve NAICS scope for Step-2 CCE:
+ * 1) exact -> broader prefixes down to minNaicsDigits
+ * 2) return first prefix meeting minValidN
+ * 3) if none meet minValidN but some have >0, use the largest sample (most specific on ties)
+ * 4) if all prefixes have 0, fallback to all industries
  */
 export async function resolveNaicsScopeForMeasureCCE({
     selectedNaics,
@@ -45,15 +43,14 @@ export async function resolveNaicsScopeForMeasureCCE({
         return resolverCache.get(cacheKey)!;
     }
 
-    let bestInvalidScope: { prefix: string, count: number, dists: MeasureDistributionResponse } | null = null;
+    let bestInvalidScope: { prefix: string; count: number; dists: MeasureDistributionResponse } | null = null;
 
-    // 1. Try exact match and prefixes down to minNaicsDigits
     for (let len = naicsDigits.length; len >= minNaicsDigits; len--) {
         const prefix = naicsDigits.slice(0, len);
 
         try {
             const dists = await api.getMeasureDistributions(prefix, arcCode, categories);
-            const validCount = dists.cce_primary.length; // Array of non-null CCE values
+            const validCount = dists.cce_primary.length;
 
             if (validCount >= minValidN) {
                 const result: ResolverResult = {
@@ -67,20 +64,16 @@ export async function resolveNaicsScopeForMeasureCCE({
                 return result;
             }
 
-            // Keep track of the fallback with the highest valid count > 0
             if (validCount > 0) {
                 if (!bestInvalidScope || validCount > bestInvalidScope.count) {
                     bestInvalidScope = { prefix, count: validCount, dists };
                 }
             }
-
         } catch (err) {
             console.error(`Error fetching distributions for NAICS ${prefix}:`, err);
-            // Continue trying broader prefixes
         }
     }
 
-    // 2. If NO prefix met minValidN, check if we found ANY data > 0
     if (bestInvalidScope) {
         const result: ResolverResult = {
             scope: bestInvalidScope.prefix === naicsDigits ? 'exact' : 'prefix',
@@ -93,7 +86,6 @@ export async function resolveNaicsScopeForMeasureCCE({
         return result;
     }
 
-    // 3. Fallback to "all" (empty NAICS string) ONLY if absolutely 0 data in all prefixes
     try {
         const allDists = await api.getMeasureDistributions('', arcCode, categories);
         const validCount = allDists.cce_primary.length;
@@ -102,13 +94,13 @@ export async function resolveNaicsScopeForMeasureCCE({
             scope: 'all',
             usedNaicsPrefix: null,
             validCount,
-            reason: validCount >= minValidN ? 'ok' : 'no_data_found',
+            reason: validCount > 0 ? (validCount >= minValidN ? 'ok' : 'insufficient_data') : 'no_data_found',
             distributions: allDists,
         };
         resolverCache.set(cacheKey, result);
         return result;
     } catch (err) {
-        console.error(`Error fetching fallback distributions for 'all':`, err);
+        console.error("Error fetching fallback distributions for 'all':", err);
         const failResult: ResolverResult = {
             scope: 'all',
             usedNaicsPrefix: null,
