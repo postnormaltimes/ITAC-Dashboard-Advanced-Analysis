@@ -197,6 +197,7 @@ class AdvancedStep1Response(BaseModel):
     measures: List[AdvancedMeasure]
     naics_code: str
     industry_median_energy_cost: float # Derived from data
+    total_assessments: int = 0
 
 # --- Measure Distribution (per-ARC) ---
 

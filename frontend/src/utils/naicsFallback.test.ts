@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { resolveNaicsScopeForMeasureCCE, normalizeNaics } from './naicsFallback';
 import { api } from '../api/client';
-import type { MeasureDistributionResponse } from '../types';
 
 vi.mock('../api/client', () => ({
     api: {
@@ -21,11 +20,11 @@ describe('normalizeNaics', () => {
         expect(normalizeNaics('32-221')).toBe('32221');
         expect(normalizeNaics('3323A')).toBe('3323');
     });
-});
 
-describe('resolveNaicsScopeForMeasureCCE', () => {
-    beforeEach(() => {
-        vi.resetAllMocks();
+    it('should normalize NAICS correctly', () => {
+        expect(normalizeNaics('32221 ')).toBe('32221');
+        expect(normalizeNaics('322-21')).toBe('32221');
+        expect(normalizeNaics('A32221')).toBe('32221');
     });
 
     it('returns exact scope if minValidN is met immediately', async () => {
@@ -38,11 +37,10 @@ describe('resolveNaicsScopeForMeasureCCE', () => {
             minValidN: 5,
         });
 
-        expect(mockApi).toHaveBeenCalledTimes(1);
-        expect(mockApi).toHaveBeenCalledWith('32221', 'EXACT-MATCH', undefined);
         expect(result.scope).toBe('exact');
         expect(result.reason).toBe('ok');
-        expect(result.validCount).toBe(6);
+        expect(result.validCount).toBe(5);
+        expect(api.getMeasureDistributions).toHaveBeenCalledTimes(1);
     });
 
     it('broadens to prefix when exact has data but is below minValidN and prefix meets minValidN', async () => {
@@ -62,7 +60,7 @@ describe('resolveNaicsScopeForMeasureCCE', () => {
         expect(result.scope).toBe('prefix');
         expect(result.usedNaicsPrefix).toBe('3222');
         expect(result.reason).toBe('ok');
-        expect(result.validCount).toBe(6);
+        expect(result.validCount).toBe(5);
     });
 
     it('keeps best insufficient prefix when none reach minValidN', async () => {

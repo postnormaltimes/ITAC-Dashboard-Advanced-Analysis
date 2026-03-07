@@ -284,7 +284,9 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             neb_codes=row['neb_codes']
         ))
 
-    return final_measures, industry_energy_cost
+    total_assessments = df['assessmentid'].nunique() if 'assessmentid' in df.columns else 0
+
+    return final_measures, industry_energy_cost, total_assessments
 
 
 # ===================================================================
@@ -659,7 +661,7 @@ def evaluate_filtered(request: FilteredRequest):
     if df.empty:
         return AdvancedStep3Response(cluster_metrics=[], cluster_median_energy_cost=0.0, cluster_size=0)
 
-    measures, cost = _process_dataset(df, naics)
+    measures, cost, _ = _process_dataset(df, naics)
 
     return AdvancedStep3Response(
         cluster_metrics=measures,
@@ -923,7 +925,7 @@ def step5b_bat_alignment(request: Step5BRequest):
         df = _apply_category_filter(df, request.categories)
 
         # Process measures (get scores, descriptions, etc.)
-        measure_data, _ = _process_dataset(df, request.naics_code)
+        measure_data, _, _ = _process_dataset(df, request.naics_code)
 
         # Build per-ARC implementation counts from raw data
         arc_stats = {}
@@ -1013,7 +1015,7 @@ def step5c_priority_index(request: Step5CRequest):
             return Step5CResponse(measures=[])
 
         df = _apply_category_filter(df, request.categories)
-        measure_data, _ = _process_dataset(df, request.naics_code)
+        measure_data, _, _ = _process_dataset(df, request.naics_code)
 
         # Clamp bat_additive_max to [0, 30]
         bat_additive_max = max(0, min(30, request.bat_additive_max))

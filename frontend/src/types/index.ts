@@ -276,6 +276,7 @@ export interface AdvancedStep1Response {
     measures: AdvancedMeasure[];
     naics_code: string;
     industry_median_energy_cost: number;
+    total_assessments: number | null;
 }
 
 export interface HistogramData {

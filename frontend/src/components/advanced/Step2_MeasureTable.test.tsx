@@ -24,7 +24,6 @@ const baseProps = {
 describe('Step2_MeasureTable CCE consistency', () => {
     beforeEach(() => {
         vi.resetAllMocks();
-    });
 
     it('displays backend-resolved fallback NAICS annotation for CCE', async () => {
         const measures = [
@@ -44,6 +43,10 @@ describe('Step2_MeasureTable CCE consistency', () => {
             naics_prefix_used: '332',
             valid_count: 5,
         });
+        (resolveNaicsScopeForMeasureCCE as any).mockResolvedValue({
+            scope: 'exact', usedNaicsPrefix: '123', validCount: 0, reason: 'insufficient_data', distributions: { gross_savings: [], payback: [], cce_primary: [], count: 0 }
+        });
+    });
 
         render(<Step2_MeasureTable measures={measures as any} {...baseProps} />);
 
