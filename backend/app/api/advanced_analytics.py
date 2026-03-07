@@ -117,7 +117,7 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             valid_payback['calc_payback'] = valid_payback['implementation_cost'] / valid_payback['total_savings']
             payback = valid_payback['calc_payback'].median()
         else:
-            payback = 0.0
+            payback = None
 
         # Legacy CCE (MMBtu-mixed)
         valid_cce = group[group['total_energy_conserved'] > 0].copy()
@@ -125,7 +125,7 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             valid_cce['calc_cce'] = (valid_cce['implementation_cost'] * crf) / valid_cce['total_energy_conserved']
             cce = valid_cce['calc_cce'].median()
         else:
-            cce = 0.0
+            cce = None
 
         # NEW: CCE Primary ($/GJ_primary)
         valid_primary = group[group['e_primary_gj'] > 0].copy()
@@ -133,7 +133,7 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             valid_primary['calc_cce_primary'] = (valid_primary['implementation_cost'] * crf) / valid_primary['e_primary_gj']
             cce_primary = valid_primary['calc_cce_primary'].median()
         else:
-            cce_primary = 0.0
+            cce_primary = None
 
         # Legacy: separate elec/gas CCE
         def get_elec_mwh(val, code):
@@ -232,22 +232,39 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
         if series.max() == series.min(): return 1.0
         return (series.max() - series) / (series.max() - series.min())
 
-    results_df = results_df.fillna(0)
+    # Keep payload metrics nullable; only prepare scoring-specific fallback columns.
+    score_df = results_df.copy()
+    score_df['score_count'] = score_df['count'].fillna(0)
+    score_df['score_imp'] = score_df['imp_rate'].fillna(0)
+    score_df['score_savings'] = score_df['gross_savings'].fillna(0)
+    score_df['score_cce_primary'] = score_df['cce_primary']
+    score_df['score_payback'] = score_df['payback']
 
-    results_df['norm_count'] = normalize_max_better(results_df['count'])
-    results_df['norm_imp'] = normalize_max_better(results_df['imp_rate'])
-    results_df['norm_savings'] = normalize_max_better(results_df['gross_savings'])
-    results_df['norm_cce'] = normalize_min_better(results_df['cce_primary'])
-    results_df['norm_payback'] = normalize_min_better(results_df['payback'])
+    if score_df['score_cce_primary'].notna().any():
+        score_df['score_cce_primary'] = score_df['score_cce_primary'].fillna(score_df['score_cce_primary'].max())
+    else:
+        score_df['score_cce_primary'] = 0.0
 
-    results_df['score'] = 100 * (
-        results_df['norm_count'] * 0.30 +
-        results_df['norm_imp'] * 0.25 +
-        results_df['norm_cce'] * 0.20 +
-        results_df['norm_payback'] * 0.15 +
-        results_df['norm_savings'] * 0.10
+    if score_df['score_payback'].notna().any():
+        score_df['score_payback'] = score_df['score_payback'].fillna(score_df['score_payback'].max())
+    else:
+        score_df['score_payback'] = 0.0
+
+    score_df['norm_count'] = normalize_max_better(score_df['score_count'])
+    score_df['norm_imp'] = normalize_max_better(score_df['score_imp'])
+    score_df['norm_savings'] = normalize_max_better(score_df['score_savings'])
+    score_df['norm_cce'] = normalize_min_better(score_df['score_cce_primary'])
+    score_df['norm_payback'] = normalize_min_better(score_df['score_payback'])
+
+    score_df['score'] = 100 * (
+        score_df['norm_count'] * 0.30 +
+        score_df['norm_imp'] * 0.25 +
+        score_df['norm_cce'] * 0.20 +
+        score_df['norm_payback'] * 0.15 +
+        score_df['norm_savings'] * 0.10
     )
 
+    results_df['score'] = score_df['score']
     results_df = results_df.sort_values('score', ascending=False)
 
     final_measures = []
@@ -257,10 +274,10 @@ def _process_dataset(df, naics, fixed_energy_cost: Optional[float] = None):
             description=row['description'],
             count=int(row['count']),
             imp_rate=float(row['imp_rate']),
-            gross_savings=float(row['gross_savings']),
-            payback=float(row['payback']),
-            cce=float(row['cce']),
-            cce_primary=float(row['cce_primary']),
+            gross_savings=float(row['gross_savings']) if pd.notnull(row['gross_savings']) else None,
+            payback=float(row['payback']) if pd.notnull(row['payback']) else None,
+            cce=float(row['cce']) if pd.notnull(row['cce']) else None,
+            cce_primary=float(row['cce_primary']) if pd.notnull(row['cce_primary']) else None,
             score=float(row['score']),
             cce_elec=float(row['cce_elec']) if pd.notnull(row['cce_elec']) else None,
             cce_gas=float(row['cce_gas']) if pd.notnull(row['cce_gas']) else None,
@@ -304,21 +321,154 @@ def _load_naics_df(naics: str, con=None) -> pd.DataFrame:
     """Load recommendations for a given NAICS from DB, falling back to demo data."""
     close_con = False
     if con is None:
-        con = get_db_connection()
-        close_con = True
+        try:
+            con = get_db_connection()
+            close_con = True
+        except Exception as e:
+            print(f"DB connection error in _load_naics_df: {e}")
+            con = None
+
     try:
         query = "SELECT * FROM recommendations WHERE naics LIKE ?"
-        df = con.execute(query, [f"{naics}%"]).fetch_df()
+        df = con.execute(query, [f"{naics}%"]).fetch_df() if con is not None else pd.DataFrame()
     except Exception as e:
         print(f"DB Error: {e}")
         df = pd.DataFrame()
     finally:
-        if close_con:
+        if close_con and con is not None:
             con.close()
 
     if df.empty and naics in ["3323", "32221"]:
         df = _get_demo_data(naics)
     return df
+
+
+def _load_measure_distribution_df(naics_code: str, arc_code: str, con=None) -> pd.DataFrame:
+    """Load rows for a single ARC/NAICS scope, with demo-data fallback that also supports NAICS prefixes."""
+    close_con = False
+    if con is None:
+        try:
+            con = get_db_connection()
+            close_con = True
+        except Exception as e:
+            print(f"DB connection error in _load_measure_distribution_df: {e}")
+            con = None
+
+    try:
+        query = "SELECT * FROM recommendations WHERE naics LIKE ? AND arc = ?"
+        df = con.execute(query, [f"{naics_code}%", arc_code]).fetch_df() if con is not None else pd.DataFrame()
+    except Exception as e:
+        print(f"DB Error in measure distribution load: {e}")
+        df = pd.DataFrame()
+    finally:
+        if close_con and con is not None:
+            con.close()
+
+    if not df.empty:
+        return df
+
+    # Demo fallback: support exact NAICS, prefix NAICS (e.g., 332 -> 3323), and all-industries ("").
+    demo_naics = ["3323", "32221"]
+    if naics_code:
+        matching_demo_naics = [code for code in demo_naics if code.startswith(naics_code)]
+    else:
+        matching_demo_naics = demo_naics
+
+    if not matching_demo_naics:
+        return df
+
+    demo_frames = []
+    for code in matching_demo_naics:
+        demo_df = _get_demo_data(code)
+        if not demo_df.empty:
+            demo_frames.append(demo_df[demo_df["arc"] == arc_code])
+
+    if not demo_frames:
+        return pd.DataFrame()
+
+    return pd.concat(demo_frames, ignore_index=True)
+
+
+MIN_VALID_CCE_SAMPLES = 5
+
+
+def _candidate_naics_prefixes(selected_naics: str, min_digits: int = 3) -> List[str]:
+    naics_digits = ''.join(ch for ch in str(selected_naics or '') if ch.isdigit())
+    return [naics_digits[:k] for k in range(len(naics_digits), min_digits - 1, -1)]
+
+
+def _compute_arc_cce_distribution(df_arc: pd.DataFrame) -> List[float]:
+    if df_arc.empty:
+        return []
+
+    crf = compute_crf()
+    cce_values: List[float] = []
+    for _, row in df_arc.iterrows():
+        metrics = compute_obs_metrics(row.to_dict(), crf)
+        cce = metrics.get('cce_primary')
+        if cce is None:
+            continue
+        try:
+            cce_f = float(cce)
+        except (TypeError, ValueError):
+            continue
+        if np.isfinite(cce_f):
+            cce_values.append(cce_f)
+
+    return cce_values
+
+
+def _resolve_arc_cce_with_fallback(
+    arc: str,
+    selected_naics: str,
+    min_valid_n: int = MIN_VALID_CCE_SAMPLES,
+    min_naics_digits: int = 3,
+    con=None,
+) -> dict:
+    prefixes = _candidate_naics_prefixes(selected_naics, min_naics_digits)
+    best_invalid = None
+
+    for i, prefix in enumerate(prefixes):
+        scope = 'exact' if i == 0 else 'prefix'
+        df_scope = _load_measure_distribution_df(prefix, arc, con=con)
+        cce_values = _compute_arc_cce_distribution(df_scope)
+        valid_count = len(cce_values)
+
+        if valid_count >= min_valid_n:
+            return {
+                'cce_primary_resolved': float(np.median(cce_values)),
+                'cce_scope_used': scope,
+                'cce_naics_prefix_used': prefix,
+                'cce_valid_count': valid_count,
+            }
+
+        if valid_count > 0 and (best_invalid is None or valid_count > best_invalid['cce_valid_count']):
+            best_invalid = {
+                'cce_primary_resolved': float(np.median(cce_values)),
+                'cce_scope_used': scope,
+                'cce_naics_prefix_used': prefix,
+                'cce_valid_count': valid_count,
+            }
+
+    if best_invalid is not None:
+        return best_invalid
+
+    df_all = _load_measure_distribution_df('', arc, con=con)
+    cce_values_all = _compute_arc_cce_distribution(df_all)
+    if cce_values_all:
+        return {
+            'cce_primary_resolved': float(np.median(cce_values_all)),
+            'cce_scope_used': 'all',
+            'cce_naics_prefix_used': None,
+            'cce_valid_count': len(cce_values_all),
+        }
+
+    return {
+        'cce_primary_resolved': None,
+        'cce_scope_used': 'none',
+        'cce_naics_prefix_used': None,
+        'cce_valid_count': 0,
+    }
 
 
 # ===================================================================
@@ -330,13 +480,41 @@ def _load_naics_df(naics: str, con=None) -> pd.DataFrame:
 @router.post("/step1_evaluate", response_model=AdvancedStep1Response)
 def evaluate_step1(request: AdvancedStep1Request):
     naics = request.naics_code
-    df = _load_naics_df(naics)
+    con = None
+    try:
+        try:
+            con = get_db_connection()
+        except Exception as db_err:
+            print(f"DB connection unavailable in step1_evaluate, falling back to demo logic: {db_err}")
+            con = None
 
-    if df.empty:
-        return AdvancedStep1Response(measures=[], naics_code=naics, industry_median_energy_cost=0.0)
+        df = _load_naics_df(naics, con=con)
 
-    measures, cost = _process_dataset(df, naics)
-    return AdvancedStep1Response(measures=measures, naics_code=naics, industry_median_energy_cost=cost)
+        if df.empty:
+            return AdvancedStep1Response(measures=[], naics_code=naics, industry_median_energy_cost=0.0)
+
+        measures, cost = _process_dataset(df, naics)
+
+        enriched_measures = []
+        for measure in measures:
+            resolved = _resolve_arc_cce_with_fallback(
+                measure.arc,
+                selected_naics=naics,
+                min_valid_n=MIN_VALID_CCE_SAMPLES,
+                min_naics_digits=3,
+                con=con,
+            )
+            enriched_measures.append(measure.model_copy(update={
+                'cce_primary': resolved['cce_primary_resolved'],
+                'cce_scope_used': resolved['cce_scope_used'],
+                'cce_naics_prefix_used': resolved['cce_naics_prefix_used'],
+                'cce_valid_count': resolved['cce_valid_count'],
+            }))
+
+        return AdvancedStep1Response(measures=enriched_measures, naics_code=naics, industry_median_energy_cost=cost)
+    finally:
+        if con is not None:
+            con.close()
 
 
 # --- Step 2: Distributions (employees/sales – legacy) ---
@@ -388,7 +566,8 @@ def get_distributions(request: DistributionRequest):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        con.close()
+        if con is not None:
+            con.close()
 
 
 # --- NEW: Per-measure distributions (Gross Savings, Payback, CCE_primary) ---
@@ -396,22 +575,47 @@ def get_distributions(request: DistributionRequest):
 @router.post("/step2_measure_distributions", response_model=MeasureDistributionResponse)
 def get_measure_distributions(request: MeasureDistributionRequest):
     """Get per-observation distribution arrays for a single ARC measure."""
-    con = get_db_connection()
+    con = None
     try:
-        query = "SELECT * FROM recommendations WHERE naics LIKE ? AND arc = ?"
-        df = con.execute(query, [f"{request.naics_code}%", request.arc_code]).fetch_df()
+        try:
+            con = get_db_connection()
+        except Exception as db_err:
+            print(f"DB connection unavailable in step2_measure_distributions, falling back to demo logic: {db_err}")
+            con = None
+        resolved = _resolve_arc_cce_with_fallback(
+            arc=request.arc_code,
+            selected_naics=request.naics_code,
+            min_valid_n=MIN_VALID_CCE_SAMPLES,
+            min_naics_digits=3,
+            con=con,
+        )
 
-        if df.empty and request.naics_code in ['3323', '32221']:
-            full_df = _get_demo_data(request.naics_code)
-            df = full_df[full_df['arc'] == request.arc_code]
+        if resolved['cce_scope_used'] in ('exact', 'prefix'):
+            naics_scope = resolved['cce_naics_prefix_used'] or request.naics_code
+        elif resolved['cce_scope_used'] == 'all':
+            naics_scope = ''
+        else:
+            naics_scope = request.naics_code
+
+        df = _load_measure_distribution_df(naics_scope, request.arc_code, con)
 
         if df.empty:
-            return MeasureDistributionResponse(gross_savings=[], payback=[], cce_primary=[], count=0)
+            return MeasureDistributionResponse(
+                gross_savings=[], payback=[], cce_primary=[], count=0,
+                scope_used=resolved['cce_scope_used'],
+                naics_prefix_used=resolved['cce_naics_prefix_used'],
+                valid_count=resolved['cce_valid_count'],
+            )
 
         # Apply category filter
         df = _apply_category_filter(df, request.categories)
         if df.empty:
-            return MeasureDistributionResponse(gross_savings=[], payback=[], cce_primary=[], count=0)
+            return MeasureDistributionResponse(
+                gross_savings=[], payback=[], cce_primary=[], count=0,
+                scope_used=resolved['cce_scope_used'],
+                naics_prefix_used=resolved['cce_naics_prefix_used'],
+                valid_count=resolved['cce_valid_count'],
+            )
 
         crf = compute_crf()
         gs_list, pb_list, cce_list = [], [], []
@@ -425,7 +629,7 @@ def get_measure_distributions(request: MeasureDistributionRequest):
             if pb is not None and pb > 0:
                 pb_list.append(float(pb))
             cce = metrics["cce_primary"]
-            if cce is not None:
+            if cce is not None and np.isfinite(cce):
                 cce_list.append(float(cce))
 
         return MeasureDistributionResponse(
@@ -433,12 +637,17 @@ def get_measure_distributions(request: MeasureDistributionRequest):
             payback=pb_list,
             cce_primary=cce_list,
             count=len(df),
+            scope_used=resolved['cce_scope_used'],
+            naics_prefix_used=resolved['cce_naics_prefix_used'],
+            valid_count=resolved['cce_valid_count'],
         )
     except Exception as e:
         print(f"Error in measure distributions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        con.close()
+        if con is not None:
+            con.close()
+
 
 
 # --- Step 3: Filtered Evaluation (Category-based + legacy range-based) ---
@@ -869,5 +1078,4 @@ def step5c_priority_index(request: Step5CRequest):
     finally:
         if con is not None:
             con.close()
-
 

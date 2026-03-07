@@ -24,7 +24,6 @@ import type { AdvancedMeasure, MeasureDistributionResponse } from '../../types';
 import { computeStats, computeHistogram, normalizeWeights } from '../../utils/stats';
 import { sanitizeMeasureDescription } from '../../utils/text';
 import { api } from '../../api/client';
-import { resolveNaicsScopeForMeasureCCE } from '../../utils/naicsFallback';
 
 // Colors shared with Step 5 for cognitive continuity
 const CHART_COLORS = {
@@ -48,7 +47,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
     const [editVal, setEditVal] = useState<string>('');
     const [activeMeasure, setActiveMeasure] = useState<string>(measures[0]?.arc || '');
     const [distData, setDistData] = useState<MeasureDistributionResponse | null>(null);
-    const [cceFallbackData, setCceFallbackData] = useState<{ dists: MeasureDistributionResponse, prefix: string | null } | null>(null);
+    const [cceFallbackData, setCceFallbackData] = useState<{ dists: MeasureDistributionResponse, prefix: string | null, scope: 'exact' | 'prefix' | 'all' } | null>(null);
     const [isLoadingDists, setIsLoadingDists] = useState(false);
 
     useEffect(() => {
@@ -58,21 +57,21 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
 
         const loadDistributions = async () => {
             try {
-                // 1. Fetch exact distributions for Gross Savings and Payback
-                const exactDists = await api.getMeasureDistributions(naicsCode, activeMeasure);
+                const activeMeasureMeta = measures.find(m => m.arc === activeMeasure);
 
-                // 2. Resolve fallback distributions specifically for CCE
-                const cceResolved = await resolveNaicsScopeForMeasureCCE({
-                    selectedNaics: naicsCode,
-                    arcCode: activeMeasure,
-                });
+                // API resolves CCE scope server-side and returns scope metadata.
+                const resolvedDists = await api.getMeasureDistributions(naicsCode, activeMeasure);
+
+                const resolvedScope = resolvedDists.scope_used ?? activeMeasureMeta?.cce_scope_used ?? 'exact';
+                const resolvedPrefix = resolvedDists.naics_prefix_used ?? activeMeasureMeta?.cce_naics_prefix_used ?? null;
 
                 if (mounted) {
-                    setDistData(exactDists);
-                    setCceFallbackData(cceResolved.distributions ? {
-                        dists: cceResolved.distributions,
-                        prefix: cceResolved.scope === 'exact' ? null : cceResolved.usedNaicsPrefix,
-                    } : null);
+                    setDistData(resolvedDists);
+                    setCceFallbackData({
+                        dists: resolvedDists,
+                        prefix: resolvedScope === 'prefix' ? resolvedPrefix : null,
+                        scope: resolvedScope === 'all' ? 'all' : resolvedScope === 'prefix' ? 'prefix' : 'exact',
+                    });
                 }
             } catch (err) {
                 console.error("Failed to load measure distributions", err);
@@ -84,7 +83,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
         loadDistributions();
 
         return () => { mounted = false; };
-    }, [activeMeasure, naicsCode]);
+    }, [activeMeasure, naicsCode, measures]);
 
     const handleEditWeight = (index: number) => {
         setEditIdx(index);
@@ -134,9 +133,12 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
     const recalculatedMeasures = measures.map(m => {
         const normCount = normMaxBetter(m.count, countStats.min, countStats.max);
         const normImp = normMaxBetter(m.imp_rate, impStats.min, impStats.max);
-        const normCce = normMinBetter(m.cce_primary, cceStats.min, cceStats.max);
-        const normPayback = normMinBetter(m.payback, paybackStats.min, paybackStats.max);
-        const normSavings = normMaxBetter(m.gross_savings, savingsStats.min, savingsStats.max);
+        const scoreCce = m.cce_primary ?? cceStats.max;
+        const scorePayback = m.payback ?? paybackStats.max;
+        const scoreSavings = m.gross_savings ?? savingsStats.min;
+        const normCce = normMinBetter(scoreCce, cceStats.min, cceStats.max);
+        const normPayback = normMinBetter(scorePayback, paybackStats.min, paybackStats.max);
+        const normSavings = normMaxBetter(scoreSavings, savingsStats.min, savingsStats.max);
 
         const newScore = 100 * (
             normCount * (weights[0] / 100) +
@@ -159,7 +161,8 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
         gsStats: computeStats(distData.gross_savings),
         pbStats: computeStats(distData.payback),
         cceStats: computeStats(cceFallbackData.dists.cce_primary),
-        ccePrefix: cceFallbackData.prefix
+        ccePrefix: cceFallbackData.prefix,
+        cceScope: cceFallbackData.scope,
     } : null;
 
     const renderWeightControl = (title: string, wIndex: number) => (
@@ -256,7 +259,7 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                         </Box>
                         <Box sx={{ width: { xs: '100%', md: 'calc(25% - 16px)' } }}>
                             {renderHistogram(
-                                `CCE ($/GJ) — ${activeMeasure}${perMeasureHists.ccePrefix !== null ? ` (fallback: NAICS ${perMeasureHists.ccePrefix || 'All'})` : ''}`,
+                                `CCE ($/GJ) — ${activeMeasure}${perMeasureHists.cceScope === 'prefix' ? ` (fallback: NAICS ${perMeasureHists.ccePrefix})` : perMeasureHists.cceScope === 'all' ? ' (fallback: All industries)' : ''}`,
                                 perMeasureHists.cce,
                                 perMeasureHists.cceStats,
                                 '$/GJ',
@@ -304,9 +307,9 @@ const Step2_MeasureTable: React.FC<Step2Props> = ({ measures, industryMedianCost
                                 </TableCell>
                                 <TableCell align="right">{row.count}</TableCell>
                                 <TableCell align="right">{(row.imp_rate * 100).toFixed(1)}%</TableCell>
-                                <TableCell align="right">{row.gross_savings.toLocaleString()}</TableCell>
-                                <TableCell align="right">{row.payback.toFixed(2)} yrs</TableCell>
-                                <TableCell align="right">${row.cce_primary.toFixed(2)}/GJ</TableCell>
+                                <TableCell align="right">{row.gross_savings == null ? 'N/A' : row.gross_savings.toLocaleString()}</TableCell>
+                                <TableCell align="right">{row.payback == null ? 'N/A' : `${row.payback.toFixed(2)} yrs`}</TableCell>
+                                <TableCell align="right">{row.cce_primary == null ? 'N/A' : `$${row.cce_primary.toFixed(2)}/GJ`}</TableCell>
                                 <TableCell align="right">
                                     <Chip
                                         label={row.score.toFixed(1)}
