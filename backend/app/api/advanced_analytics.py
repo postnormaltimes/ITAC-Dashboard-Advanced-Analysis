@@ -495,7 +495,17 @@ def evaluate_step1(request: AdvancedStep1Request):
         if df.empty:
             return AdvancedStep1Response(measures=[], naics_code=naics, industry_median_energy_cost=0.0)
 
-        measures, cost, total_assessments = _process_dataset(df, naics)
+        measures, cost, _ = _process_dataset(df, naics)
+
+        total_assessments = None
+        if con is not None:
+            try:
+                count_query = "SELECT COUNT(*) FROM assess WHERE CAST(naics AS VARCHAR) LIKE ?"
+                res = con.execute(count_query, [f"{naics}%"]).fetchone()
+                if res and res[0] > 0:
+                    total_assessments = res[0]
+            except Exception as e:
+                print(f"Error fetching total_assessments from assess table: {e}")
 
         enriched_measures = []
         for measure in measures:
