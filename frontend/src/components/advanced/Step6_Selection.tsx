@@ -91,7 +91,7 @@ const Step6_Selection: React.FC<Step6Props> = ({ measures, rankingMode = 'critic
                                     </TableCell>
                                     <TableCell>{row.arc}</TableCell>
                                     <TableCell>{sanitizeMeasureDescription(row.arc, row.description)}</TableCell>
-                                    <TableCell align="right">{row.score.toFixed(1)}</TableCell>
+                                    <TableCell align="right">{Number.isInteger(row.score) ? row.score : row.score.toFixed(1)}</TableCell>
                                     <TableCell align="right">{row.payback !== null ? row.payback.toFixed(1) : 'N/A'}</TableCell>
                                     <TableCell align="right">{row.cce !== null ? `$${row.cce.toFixed(2)}` : 'N/A'}</TableCell>
                                 </TableRow>

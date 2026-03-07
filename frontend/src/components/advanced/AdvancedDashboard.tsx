@@ -33,7 +33,7 @@ const AdvancedDashboard: React.FC = () => {
 
     // State Store — persists across navigation
     const [naicsCode, setNaicsCode] = useState<string>('');
-    const [step1Data, setStep1Data] = useState<{ measures: AdvancedMeasure[], industryMedianCost: number, totalAssessments: number } | null>(null);
+    const [step1Data, setStep1Data] = useState<{ measures: AdvancedMeasure[], industryMedianCost: number, totalAssessments: number | null } | null>(null);
     const [selectedCategories, setSelectedCategories] = useState<FirmSizeCategory[]>([]);
     const [clusterMeasures, setClusterMeasures] = useState<AdvancedMeasure[]>([]);
     const [selection, setSelection] = useState<string[]>([]);
@@ -67,12 +67,18 @@ const AdvancedDashboard: React.FC = () => {
 
         if (currentRankingMode === 'priority' && priorityMeasures.length > 0) {
             // Build a priority order map: arc → rank (based on priority_score sort from backend)
+            // Also store the actual priority score so we can overwrite the criticality score
             const priorityOrder = new Map<string, number>();
+            const priorityScores = new Map<string, number>();
             priorityMeasures.forEach((pm, idx) => {
                 priorityOrder.set(pm.arc, idx);
+                priorityScores.set(pm.arc, pm.priority_score);
             });
-            // Sort base measures by priority order; unranked measures go to the end
-            return [...baseMeasures].sort((a, b) => {
+            // Map the new scores and sort base measures by priority order
+            return baseMeasures.map(m => ({
+                ...m,
+                score: priorityScores.has(m.arc) ? priorityScores.get(m.arc)! : m.score
+            })).sort((a, b) => {
                 const aRank = priorityOrder.get(a.arc) ?? 9999;
                 const bRank = priorityOrder.get(b.arc) ?? 9999;
                 return aRank - bRank;
