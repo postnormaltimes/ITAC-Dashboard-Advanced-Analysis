@@ -45,7 +45,7 @@ export async function resolveNaicsScopeForMeasureCCE({
 
     let bestInvalidScope: { prefix: string; count: number; dists: MeasureDistributionResponse } | null = null;
 
-    for (let len = naicsDigits.length; len >= Math.max(3, minNaicsDigits); len--) {
+    for (let len = naicsDigits.length; len >= minNaicsDigits; len--) {
         const prefix = naicsDigits.slice(0, len);
 
         try {

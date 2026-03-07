@@ -181,13 +181,16 @@ class AdvancedMeasure(BaseModel):
     description: str
     count: int
     imp_rate: float
-    gross_savings: float  # Median
-    payback: float        # Median
-    cce: float            # Median (legacy, MMBtu-based)
-    cce_primary: float = 0.0  # Median CCE in $/GJ_primary (normalized)
+    gross_savings: Optional[float] = None  # Median
+    payback: Optional[float] = None        # Median
+    cce: Optional[float] = None            # Median (legacy, MMBtu-based)
+    cce_primary: Optional[float] = None    # Median CCE in $/GJ_primary (normalized)
     score: float          # 0-100
     cce_gas: Optional[float] = None
     cce_elec: Optional[float] = None
+    cce_scope_used: Optional[str] = None
+    cce_naics_prefix_used: Optional[str] = None
+    cce_valid_count: Optional[int] = None
     neb_codes: List[str] = []
 
 class AdvancedStep1Response(BaseModel):
@@ -208,6 +211,9 @@ class MeasureDistributionResponse(BaseModel):
     payback: List[float]
     cce_primary: List[float]
     count: int
+    scope_used: Optional[str] = None
+    naics_prefix_used: Optional[str] = None
+    valid_count: Optional[int] = None
 
 # --- Category-based Filtering ---
 
