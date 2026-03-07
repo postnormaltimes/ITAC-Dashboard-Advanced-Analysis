@@ -51,7 +51,7 @@ const Step9_GapAnalysis: React.FC<Step9Props> = ({ naicsCode, selectedMeasureIds
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'center' }}>
                 <Box>
-                    <Typography variant="h5">Step 9: Gap Analysis</Typography>
+                    <Typography variant="h5">Step 11: Gap Analysis</Typography>
                     <Typography color="text.secondary">
                         Final assessment with NEB adjustments. Economic vs technical potential.
                     </Typography>

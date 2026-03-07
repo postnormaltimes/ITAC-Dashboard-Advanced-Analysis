@@ -57,7 +57,7 @@ const Step5B_BatAlignment: React.FC<Step5BProps> = ({
     return (
         <Paper sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>
-                Step 5B — BAT Alignment & Improvement Gap
+                Step 6: BAT Alignment & Improvement Gap
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 BAT-linked measures only. The Improvement Index (0–100) reflects how much room

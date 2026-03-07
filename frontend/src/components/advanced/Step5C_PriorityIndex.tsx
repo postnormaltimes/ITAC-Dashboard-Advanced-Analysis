@@ -55,7 +55,7 @@ const Step5C_PriorityIndex: React.FC<Step5CProps> = ({
     return (
         <Paper sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>
-                Step 5C — Priority Score
+                Step 7: Priority Score
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 BAT-linked measures receive a weighted Priority Score adjusting their Criticality upwards to reflect their BAT alignment.

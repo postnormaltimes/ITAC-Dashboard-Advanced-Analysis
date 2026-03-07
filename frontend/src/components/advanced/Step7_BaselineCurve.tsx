@@ -47,11 +47,11 @@ const Step7_BaselineCurve: React.FC<Step7Props> = ({ naicsCode, selectedMeasureI
 
     return (
         <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Box>
-                    <Typography variant="h5">Step 7: Baseline Potential (Primary Energy)</Typography>
+                    <Typography variant="h5">Step 9: Baseline Curve</Typography>
                     <Typography color="text.secondary">
-                        Combined cost of conserved energy supply curve in $/GJ_primary.
+                        Analyze cumulative primary energy savings against normalized investment ($/GJ).
                     </Typography>
                 </Box>
                 <Box>

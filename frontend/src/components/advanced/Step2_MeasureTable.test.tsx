@@ -17,6 +17,7 @@ vi.mock('../../api/client', () => ({
 const baseProps = {
     industryMedianCost: 10,
     naicsCode: '33231',
+    totalAssessments: 100,
     onBack: vi.fn(),
     onNext: vi.fn(),
 };
@@ -24,6 +25,7 @@ const baseProps = {
 describe('Step2_MeasureTable CCE consistency', () => {
     beforeEach(() => {
         vi.resetAllMocks();
+    });
 
     it('displays backend-resolved fallback NAICS annotation for CCE', async () => {
         const measures = [

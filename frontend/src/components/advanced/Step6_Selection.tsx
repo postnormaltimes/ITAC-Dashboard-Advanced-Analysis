@@ -35,7 +35,7 @@ const Step6_Selection: React.FC<Step6Props> = ({ measures, rankingMode = 'critic
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'center' }}>
                 <Box>
-                    <Typography variant="h5">Step 6: Measure Selection</Typography>
+                    <Typography variant="h5">Step 8: Measure Selection</Typography>
                     <Typography color="text.secondary">
                         Select the measures to include in the Cost Curve and Financial Analysis.
                         {rankingMode === 'priority' && (
@@ -92,8 +92,8 @@ const Step6_Selection: React.FC<Step6Props> = ({ measures, rankingMode = 'critic
                                     <TableCell>{row.arc}</TableCell>
                                     <TableCell>{sanitizeMeasureDescription(row.arc, row.description)}</TableCell>
                                     <TableCell align="right">{row.score.toFixed(1)}</TableCell>
-                                    <TableCell align="right">{row.payback.toFixed(1)}</TableCell>
-                                    <TableCell align="right">${row.cce.toFixed(2)}</TableCell>
+                                    <TableCell align="right">{row.payback !== null ? row.payback.toFixed(1) : 'N/A'}</TableCell>
+                                    <TableCell align="right">{row.cce !== null ? `$${row.cce.toFixed(2)}` : 'N/A'}</TableCell>
                                 </TableRow>
                             );
                         })}

@@ -70,7 +70,7 @@ const Step8_NEBInput: React.FC<Step8Props> = ({ naicsCode, selectedMeasureIds, s
                     </BarChart>
                 </ResponsiveContainer>
                 <Typography variant="caption" color="text.secondary">
-                    Median: ${stats.median.toFixed(0)} | N: {values.length}
+                    Median: {stats.median !== null ? `$${stats.median.toFixed(0)}` : 'N/A'} | N: {values.length}
                 </Typography>
             </Paper>
         );
@@ -81,10 +81,10 @@ const Step8_NEBInput: React.FC<Step8Props> = ({ naicsCode, selectedMeasureIds, s
     return (
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, alignItems: 'center' }}>
-                <Box>
-                    <Typography variant="h5">Step 8: Non-Energy Benefits</Typography>
+                <Box sx={{ mb: 3 }}>
+                    <Typography variant="h5">Step 10: Non-Energy Benefits</Typography>
                     <Typography color="text.secondary">
-                        Review NEB categories per measure. Enter operating costs and NEB adjustments.
+                        Review or enter monetized secondary impacts like operation/maintenance cost changes and non-energy benefits (NEBs) for the selected measures.
                     </Typography>
                 </Box>
                 <Box>

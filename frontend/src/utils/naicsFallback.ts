@@ -37,78 +37,42 @@ export async function resolveNaicsScopeForMeasureCCE({
 }): Promise<ResolverResult> {
     const naicsDigits = normalizeNaics(selectedNaics);
     const catKey = categories ? categories.join(',') : 'none';
-    const cacheKey = `${naicsDigits}-${arcCode}-${catKey}-${minNaicsDigits}-${minValidN}`;
+    const cacheKey = `${naicsDigits}-${arcCode}-${catKey}`;
 
     if (resolverCache.has(cacheKey)) {
         return resolverCache.get(cacheKey)!;
     }
 
-    let bestInvalidScope: { prefix: string; count: number; dists: MeasureDistributionResponse } | null = null;
-
-    for (let len = naicsDigits.length; len >= minNaicsDigits; len--) {
-        const prefix = naicsDigits.slice(0, len);
-
-        try {
-            const dists = await api.getMeasureDistributions(prefix, arcCode, categories);
-            const validCount = dists.cce_primary.length;
-
-            if (validCount >= minValidN) {
-                const result: ResolverResult = {
-                    scope: len === naicsDigits.length ? 'exact' : 'prefix',
-                    usedNaicsPrefix: prefix,
-                    validCount,
-                    reason: 'ok',
-                    distributions: dists,
-                };
-                resolverCache.set(cacheKey, result);
-                return result;
-            }
-
-            if (validCount > 0) {
-                if (!bestInvalidScope || validCount > bestInvalidScope.count) {
-                    bestInvalidScope = { prefix, count: validCount, dists };
-                }
-            }
-        } catch (err) {
-            console.error(`Error fetching distributions for NAICS ${prefix}:`, err);
-        }
-    }
-
-    if (bestInvalidScope) {
-        const result: ResolverResult = {
-            scope: bestInvalidScope.prefix === naicsDigits ? 'exact' : 'prefix',
-            usedNaicsPrefix: bestInvalidScope.prefix,
-            validCount: bestInvalidScope.count,
-            reason: 'insufficient_data',
-            distributions: bestInvalidScope.dists,
-        };
-        resolverCache.set(cacheKey, result);
-        return result;
-    }
-
     try {
-        const allDists = await api.getMeasureDistributions('', arcCode, categories);
-        const validCount = allDists.cce_primary.length;
+        // Backend now handles all fallback logic natively when querying distributions
+        const dists = await api.getMeasureDistributions(naicsDigits, arcCode, categories);
+
+        const validCount = dists.valid_count ?? dists.cce_primary.length;
+        const scope = dists.scope_used || 'exact';
+        const usedPrefix = dists.naics_prefix_used || naicsDigits;
+
+        const reason = validCount > 0
+            ? (validCount >= minValidN ? 'ok' : 'insufficient_data')
+            : (scope === 'all' || scope === 'none' ? 'no_data_found' : 'insufficient_data');
 
         const result: ResolverResult = {
-            scope: 'all',
-            usedNaicsPrefix: null,
+            scope: scope as 'exact' | 'prefix' | 'all',
+            usedNaicsPrefix: usedPrefix,
             validCount,
-            reason: validCount > 0 ? (validCount >= minValidN ? 'ok' : 'insufficient_data') : 'no_data_found',
-            distributions: allDists,
+            reason: reason as 'ok' | 'insufficient_data' | 'no_data_found',
+            distributions: dists,
         };
+
         resolverCache.set(cacheKey, result);
         return result;
     } catch (err) {
-        console.error("Error fetching fallback distributions for 'all':", err);
-        const failResult: ResolverResult = {
-            scope: 'all',
-            usedNaicsPrefix: null,
+        console.error(`Error fetching distributions for NAICS ${naicsDigits}:`, err);
+        return {
+            scope: 'exact',
+            usedNaicsPrefix: naicsDigits,
             validCount: 0,
             reason: 'no_data_found',
             distributions: null,
         };
-        resolverCache.set(cacheKey, failResult);
-        return failResult;
     }
 }
