@@ -24,7 +24,6 @@ const baseProps = {
 describe('Step2_MeasureTable CCE consistency', () => {
     beforeEach(() => {
         vi.resetAllMocks();
-    });
 
     it('displays backend-resolved fallback NAICS annotation for CCE', async () => {
         const measures = [

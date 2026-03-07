@@ -31,9 +31,9 @@ describe('computeStats', () => {
     });
     it('should handle empty arrays', () => {
         const stats = computeStats([]);
-        expect(stats.min).toBe(0);
-        expect(stats.max).toBe(0);
-        expect(stats.median).toBe(0);
+        expect(stats.min).toBe(null);
+        expect(stats.max).toBe(null);
+        expect(stats.median).toBe(null);
     });
 });
 
