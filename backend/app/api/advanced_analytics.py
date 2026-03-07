@@ -495,7 +495,7 @@ def evaluate_step1(request: AdvancedStep1Request):
         if df.empty:
             return AdvancedStep1Response(measures=[], naics_code=naics, industry_median_energy_cost=0.0)
 
-        measures, cost = _process_dataset(df, naics)
+        measures, cost, total_assessments = _process_dataset(df, naics)
 
         enriched_measures = []
         for measure in measures:
@@ -513,7 +513,7 @@ def evaluate_step1(request: AdvancedStep1Request):
                 'cce_valid_count': resolved['cce_valid_count'],
             }))
 
-        return AdvancedStep1Response(measures=enriched_measures, naics_code=naics, industry_median_energy_cost=cost)
+        return AdvancedStep1Response(measures=enriched_measures, naics_code=naics, industry_median_energy_cost=cost, total_assessments=total_assessments)
     finally:
         if con is not None:
             con.close()
