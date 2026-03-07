@@ -323,16 +323,21 @@ def _load_naics_df(naics: str, con=None) -> pd.DataFrame:
     """Load recommendations for a given NAICS from DB, falling back to demo data."""
     close_con = False
     if con is None:
-        con = get_db_connection()
-        close_con = True
+        try:
+            con = get_db_connection()
+            close_con = True
+        except Exception as e:
+            print(f"DB connection error in _load_naics_df: {e}")
+            con = None
+
     try:
         query = "SELECT * FROM recommendations WHERE naics LIKE ?"
-        df = con.execute(query, [f"{naics}%"]).fetch_df()
+        df = con.execute(query, [f"{naics}%"]).fetch_df() if con is not None else pd.DataFrame()
     except Exception as e:
         print(f"DB Error: {e}")
         df = pd.DataFrame()
     finally:
-        if close_con:
+        if close_con and con is not None:
             con.close()
 
     if df.empty and naics in ["3323", "32221"]:
@@ -344,17 +349,21 @@ def _load_measure_distribution_df(naics_code: str, arc_code: str, con=None) -> p
     """Load rows for a single ARC/NAICS scope, with demo-data fallback that also supports NAICS prefixes."""
     close_con = False
     if con is None:
-        con = get_db_connection()
-        close_con = True
+        try:
+            con = get_db_connection()
+            close_con = True
+        except Exception as e:
+            print(f"DB connection error in _load_measure_distribution_df: {e}")
+            con = None
 
     try:
         query = "SELECT * FROM recommendations WHERE naics LIKE ? AND arc = ?"
-        df = con.execute(query, [f"{naics_code}%", arc_code]).fetch_df()
+        df = con.execute(query, [f"{naics_code}%", arc_code]).fetch_df() if con is not None else pd.DataFrame()
     except Exception as e:
         print(f"DB Error in measure distribution load: {e}")
         df = pd.DataFrame()
     finally:
-        if close_con:
+        if close_con and con is not None:
             con.close()
 
     if not df.empty:
@@ -473,8 +482,14 @@ def _resolve_arc_cce_with_fallback(
 @router.post("/step1_evaluate", response_model=AdvancedStep1Response)
 def evaluate_step1(request: AdvancedStep1Request):
     naics = request.naics_code
-    con = get_db_connection()
+    con = None
     try:
+        try:
+            con = get_db_connection()
+        except Exception as db_err:
+            print(f"DB connection unavailable in step1_evaluate, falling back to demo logic: {db_err}")
+            con = None
+
         df = _load_naics_df(naics, con=con)
 
         if df.empty:
@@ -500,7 +515,8 @@ def evaluate_step1(request: AdvancedStep1Request):
 
         return AdvancedStep1Response(measures=enriched_measures, naics_code=naics, industry_median_energy_cost=cost)
     finally:
-        con.close()
+        if con is not None:
+            con.close()
 
 
 # --- Step 2: Distributions (employees/sales – legacy) ---
@@ -552,7 +568,8 @@ def get_distributions(request: DistributionRequest):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        con.close()
+        if con is not None:
+            con.close()
 
 
 # --- NEW: Per-measure distributions (Gross Savings, Payback, CCE_primary) ---
@@ -560,8 +577,13 @@ def get_distributions(request: DistributionRequest):
 @router.post("/step2_measure_distributions", response_model=MeasureDistributionResponse)
 def get_measure_distributions(request: MeasureDistributionRequest):
     """Get per-observation distribution arrays for a single ARC measure."""
-    con = get_db_connection()
+    con = None
     try:
+        try:
+            con = get_db_connection()
+        except Exception as db_err:
+            print(f"DB connection unavailable in step2_measure_distributions, falling back to demo logic: {db_err}")
+            con = None
         resolved = _resolve_arc_cce_with_fallback(
             arc=request.arc_code,
             selected_naics=request.naics_code,
@@ -625,7 +647,9 @@ def get_measure_distributions(request: MeasureDistributionRequest):
         print(f"Error in measure distributions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        con.close()
+        if con is not None:
+            con.close()
+
 
 
 

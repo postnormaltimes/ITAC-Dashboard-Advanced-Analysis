@@ -87,3 +87,13 @@ def test_step1_serializes_null_cce_when_no_valid_data_anywhere(monkeypatch):
 def test_prefix_generator_truncates_to_three_digits():
     assert advanced_analytics._candidate_naics_prefixes('32221', min_digits=3) == ['32221', '3222', '322']
     assert advanced_analytics._candidate_naics_prefixes('32-221', min_digits=3) == ['32221', '3222', '322']
+
+
+def test_step1_uses_demo_fallback_when_db_connection_unavailable(monkeypatch):
+    def raise_connect():
+        raise RuntimeError('db offline')
+
+    monkeypatch.setattr(advanced_analytics, 'get_db_connection', raise_connect)
+
+    resp = advanced_analytics.evaluate_step1(AdvancedStep1Request(naics_code='32221'))
+    assert len(resp.measures) > 0
